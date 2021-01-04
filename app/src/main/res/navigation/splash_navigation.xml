@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/splash_navigation"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.ecreditpal.danaflash.ui.splash.SplashFragment"
+        android:label="SplashFragment">
+        <action
+            android:id="@+id/action_splashFragment_to_privacyPoliciesFragment"
+            app:destination="@id/privacyPoliciesFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_mainActivity"
+            app:destination="@id/mainActivity"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+    <dialog
+        android:id="@+id/privacyPoliciesFragment"
+        android:name="com.ecreditpal.danaflash.ui.splash.PrivacyPoliciesFragment"
+        android:label="PrivacyPoliciesFragment" >
+        <action
+            android:id="@+id/action_privacyPoliciesFragment_to_mainActivity"
+            app:destination="@id/mainActivity"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/push_bottom_out" />
+    </dialog>
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.ecreditpal.danaflash.MainActivity"
+        android:label="MainActivity" />
+</navigation>

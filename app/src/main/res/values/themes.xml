@@ -16,6 +16,6 @@
     </style>
 
     <style name="SplashTheme" parent="Theme.DanaFlash">
-        <item name="android:windowBackground">@drawable/pic_splash</item>
+        <item name="android:windowBackground">@drawable/layer_start</item>
     </style>
 </resources>

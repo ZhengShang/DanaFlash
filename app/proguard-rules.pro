@@ -19,3 +19,16 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keepclassmembers class * extends androidx.datastore.preferences.protobuf.GeneratedMessageLite.*
+
+-dontwarn com.blankj.utilcode.**
+
+-keepclassmembers class * {
+    @com.blankj.utilcode.util.BusUtils$Bus <methods>;
+}
+
+-keep public class * extends com.blankj.utilcode.util.ApiUtils$BaseApi
+-keep,allowobfuscation @interface com.blankj.utilcode.util.ApiUtils$Api
+-keep @com.blankj.utilcode.util.ApiUtils$Api class *
+
+-keepattributes *Annotation*

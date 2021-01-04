@@ -1,4 +1,4 @@
-package com.ecreditpal.danaflash
+package com.ecreditpal.danaflash.base
 
 import androidx.appcompat.app.AppCompatActivity
 
