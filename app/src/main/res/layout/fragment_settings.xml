@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.ecreditpal.danaflash.BuildConfig" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/window_background">
+
+        <com.ecreditpal.danaflash.widget.SettingItem
+            android:id="@+id/privacy"
+            clickNav="@{@id/action_settingsFragment_to_privacyFragment}"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/ripple_white_mask"
+            app:layout_constraintTop_toTopOf="parent"
+            app:siStartIcon="@drawable/ic_privacy"
+            app:siTitle="@string/privacy_policy" />
+
+        <com.ecreditpal.danaflash.widget.SettingItem
+            android:id="@+id/register_protocol"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/ripple_white_mask"
+            app:layout_constraintTop_toBottomOf="@id/privacy"
+            app:siStartIcon="@drawable/ic_protocol"
+            app:siTitle="@string/register_protocol" />
+
+        <com.ecreditpal.danaflash.widget.SettingItem
+            android:id="@+id/version"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/ripple_white_mask"
+            app:layout_constraintTop_toBottomOf="@id/register_protocol"
+            app:siStartIcon="@drawable/ic_version"
+            app:siSubTitle='@{"v." + BuildConfig.VERSION_NAME}'
+            app:siTitle="@string/version" />
+
+        <Button
+            android:id="@+id/sign_out"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:layout_marginBottom="@dimen/def_edge_margin"
+            android:background="@drawable/shape_red_solid_r30"
+            android:text="@string/sing_out"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

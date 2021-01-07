@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/splash_navigation"
     app:startDestination="@id/splashFragment">
 
@@ -21,8 +22,9 @@
     </fragment>
     <dialog
         android:id="@+id/privacyPoliciesFragment"
-        android:name="com.ecreditpal.danaflash.ui.splash.PrivacyPoliciesFragment"
-        android:label="PrivacyPoliciesFragment" >
+        android:name="com.ecreditpal.danaflash.ui.splash.PrivacyFirstFragment"
+        android:label="PrivacyPoliciesFragment"
+        tools:layout="@layout/fragment_privacy_first">
         <action
             android:id="@+id/action_privacyPoliciesFragment_to_mainActivity"
             app:destination="@id/mainActivity"
@@ -32,5 +34,6 @@
     <activity
         android:id="@+id/mainActivity"
         android:name="com.ecreditpal.danaflash.MainActivity"
-        android:label="MainActivity" />
+        android:label="MainActivity"
+        tools:layout="@layout/activity_main" />
 </navigation>

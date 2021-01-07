@@ -3,9 +3,9 @@ package com.ecreditpal.danaflash.base
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.NavigationRes
-import androidx.appcompat.widget.Toolbar
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.Navigation
 import com.ecreditpal.danaflash.R
@@ -21,13 +21,13 @@ abstract class BaseNavActivity : BaseActivity() {
         if (navGraphId() == 0) {
             throw RuntimeException("必须传入NavHost依赖的res/navigation/里面的导航文件.")
         }
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+
+        findViewById<ImageView>(R.id.back).setOnClickListener { onBackPressed() }
         try {
             val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
             navController.setGraph(navGraphId())
-            navController.addOnDestinationChangedListener { _: NavController?, destination: NavDestination, _: Bundle? ->
-                toolbar.title = destination.label
+            navController.addOnDestinationChangedListener { _, destination: NavDestination, _ ->
+                findViewById<TextView>(R.id.title).text = destination.label
             }
         } catch (e: Exception) {
             //Do not have nav host fragment
@@ -36,7 +36,7 @@ abstract class BaseNavActivity : BaseActivity() {
     }
 
     protected fun hideToolbar() {
-        findViewById<Toolbar>(R.id.toolbar)?.visibility = View.GONE
+        findViewById<View>(R.id.toolbar)?.visibility = View.GONE
     }
 
     /**

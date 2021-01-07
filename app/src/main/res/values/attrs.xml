@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SettingItem">
+        <attr name="siStartIcon" format="reference" />
+        <attr name="siTitle" format="string|reference" />
+        <attr name="siSubTitle" format="string|reference" />
+        <attr name="siEndText" format="string|reference" />
+        <attr name="siEndIcon" format="reference" />
+    </declare-styleable>
+</resources>

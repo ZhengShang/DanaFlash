@@ -4,5 +4,15 @@
     <string name="title_personal">Personal</string>
     <string name="disagree">Disagree</string>
     <string name="agree">Agree</string>
-    <string name="privacy_policies">Privacy Policies</string>
+    <string name="my_orders">My Orders</string>
+    <string name="all_orders">All orders</string>
+    <string name="to_repayment_orders">Repayment orders</string>
+    <string name="paid_orders">Paid orders</string>
+    <string name="feedback">Feedback</string>
+    <string name="faq">FAQ</string>
+    <string name="settings">Settings</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="register_protocol">Register protocol</string>
+    <string name="version">Version</string>
+    <string name="sing_out">Sign out</string>
 </resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DanaFlash</string>
+    <string name="title_home">首页</string>
+    <string name="title_personal">我的</string>
+    <string name="disagree">不同意</string>
+    <string name="agree">同意</string>
+    <string name="my_orders">我的订单</string>
+    <string name="all_orders">全部订单</string>
+    <string name="to_repayment_orders">待还款</string>
+    <string name="paid_orders">已还款</string>
+    <string name="feedback">意见反馈</string>
+    <string name="faq">FAQ</string>
+    <string name="settings">设置</string>
+    <string name="privacy_policy">隐私政策</string>
+    <string name="register_protocol">注册协议</string>
+    <string name="version">版本</string>
+    <string name="sing_out">退出</string>
+</resources>

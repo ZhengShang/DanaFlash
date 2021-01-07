@@ -1,6 +1,9 @@
 package com.ecreditpal.danaflash.ui.splash
 
+import DataStoreKeys
+import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.text.method.ScrollingMovementMethod
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -10,7 +13,6 @@ import android.widget.TextView
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.createDataStore
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -18,12 +20,9 @@ import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseDialogFragment
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class PrivacyPoliciesFragment : BaseDialogFragment() {
+class PrivacyFirstFragment : BaseDialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,8 +36,19 @@ class PrivacyPoliciesFragment : BaseDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         isCancelable = false
 
-        view.findViewById<TextView>(R.id.content).movementMethod =
-            ScrollingMovementMethod.getInstance()
+        val privacyHtml = view.context.applicationContext.assets
+            .open("privacy_policies.html").bufferedReader()
+            .use {
+                it.readText()
+            }
+        view.findViewById<TextView>(R.id.content).apply {
+            movementMethod = ScrollingMovementMethod.getInstance()
+            text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Html.fromHtml(privacyHtml, Html.FROM_HTML_MODE_COMPACT);
+            } else {
+                Html.fromHtml(privacyHtml);
+            }
+        }
         view.findViewById<TextView>(R.id.agree).setOnClickListener {
             findNavController().navigate(R.id.action_privacyPoliciesFragment_to_mainActivity)
             writeAcceptValue()
