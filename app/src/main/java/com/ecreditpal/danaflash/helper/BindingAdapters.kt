@@ -13,6 +13,11 @@ fun setClickNavigate(view: View?, @IdRes id: Int) {
     view.nav(id)
 }
 
+@BindingAdapter("android:visibleGone")
+fun setVisibleOrGone(view: View, visible: Boolean) {
+    view.visibility = if (visible) View.VISIBLE else View.GONE
+}
+
 @BindingAdapter("circleImageUrl")
 fun setCircleImage(imageView: ImageView, url: String?) {
     if (TextUtils.isEmpty(url)) {

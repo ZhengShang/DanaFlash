@@ -16,4 +16,14 @@
     <string name="register_protocol">注册协议</string>
     <string name="version">版本</string>
     <string name="sing_out">退出</string>
+    <string name="submit">提交</string>
+    <string name="plz_input_phone">请输入手机号</string>
+    <string name="plz_input_verification_code">请输入验证码</string>
+    <string name="get_verification_code">获取验证码</string>
+    <string name="login">登陆</string>
+    <string name="reacquire">重发验证码</string>
+    <string name="login_privacy_declare">登录即代表您同意Dana Flash的隐私协议</string>
+    <string name="failed_to_get_verify_code">获取验证码失败</string>
+    <string name="dismatch_phone_with_first_not_8">请输入8开头9-13位数字</string>
+    <string name="failed_to_login">登陆失败</string>
 </resources>

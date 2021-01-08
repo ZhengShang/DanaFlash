@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager
 
 open class BaseDialogFragment : AppCompatDialogFragment() {
 
-    override fun show(manager: FragmentManager, tag: String?) {
-        super.show(manager, this::class.java.simpleName)
+    fun show(manager: FragmentManager) {
+        show(manager, this::class.java.simpleName)
     }
 }

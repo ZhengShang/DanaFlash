@@ -18,11 +18,19 @@
         <action
             android:id="@+id/action_navigation_personal_to_settingsActivity"
             app:destination="@id/settingsActivity" />
+        <action
+            android:id="@+id/action_navigation_personal_to_feedbackActivity"
+            app:destination="@id/feedbackActivity" />
     </fragment>
     <activity
         android:id="@+id/settingsActivity"
         android:name="com.ecreditpal.danaflash.ui.settings.SettingsActivity"
         android:label="SettingsActivity"
         tools:layout="@layout/fragment_settings" />
+    <activity
+        android:id="@+id/feedbackActivity"
+        android:name="com.ecreditpal.danaflash.ui.feedback.FeedbackActivity"
+        android:label="FeedbackActivity"
+        tools:layout="@layout/fragment_feedback" />
 
 </navigation>

@@ -15,4 +15,14 @@
     <string name="register_protocol">Register protocol</string>
     <string name="version">Version</string>
     <string name="sing_out">Sign out</string>
+    <string name="submit">Submit</string>
+    <string name="plz_input_phone">Please input phone number</string>
+    <string name="plz_input_verification_code">Please input verification code</string>
+    <string name="get_verification_code">Get verification code</string>
+    <string name="login">Login</string>
+    <string name="reacquire">Reacquire</string>
+    <string name="login_privacy_declare">By logging in, you agree to Dana Flash\'s privacy agreement</string>
+    <string name="failed_to_get_verify_code">Get verification code failed.</string>
+    <string name="dismatch_phone_with_first_not_8">Please enter 9-13 digits starting with 8</string>
+    <string name="failed_to_login">Login failed</string>
 </resources>

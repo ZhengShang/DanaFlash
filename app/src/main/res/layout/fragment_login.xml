@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewMoel"
+            type="com.ecreditpal.danaflash.ui.login.LoginViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/def_edge_margin"
+            android:src="@drawable/ic_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/dana_red" />
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/ic_logo_login"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/back" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/phone_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="28dp"
+            android:background="@drawable/shape_login_input_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logo">
+
+            <TextView
+                android:id="@+id/prefix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="+86"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="9dp"
+                android:background="@color/divider"
+                app:layout_constraintBottom_toBottomOf="@id/prefix"
+                app:layout_constraintStart_toEndOf="@id/prefix"
+                app:layout_constraintTop_toTopOf="@id/prefix" />
+
+            <EditText
+                android:id="@+id/phone_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@null"
+                android:hint="@string/plz_input_phone"
+                android:inputType="numberSigned"
+                android:maxLength="13"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/clear_phone_number"
+                app:layout_constraintStart_toEndOf="@id/divider"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/clear_phone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="11dp"
+                android:src="@drawable/ic_close"
+                android:visibleGone="@{phoneNumber.text.length() > 0}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/verify_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="28dp"
+            android:background="@drawable/shape_login_input_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/phone_layout">
+
+            <EditText
+                android:id="@+id/verify_code"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@null"
+                android:hint="@string/plz_input_verification_code"
+                android:inputType="numberSigned"
+                android:maxLength="6"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/clear_verify_code"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/clear_verify_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="11dp"
+                android:src="@drawable/ic_close"
+                android:visibleGone="@{verifyCode.text.length() > 0}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/cold_down"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/cold_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewMoel.coldDownText}"
+                android:textColor="@color/dana_red"
+                android:visibleGone="@{!viewMoel.verifyCodeBtnVisible}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/get_verify_code"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_goneMarginEnd="@dimen/def_edge_margin"
+                tools:text="60s" />
+
+            <TextView
+                android:id="@+id/get_verify_code"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginEnd="@dimen/def_edge_margin"
+                android:background="@drawable/selector_dash_btn"
+                android:gravity="center"
+                android:enabled="@{phoneNumber.text.length() > 0}"
+                android:onClick="@{()-> viewMoel.getVerifyCode(phoneNumber.getText())}"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="@{viewMoel.verifyCodeString}"
+                android:textColor="@color/white"
+                android:visibleGone="@{viewMoel.verifyCodeBtnVisible}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/get_verification_code" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/login"
+            style="@style/BottomButton"
+            android:layout_marginTop="50dp"
+            android:enabled="@{phoneNumber.text.length() > 0 &amp;&amp; verifyCode.text.length() > 0}"
+            android:text="@string/login"
+            android:onClick="@{()-> viewMoel.login(phoneNumber.getText(), verifyCode.getText())}"
+            app:layout_constraintTop_toBottomOf="@id/verify_layout"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/privacy_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/def_edge_margin"
+            android:gravity="center"
+            android:text="@string/login_privacy_declare"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/login" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

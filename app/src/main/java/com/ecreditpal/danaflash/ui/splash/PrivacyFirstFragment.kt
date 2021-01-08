@@ -10,16 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.createDataStore
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseDialogFragment
+import com.ecreditpal.danaflash.helper.writeDsData
 import kotlinx.coroutines.launch
 
 class PrivacyFirstFragment : BaseDialogFragment() {
@@ -61,12 +58,7 @@ class PrivacyFirstFragment : BaseDialogFragment() {
 
     private fun writeAcceptValue() {
         viewLifecycleOwner.lifecycleScope.launch {
-            val dataStore: DataStore<Preferences> = context?.createDataStore(
-                name = "settings"
-            ) ?: return@launch
-            dataStore.edit { preferences ->
-                preferences[DataStoreKeys.IS_ACCEPT_PRIVACY] = true
-            }
+            context.writeDsData(DataStoreKeys.IS_ACCEPT_PRIVACY, true)
         }
     }
 
