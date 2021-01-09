@@ -12,11 +12,10 @@ import com.ecreditpal.danaflash.R
 @SuppressLint("Recycle")
 class SettingItem @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null,
-    defStyle: Int = 0
-) : ConstraintLayout(context, attrs, defStyle) {
+    attrs: AttributeSet? = null
+) : ConstraintLayout(context, attrs) {
 
-    private var startIconView: ImageView;
+    private var startIconView: ImageView
     private var titleView: TextView
     private var subTitleView: TextView
     private var endTextView: TextView
@@ -32,38 +31,36 @@ class SettingItem @JvmOverloads constructor(
             endIconView = findViewById(R.id.end_icon)
         }
 
-        context.obtainStyledAttributes(attrs, R.styleable.SettingItem).apply {
-            (0..indexCount).forEach { attr ->
-                when (getIndex(attr)) {
-                    R.styleable.SettingItem_siStartIcon -> {
-                        startIconView.setImageResource(
-                            getResourceId(R.styleable.SettingItem_siStartIcon, 0)
-                        )
-                    }
-                    R.styleable.SettingItem_siTitle -> {
-                        titleView.text = getString(R.styleable.SettingItem_siTitle)
-                    }
-                    R.styleable.SettingItem_siSubTitle -> {
-                        subTitleView.text = getString(R.styleable.SettingItem_siSubTitle)
-                        subTitleView.visibility = View.VISIBLE
-                    }
-                    R.styleable.SettingItem_siEndText -> {
-                        endTextView.text = getString(R.styleable.SettingItem_siEndText)
-                        endTextView.visibility = View.VISIBLE
-                    }
-                    R.styleable.SettingItem_siEndIcon -> {
-                        endIconView.setImageResource(
-                            getResourceId(R.styleable.SettingItem_siEndIcon, 0)
-                        )
+        if (!isInEditMode) {
+            context.obtainStyledAttributes(attrs, R.styleable.SettingItem).apply {
+                (0..indexCount).forEach { attr ->
+                    when (getIndex(attr)) {
+                        R.styleable.SettingItem_siStartIcon -> {
+                            startIconView.setImageResource(
+                                getResourceId(R.styleable.SettingItem_siStartIcon, 0)
+                            )
+                        }
+                        R.styleable.SettingItem_siTitle -> {
+                            titleView.text = getString(R.styleable.SettingItem_siTitle)
+                        }
+                        R.styleable.SettingItem_siSubTitle -> {
+                            subTitleView.text = getString(R.styleable.SettingItem_siSubTitle)
+                            subTitleView.visibility = View.VISIBLE
+                        }
+                        R.styleable.SettingItem_siEndText -> {
+                            endTextView.text = getString(R.styleable.SettingItem_siEndText)
+                            endTextView.visibility = View.VISIBLE
+                        }
+                        R.styleable.SettingItem_siEndIcon -> {
+                            endIconView.setImageResource(
+                                getResourceId(R.styleable.SettingItem_siEndIcon, 0)
+                            )
+                        }
                     }
                 }
+            }.also {
+                it.recycle()
             }
-        }.also {
-            it.recycle()
-        }
-
-        if (isInEditMode) {
-            inflate(context, R.layout.widget_setting_item, this)
         }
     }
 

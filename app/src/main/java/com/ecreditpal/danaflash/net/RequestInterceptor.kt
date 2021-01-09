@@ -20,8 +20,8 @@ class RequestInterceptor : Interceptor {
     @Throws(IOException::class)
     private fun addToken(chain: Interceptor.Chain, request: Request): Response? {
         val q = request.newBuilder()
-            .addHeader("phone", UserFace.getPhone())
-            .addHeader("token", UserFace.token ?: "")
+            .addHeader("phone", UserFace.phone)
+            .addHeader("token", UserFace.token)
             .addHeader("appName", "DanaFlash")
             .build()
         return chain.proceed(q)

@@ -1,19 +1,18 @@
 package com.ecreditpal.danaflash.ui.login
 
+import DataStoreKeys
 import android.app.Application
 import android.os.CountDownTimer
 import android.text.Editable
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.ecreditpal.danaflash.App
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.LoadingTips
 import com.ecreditpal.danaflash.data.UserFace
-import com.ecreditpal.danaflash.model.BaseResponse
-import com.ecreditpal.danaflash.model.LoginRes
+import com.ecreditpal.danaflash.helper.writeDsData
 import com.ecreditpal.danaflash.net.dfApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +20,7 @@ import kotlinx.coroutines.launch
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     private val countDownRemain = MutableLiveData(60)
-    val loginResult = MutableLiveData<LoginRes>()
+    val loginResult = MutableLiveData<Boolean>()
 
     private val timer: CountDownTimer by lazy {
         object : CountDownTimer(60_000, 1000) {
@@ -52,8 +51,14 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
         viewModelScope.launch(Dispatchers.Main) {
             LoadingTips.showLoading()
-            val res = dfApi().getVCode(phone.toString())
-            LoadingTips.dismissLoading()
+            val res = kotlin.runCatching {
+                dfApi().getVCode(phone.toString())
+            }.getOrElse {
+                LogUtils.e(it)
+                LoadingTips.dismissLoading()
+                ToastUtils.showLong(R.string.failed_to_get_verify_code)
+                return@launch
+            }
             if (res.isSuccess()) {
                 startCountDown()
             } else {
@@ -68,14 +73,26 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         }
         viewModelScope.launch {
             LoadingTips.showLoading()
-            val res: BaseResponse<LoginRes> = dfApi().login(
-                phone.toString(),
-                UserFace.getGoogleId(),
-                code.toString()
-            )
-            LoadingTips.dismissLoading()
+            val res = kotlin.runCatching {
+                dfApi().login(
+                    phone.toString(),
+                    UserFace.getGoogleId(),
+                    code.toString()
+                )
+            }.getOrElse {
+                LogUtils.e(it)
+                LoadingTips.dismissLoading()
+                ToastUtils.showLong(R.string.failed_to_login)
+                return@launch
+            }
             if (res.isSuccess()) {
-                loginResult.value = res.data
+                viewModelScope.launch(Dispatchers.IO) {
+                    UserFace.token = res.data?.token ?: ""
+                    UserFace.phone = res.data?.number ?: ""
+                    App.context.writeDsData(DataStoreKeys.TOKEN, res.data?.token ?: "")
+                    App.context.writeDsData(DataStoreKeys.PHONE, res.data?.nationalNumber ?: "")
+                }
+                loginResult.value = true
             } else {
                 ToastUtils.showLong(R.string.failed_to_login)
             }
