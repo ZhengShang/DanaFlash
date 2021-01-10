@@ -26,4 +26,5 @@
     <string name="failed_to_get_verify_code">获取验证码失败</string>
     <string name="dismatch_phone_with_first_not_8">请输入8开头9-13位数字</string>
     <string name="failed_to_login">登陆失败</string>
+    <string name="loan">借款</string>
 </resources>

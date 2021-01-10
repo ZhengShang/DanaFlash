@@ -3,6 +3,7 @@ package com.ecreditpal.danaflash.net
 import com.ecreditpal.danaflash.BuildConfig
 import com.ecreditpal.danaflash.model.BaseResponse
 import com.ecreditpal.danaflash.model.LoginRes
+import com.ecreditpal.danaflash.model.ProductRes
 import com.ecreditpal.danaflash.model.VersionRes
 import retrofit2.http.*
 
@@ -30,6 +31,9 @@ interface DanaApi {
         @Query("version") version: String = BuildConfig.VERSION_NAME,
         @Query("versionCode") versionCode: Int = BuildConfig.VERSION_CODE
     ): BaseResponse<VersionRes>
+
+    @GET("/adakita/product")
+    suspend fun product(@QueryMap map: Map<String, @JvmSuppressWildcards Any>): BaseResponse<ProductRes>
 }
 
 

@@ -1,6 +1,7 @@
 package com.ecreditpal.danaflash.net
 
 import com.ecreditpal.danaflash.BuildConfig
+import com.ecreditpal.danaflash.data.BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.fastjson.FastJsonConverterFactory
@@ -29,7 +30,7 @@ object RetrofitService {
 
         service = Retrofit.Builder()
             .client(client)
-            .baseUrl("http://www.pdd66in.xyz:7092/")
+            .baseUrl(BASE_URL)
             .addConverterFactory(FastJsonConverterFactory.create())
             .build()
     }

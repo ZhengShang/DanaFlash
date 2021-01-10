@@ -4,41 +4,39 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.ecreditpal.danaflash.databinding.FragmentHomeBinding
+import androidx.lifecycle.lifecycleScope
 import com.ecreditpal.danaflash.base.BaseFragment
+import com.ecreditpal.danaflash.databinding.FragmentHomeBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class HomeFragment : BaseFragment() {
 
     private lateinit var homeViewModel: HomeViewModel
-    private var _binding: FragmentHomeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var _binding: FragmentHomeBinding
+    private val adapter = ProductAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
-                ViewModelProvider(this).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
+        return _binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding.recycler.adapter = adapter
+
+        lifecycleScope.launch {
+            homeViewModel.flow.collectLatest { pagingData ->
+                adapter.submitData(pagingData)
+            }
+        }
     }
 }

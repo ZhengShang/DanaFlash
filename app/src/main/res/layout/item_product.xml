@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="info"
+            type="com.ecreditpal.danaflash.model.ProductRes.Product" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="3dp"
+        android:background="@drawable/shape_product_card"
+        android:elevation="10dp">
+
+        <ImageView
+            android:id="@+id/icon"
+            circleImageUrl="@{info.image}"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginEnd="4dp"
+            app:layout_constraintEnd_toStartOf="@id/title"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/icon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="KSP Gocash" />
+
+        <View
+            android:id="@+id/border1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="9dp"
+            android:background="@drawable/shape_product_view_border"
+            app:layout_constraintBottom_toBottomOf="@id/amount_summary"
+            app:layout_constraintEnd_toStartOf="@id/border2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/icon" />
+
+        <TextView
+            android:id="@+id/amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/amount"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/border1"
+            app:layout_constraintStart_toStartOf="@id/border1"
+            app:layout_constraintTop_toTopOf="@id/border1"
+            tools:text="100Juta" />
+
+        <TextView
+            android:id="@+id/amount_summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:textColor="@color/summary"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/amount"
+            app:layout_constraintStart_toStartOf="@id/amount"
+            app:layout_constraintTop_toBottomOf="@id/amount"
+            tools:text="Jumlah maksimum" />
+
+        <View
+            android:id="@+id/border2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="9dp"
+            android:layout_marginEnd="28dp"
+            android:background="@drawable/shape_product_view_border"
+            app:layout_constraintBottom_toBottomOf="@id/border1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/border1"
+            app:layout_constraintTop_toTopOf="@id/border1" />
+
+        <TextView
+            android:id="@+id/rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/amount"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/border2"
+            app:layout_constraintStart_toStartOf="@id/border2"
+            app:layout_constraintTop_toTopOf="@id/border2"
+            tools:text="≥0.89%" />
+
+        <TextView
+            android:id="@+id/rate_summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/summary"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/rate"
+            app:layout_constraintStart_toStartOf="@id/rate"
+            app:layout_constraintTop_toBottomOf="@id/rate"
+            tools:text="Acuan Bunga" />
+
+        <TextView
+            android:id="@+id/loan"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/selector_dash_btn"
+            android:gravity="center"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:stateListAnimator="@animator/press_alpha2down"
+            android:text="@string/loan"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/border1" />
+
+        <TextView
+            android:id="@+id/summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:drawablePadding="4dp"
+            android:textColor="@color/sub_text"
+            android:textSize="12sp"
+            app:drawableStartCompat="@drawable/ic_bugle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/loan"
+            tools:text="Persen approval 95%/Area dixukung selurgh" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

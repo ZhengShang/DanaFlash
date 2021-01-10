@@ -11,7 +11,7 @@ import com.ecreditpal.danaflash.databinding.FragmentPersonalBinding
 
 class PersonalFragment : BaseFragment() {
 
-    private lateinit var dashboardViewModel: PersonalViewModel
+    private lateinit var personalViewModel: PersonalViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,12 +26,12 @@ class PersonalFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
+        personalViewModel =
             ViewModelProvider(this).get(PersonalViewModel::class.java)
 
-        val _binding = FragmentPersonalBinding.inflate(inflater, container, false)
-
-        return _binding.root
+        val binding = FragmentPersonalBinding.inflate(inflater, container, false)
+        binding.vm = personalViewModel
+        return binding.root
     }
 
 
