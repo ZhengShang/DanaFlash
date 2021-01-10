@@ -29,4 +29,11 @@ class FeedbackFragment : BaseFragment() {
             findNavController().navigate(R.id.action_feedbackFragment_to_loginActivity)
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        if (!UserFace.isLogin()) {
+            activity?.onBackPressed()
+        }
+    }
 }

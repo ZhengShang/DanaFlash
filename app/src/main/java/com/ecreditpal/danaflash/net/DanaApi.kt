@@ -1,10 +1,10 @@
 package com.ecreditpal.danaflash.net
 
+import com.ecreditpal.danaflash.BuildConfig
 import com.ecreditpal.danaflash.model.BaseResponse
 import com.ecreditpal.danaflash.model.LoginRes
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import com.ecreditpal.danaflash.model.VersionRes
+import retrofit2.http.*
 
 interface DanaApi {
 
@@ -24,6 +24,12 @@ interface DanaApi {
         @Field("code") code: String = "62"
     ): BaseResponse<LoginRes>
 
+    @GET("/adakita/version/manage")
+    suspend fun versionMange(
+        @Query("channel") channel: String,
+        @Query("version") version: String = BuildConfig.VERSION_NAME,
+        @Query("versionCode") versionCode: Int = BuildConfig.VERSION_CODE
+    ): BaseResponse<VersionRes>
 }
 
 
