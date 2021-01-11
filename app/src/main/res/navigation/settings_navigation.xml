@@ -17,9 +17,21 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_settingsFragment_to_updateDialog"
+            app:destination="@id/updateDialog" />
     </fragment>
     <fragment
         android:id="@+id/privacyFragment"
         android:name="com.ecreditpal.danaflash.ui.settings.PrivacyFragment"
         android:label="@string/privacy_policy" />
+    <dialog
+        android:id="@+id/updateDialog"
+        android:name="com.ecreditpal.danaflash.ui.comm.UpdateDialog"
+        android:label="UpdateDialog"
+        tools:layout="@layout/dialog_update">
+        <argument
+            android:name="versionRes"
+            app:argType="com.ecreditpal.danaflash.model.VersionRes" />
+    </dialog>
 </navigation>

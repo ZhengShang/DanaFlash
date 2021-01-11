@@ -1,6 +1,6 @@
 package com.ecreditpal.danaflash.ui.home
 
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -10,13 +10,14 @@ import com.ecreditpal.danaflash.model.ProductRes
 
 class ProductAdapter : PagingDataAdapter<ProductRes.Product, ProductHolder>(DiffCallback()) {
     override fun onBindViewHolder(holder: ProductHolder, position: Int) {
-        ItemProductBinding.bind(holder.itemView).info = getItem(position)
+        holder.binding.info = getItem(position)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductHolder {
-        return ProductHolder(parent)
+        val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        binding.executePendingBindings()
+        return ProductHolder(binding)
     }
-
 }
 
 internal class DiffCallback : DiffUtil.ItemCallback<ProductRes.Product>() {
@@ -36,6 +37,4 @@ internal class DiffCallback : DiffUtil.ItemCallback<ProductRes.Product>() {
 
 }
 
-class ProductHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-}
+class ProductHolder(val binding: ItemProductBinding) : RecyclerView.ViewHolder(binding.root)

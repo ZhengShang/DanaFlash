@@ -26,4 +26,11 @@
     <string name="dismatch_phone_with_first_not_8">Please enter 9-13 digits starting with 8</string>
     <string name="failed_to_login">Login failed</string>
     <string name="loan">Loan</string>
+    <string name="update_now">Update now</string>
+    <string name="new_version_detect_and_update">There is a new version, go to update</string>
+    <string name="your_app_is_newest">Your app is already the latest version</string>
+    <string name="failed_to_download">Download failed</string>
+    <string name="download_success">Download success</string>
+    <string name="update_download_progress">Downloading %d</string>
+    <string name="failed_to_update_in_google_store">Cannot enter the Google store to update</string>
 </resources>

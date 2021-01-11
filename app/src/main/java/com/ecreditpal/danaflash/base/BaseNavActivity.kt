@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.annotation.NavigationRes
 import androidx.navigation.NavDestination
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.DialogFragmentNavigator
 import com.ecreditpal.danaflash.R
 
 abstract class BaseNavActivity : BaseActivity() {
@@ -27,7 +28,10 @@ abstract class BaseNavActivity : BaseActivity() {
             val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
             navController.setGraph(navGraphId())
             navController.addOnDestinationChangedListener { _, destination: NavDestination, _ ->
-                findViewById<TextView>(R.id.title).text = destination.label
+                //Dialog no need to show title
+                if (destination !is DialogFragmentNavigator.Destination) {
+                    findViewById<TextView>(R.id.title).text = destination.label
+                }
             }
         } catch (e: Exception) {
             //Do not have nav host fragment

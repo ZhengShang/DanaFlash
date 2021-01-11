@@ -27,4 +27,11 @@
     <string name="dismatch_phone_with_first_not_8">请输入8开头9-13位数字</string>
     <string name="failed_to_login">登陆失败</string>
     <string name="loan">借款</string>
+    <string name="update_now">立即更新</string>
+    <string name="new_version_detect_and_update">有新版本, 去更新</string>
+    <string name="your_app_is_newest">您的App已经是最新版本</string>
+    <string name="failed_to_download">下载失败</string>
+    <string name="download_success">下载成功</string>
+    <string name="update_download_progress">已下载 %d</string>
+    <string name="failed_to_update_in_google_store">无法进入Google store更新</string>
 </resources>

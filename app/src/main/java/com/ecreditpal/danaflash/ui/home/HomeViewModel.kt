@@ -18,7 +18,7 @@ class HomeViewModel : ViewModel() {
             mutableMapOf(
                 "type" to 1,
                 "orderType" to 1,
-                "selectIds" to emptyArray<Int>()
+                "selectIds" to "1,2"
             )
         )
     }.flow

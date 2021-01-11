@@ -4,6 +4,12 @@
 
     <data>
 
+        <variable
+            name="versionVm"
+            type="com.ecreditpal.danaflash.ui.settings.VersionViewModel" />
+
+        <import type="com.ecreditpal.danaflash.data.UserFace" />
+
         <import type="com.ecreditpal.danaflash.BuildConfig" />
     </data>
 
@@ -40,6 +46,8 @@
             android:layout_marginTop="1dp"
             android:background="@drawable/ripple_white_mask"
             app:layout_constraintTop_toBottomOf="@id/register_protocol"
+            app:siEndText="@{versionVm.versionEndText}"
+            app:siEndTextColor="@{versionVm.versionEndTextColor}"
             app:siStartIcon="@drawable/ic_version"
             app:siSubTitle='@{"v." + BuildConfig.VERSION_NAME}'
             app:siTitle="@string/version" />
@@ -54,6 +62,7 @@
             android:background="@drawable/shape_red_solid_r30"
             android:text="@string/sing_out"
             android:textSize="18sp"
+            android:visibleGone="@{UserFace.INSTANCE.login}"
             app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

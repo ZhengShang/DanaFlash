@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.ecreditpal.danaflash.R
 
 @SuppressLint("Recycle")
@@ -51,6 +52,14 @@ class SettingItem @JvmOverloads constructor(
                             endTextView.text = getString(R.styleable.SettingItem_siEndText)
                             endTextView.visibility = View.VISIBLE
                         }
+                        R.styleable.SettingItem_siEndTextColor -> {
+                            endTextView.setTextColor(
+                                getColor(
+                                    R.styleable.SettingItem_siEndTextColor,
+                                    ContextCompat.getColor(context, R.color.text)
+                                )
+                            )
+                        }
                         R.styleable.SettingItem_siEndIcon -> {
                             endIconView.setImageResource(
                                 getResourceId(R.styleable.SettingItem_siEndIcon, 0)
@@ -72,6 +81,23 @@ class SettingItem @JvmOverloads constructor(
             } else {
                 View.VISIBLE
             }
+            field = value
+        }
+
+    var siEndText: String? = null
+        set(value) {
+            endTextView.text = value
+            endTextView.visibility = if (value.isNullOrEmpty()) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
+            field = value
+        }
+
+    var siEndTextColor: Int = ContextCompat.getColor(context, R.color.text)
+        set(value) {
+            endTextView.setTextColor(value)
             field = value
         }
 }
