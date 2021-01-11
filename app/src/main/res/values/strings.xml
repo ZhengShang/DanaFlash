@@ -33,4 +33,6 @@
     <string name="download_success">Download success</string>
     <string name="update_download_progress">Downloading %d</string>
     <string name="failed_to_update_in_google_store">Cannot enter the Google store to update</string>
+    <string name="product_detail">Product detail</string>
+    <string name="fill_information">Fill in the information</string>
 </resources>
