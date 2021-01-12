@@ -18,6 +18,11 @@ fun setVisibleOrGone(view: View, visible: Boolean) {
     view.visibility = if (visible) View.VISIBLE else View.GONE
 }
 
+@BindingAdapter("android:visibleInvisible")
+fun setVisibleOrInvisible(view: View, visible: Boolean) {
+    view.visibility = if (visible) View.VISIBLE else View.INVISIBLE
+}
+
 @BindingAdapter("circleImageUrl")
 fun setCircleImage(imageView: ImageView, url: String?) {
     if (TextUtils.isEmpty(url)) {

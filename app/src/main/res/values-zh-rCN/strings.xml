@@ -34,4 +34,8 @@
     <string name="download_success">下载成功</string>
     <string name="update_download_progress">已下载 %d</string>
     <string name="failed_to_update_in_google_store">无法进入Google store更新</string>
+    <string name="product_detail">产品详情</string>
+    <string name="fill_information">信息填写</string>
+    <string name="base_info">主要信息</string>
+    <string name="other_info">其他信息</string>
 </resources>

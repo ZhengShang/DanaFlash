@@ -35,4 +35,7 @@
     <string name="failed_to_update_in_google_store">Cannot enter the Google store to update</string>
     <string name="product_detail">Product detail</string>
     <string name="fill_information">Fill in the information</string>
+    <string name="base_info">Main information</string>
+    <string name="other_info">Other information</string>
+    <string name="online_loan">Online loan</string>
 </resources>

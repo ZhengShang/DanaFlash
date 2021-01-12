@@ -1,13 +1,17 @@
 package com.ecreditpal.danaflash.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 
+@Parcelize
 data class ProductRes(
     val isHomeOrder: Boolean?, // true
     val list: List<Product>?,
     val max: Int?, // 296
     val selectIds: List<Int?>?
-) {
+) : Parcelable {
+    @Parcelize
     data class Product(
         val amountMax: BigDecimal?, // 1000000.00
         val amountMin: BigDecimal?, // 600000.00
@@ -31,5 +35,5 @@ data class ProductRes(
         val summary: String?,
         val tag: String?, // null
         val xinghe: Int? // null
-    )
+    ) : Parcelable
 }

@@ -9,8 +9,16 @@ import com.ecreditpal.danaflash.databinding.ItemProductBinding
 import com.ecreditpal.danaflash.model.ProductRes
 
 class ProductAdapter : PagingDataAdapter<ProductRes.Product, ProductHolder>(DiffCallback()) {
+
+    var clickListener: ((Int, product: ProductRes.Product?) -> Unit)? = null
+
     override fun onBindViewHolder(holder: ProductHolder, position: Int) {
-        holder.binding.info = getItem(position)
+        holder.binding.apply {
+            info = getItem(position)
+            loan.setOnClickListener {
+                clickListener?.invoke(it.id, getItem(position))
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductHolder {

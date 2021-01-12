@@ -19,8 +19,9 @@ class SettingItem @JvmOverloads constructor(
     private var startIconView: ImageView
     private var titleView: TextView
     private var subTitleView: TextView
-    private var endTextView: TextView
     private var endIconView: ImageView
+    var endTextView: TextView
+        private set
 
     init {
 
@@ -45,19 +46,15 @@ class SettingItem @JvmOverloads constructor(
                             titleView.text = getString(R.styleable.SettingItem_siTitle)
                         }
                         R.styleable.SettingItem_siSubTitle -> {
-                            subTitleView.text = getString(R.styleable.SettingItem_siSubTitle)
-                            subTitleView.visibility = View.VISIBLE
+                            siSubTitle = getString(R.styleable.SettingItem_siSubTitle)
                         }
                         R.styleable.SettingItem_siEndText -> {
-                            endTextView.text = getString(R.styleable.SettingItem_siEndText)
-                            endTextView.visibility = View.VISIBLE
+                            siEndText = getString(R.styleable.SettingItem_siEndText)
                         }
                         R.styleable.SettingItem_siEndTextColor -> {
-                            endTextView.setTextColor(
-                                getColor(
-                                    R.styleable.SettingItem_siEndTextColor,
-                                    ContextCompat.getColor(context, R.color.text)
-                                )
+                            siEndTextColor = getColor(
+                                R.styleable.SettingItem_siEndTextColor,
+                                ContextCompat.getColor(context, R.color.text)
                             )
                         }
                         R.styleable.SettingItem_siEndIcon -> {

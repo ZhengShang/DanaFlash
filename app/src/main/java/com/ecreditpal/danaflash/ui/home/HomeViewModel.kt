@@ -17,8 +17,7 @@ class HomeViewModel : ViewModel() {
         ProductPagingSource(
             mutableMapOf(
                 "type" to 1,
-                "orderType" to 1,
-                "selectIds" to "1,2"
+                "orderType" to 1
             )
         )
     }.flow

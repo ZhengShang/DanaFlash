@@ -9,6 +9,9 @@ import java.io.IOException
 class ProductPagingSource(
     private val queryMap: MutableMap<String, Any>
 ) : PagingSource<Int, ProductRes.Product>() {
+
+    private var _selectIds: List<Int?> = emptyList()
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ProductRes.Product> {
         try {
             // Start refresh at page 1 if undefined.
@@ -16,7 +19,9 @@ class ProductPagingSource(
             val response = dfApi().product(queryMap.apply {
                 put("pageIndex", nextPageNumber)
                 put("pageSize", PAGE_SIZE)
+                put("selectIds", _selectIds.joinToString())
             })
+            _selectIds = response.data?.selectIds ?: emptyList<Int>()
             return LoadResult.Page(
                 data = response.data?.list ?: emptyList(),
                 prevKey = null, // Only paging forward.

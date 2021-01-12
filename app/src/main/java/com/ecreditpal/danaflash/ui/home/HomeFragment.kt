@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
@@ -30,6 +31,13 @@ class HomeFragment : BaseFragment() {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         view.findViewById<RecyclerView>(R.id.recycler).apply {
             adapter = pageAdapter
+        }
+        pageAdapter.clickListener = { viewId, product ->
+            if (viewId == R.id.loan && product != null) {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionNavigationHomeToProductActivity(product)
+                )
+            }
         }
         lifecycleScope.launch {
             homeViewModel.flow.collectLatest { pagingData ->

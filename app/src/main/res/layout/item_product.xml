@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="com.ecreditpal.danaflash.data.ComConsKt" />
+
         <variable
             name="info"
             type="com.ecreditpal.danaflash.model.ProductRes.Product" />
@@ -18,11 +20,12 @@
         android:layout_marginEnd="6dp"
         android:layout_marginBottom="3dp"
         android:background="@drawable/shape_product_card"
-        android:elevation="10dp">
+        android:elevation="10dp"
+        android:paddingBottom="10dp">
 
         <ImageView
             android:id="@+id/icon"
-            circleImageUrl="@{info.image}"
+            circleImageUrl='@{ComConsKt.IMAGE_PREFIX + info.image}'
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginTop="11dp"
@@ -134,7 +137,7 @@
             android:stateListAnimator="@animator/press_alpha2down"
             android:text="@string/loan"
             android:textColor="@color/white"
-            android:textSize="12sp"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/border1" />
@@ -144,10 +147,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
             android:drawablePadding="4dp"
             android:textColor="@color/sub_text"
             android:textSize="12sp"
+            android:visibility="gone"
+            android:visibleGone="@{info.summary.length() > 0}"
             app:drawableStartCompat="@drawable/ic_bugle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

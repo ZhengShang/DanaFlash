@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="com.ecreditpal.danaflash.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_navigation_home_to_productActivity"
+            app:destination="@id/productActivity" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_personal"
         android:name="com.ecreditpal.danaflash.ui.personal.PersonalFragment"
@@ -32,5 +36,13 @@
         android:name="com.ecreditpal.danaflash.ui.feedback.FeedbackActivity"
         android:label="FeedbackActivity"
         tools:layout="@layout/fragment_feedback" />
+    <activity
+        android:id="@+id/productActivity"
+        android:name="com.ecreditpal.danaflash.ui.detail.ProductActivity"
+        android:label="@string/product_detail">
+        <argument
+            android:name="product"
+            app:argType="com.ecreditpal.danaflash.model.ProductRes$Product" />
+    </activity>
 
 </navigation>
