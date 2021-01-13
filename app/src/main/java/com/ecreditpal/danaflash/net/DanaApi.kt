@@ -5,6 +5,7 @@ import com.ecreditpal.danaflash.model.BaseResponse
 import com.ecreditpal.danaflash.model.LoginRes
 import com.ecreditpal.danaflash.model.ProductRes
 import com.ecreditpal.danaflash.model.VersionRes
+import okhttp3.RequestBody
 import retrofit2.http.*
 
 interface DanaApi {
@@ -34,6 +35,9 @@ interface DanaApi {
 
     @GET("/adakita/product")
     suspend fun product(@QueryMap map: Map<String, @JvmSuppressWildcards Any>): BaseResponse<ProductRes>
+
+    @POST("/adakita/contact_list")
+    suspend fun uploadContacts(@Body body: RequestBody): BaseResponse<Void>
 }
 
 
