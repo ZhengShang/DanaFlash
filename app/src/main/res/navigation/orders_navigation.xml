@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/orders_navigation.xml"
+    app:startDestination="@id/myOrdersFragment">
+
+    <fragment
+        android:id="@+id/myOrdersFragment"
+        android:name="com.ecreditpal.danaflash.ui.orders.MyOrdersFragment"
+        android:label="@string/my_orders"
+        tools:layout="@layout/fragment_my_orders" />
+</navigation>
