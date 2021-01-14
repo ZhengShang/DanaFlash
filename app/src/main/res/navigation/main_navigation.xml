@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_navigation_home_to_productActivity"
             app:destination="@id/productActivity" />
-        <action
-            android:id="@+id/action_navigation_home_self"
-            app:destination="@id/navigation_home" />
     </fragment>
     <fragment
         android:id="@+id/navigation_personal"
@@ -28,6 +25,9 @@
         <action
             android:id="@+id/action_navigation_personal_to_feedbackActivity"
             app:destination="@id/feedbackActivity" />
+        <action
+            android:id="@+id/action_navigation_personal_to_ordersActivity"
+            app:destination="@id/ordersActivity" />
     </fragment>
     <activity
         android:id="@+id/settingsActivity"
@@ -53,6 +53,16 @@
         android:name="com.ecreditpal.danaflash.ui.home.PermissionTipsDialog"
         android:label="PermissionTipsDialog"
         tools:layout="@layout/fragment_permission_tips" />
+    <activity
+        android:id="@+id/ordersActivity"
+        android:name="com.ecreditpal.danaflash.ui.orders.OrdersActivity"
+        android:label="@string/my_orders"
+        tools:layout="@layout/fragment_my_orders">
+        <argument
+            android:name="status"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </activity>
 
 
 </navigation>

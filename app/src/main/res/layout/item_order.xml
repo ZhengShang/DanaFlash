@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.ecreditpal.danaflash.data.ComConsKt" />
+
+        <variable
+            name="info"
+            type="com.ecreditpal.danaflash.model.OrderRes" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/shape_product_card">
+
+        <ImageView
+            android:id="@+id/icon"
+            imageUrl="@{ComConsKt.IMAGE_PREFIX + info.img}"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="@dimen/def_edge_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@{info.productName}"
+            android:textColor="@color/text"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/icon"
+            app:layout_constraintStart_toEndOf="@+id/icon"
+            app:layout_constraintTop_toTopOf="@id/icon"
+            tools:layout_editor_absoluteY="16dp"
+            tools:text="Maucush Kredit" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:textColor="@color/sub_text"
+            app:layout_constraintBottom_toBottomOf="@id/name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/name"
+            tools:text="Maucush Kredit" />
+
+        <TextView
+            android:id="@+id/order_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="24dp"
+            android:text="@string/order_number_colon"
+            android:textColor="@color/summary"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/icon" />
+
+        <TextView
+            android:id="@+id/order_number_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:text="@{info.orderId}"
+            android:textColor="@color/text"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/order_number"
+            tools:text="2019122608270001" />
+
+        <TextView
+            android:id="@+id/loan_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="8dp"
+            android:text="@string/loan_amount_colon"
+            android:textColor="@color/summary"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/order_number" />
+
+        <TextView
+            android:id="@+id/loan_amount_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:text="@{info.loanAmount.toString()}"
+            android:textColor="@color/text"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/loan_amount"
+            tools:text="Rp.560.000" />
+
+        <TextView
+            android:id="@+id/loan_term"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="8dp"
+            android:text="@string/loan_term_colon"
+            android:textColor="@color/summary"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/loan_amount" />
+
+        <TextView
+            android:id="@+id/loan_term_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:text="@{info.loanTermString()}"
+            android:textColor="@color/text"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/loan_term"
+            tools:text="7 Hari" />
+
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:background="@color/divider"
+            app:layout_constraintTop_toBottomOf="@id/loan_term" />
+
+        <TextView
+            android:id="@+id/line_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:gravity="center"
+            android:stateListAnimator="@animator/press_alpha2down"
+            android:textColor="@color/dana_purple"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/divider1"
+            tools:text="Pinjam Kembali" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:background="@color/divider"
+            app:layout_constraintBottom_toBottomOf="@id/left_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider1" />
+
+        <TextView
+            android:id="@+id/left_button"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:gravity="center"
+            android:stateListAnimator="@animator/press_alpha2down"
+            android:textColor="@color/dana_purple"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/divider2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider1"
+            tools:text="left" />
+
+        <TextView
+            android:id="@+id/right_button"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:gravity="center"
+            android:stateListAnimator="@animator/press_alpha2down"
+            android:textColor="@color/dana_purple"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/divider2"
+            app:layout_constraintTop_toBottomOf="@id/divider1"
+            tools:text="right" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -5,6 +5,12 @@
 
     <data>
 
+        <import type="com.ecreditpal.danaflash.data.OrderStatus" />
+
+        <variable
+            name="pf"
+            type="com.ecreditpal.danaflash.ui.personal.PersonalFragment" />
+
         <variable
             name="vm"
             type="com.ecreditpal.danaflash.ui.personal.PersonalViewModel" />
@@ -55,6 +61,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawablePadding="4dp"
+                android:onClick="@{()-> pf.nav(OrderStatus.ALL)}"
+                android:stateListAnimator="@animator/press_alpha2down"
                 android:text="@string/my_orders"
                 android:textColor="@color/dana_red"
                 android:textSize="16sp"
@@ -73,8 +81,10 @@
                 android:background="@drawable/shape_personal_order_item"
                 android:drawablePadding="11dp"
                 android:gravity="center"
+                android:onClick="@{()-> pf.nav(OrderStatus.ALL)}"
                 android:paddingTop="10dp"
                 android:paddingBottom="14dp"
+                android:stateListAnimator="@animator/press_alpha2down"
                 android:text="@string/all_orders"
                 android:textSize="14sp"
                 app:drawableTopCompat="@drawable/ic_order_all"
@@ -95,9 +105,11 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
+                android:onClick="@{()-> pf.nav(OrderStatus.STATUS_REPAYMENTING)}"
                 android:paddingTop="10dp"
                 android:paddingBottom="14dp"
                 android:singleLine="true"
+                android:stateListAnimator="@animator/press_alpha2down"
                 android:text="@string/to_repayment_orders"
                 android:textSize="14sp"
                 app:drawableTopCompat="@drawable/ic_order_to_repayment"
@@ -115,8 +127,10 @@
                 android:background="@drawable/shape_personal_order_item"
                 android:drawablePadding="11dp"
                 android:gravity="center"
+                android:onClick="@{()-> pf.nav(OrderStatus.STATUS_REPAYMENTED)}"
                 android:paddingTop="10dp"
                 android:paddingBottom="14dp"
+                android:stateListAnimator="@animator/press_alpha2down"
                 android:text="@string/paid_orders"
                 android:textSize="14sp"
                 app:drawableTopCompat="@drawable/ic_order_paid"

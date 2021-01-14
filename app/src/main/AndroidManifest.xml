@@ -36,6 +36,7 @@
         <activity android:name=".ui.feedback.FeedbackActivity" />
         <activity android:name=".ui.login.LoginActivity" />
         <activity android:name=".ui.detail.ProductActivity" />
+        <activity android:name=".ui.orders.OrdersActivity" />
     </application>
 
 </manifest>

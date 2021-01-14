@@ -38,4 +38,8 @@
     <string name="base_info">Main information</string>
     <string name="other_info">Other information</string>
     <string name="online_loan">Online loan</string>
+    <string name="retry">Retry</string>
+    <string name="order_number_colon">Order number:</string>
+    <string name="loan_amount_colon">Loan amount:</string>
+    <string name="loan_term_colon">Loan term:</string>
 </resources>

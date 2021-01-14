@@ -14,8 +14,7 @@ class ProductPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ProductRes.Product> {
         try {
-            // Start refresh at page 1 if undefined.
-            val nextPageNumber = params.key ?: 1
+            val nextPageNumber = params.key ?: PAGE_FIRST
             val response = dfApi().product(queryMap.apply {
                 put("pageIndex", nextPageNumber)
                 put("pageSize", PAGE_SIZE)
@@ -32,6 +31,8 @@ class ProductPagingSource(
             return LoadResult.Error(e)
         } catch (e: HttpException) {
             // HttpException for any non-2xx HTTP status codes.
+            return LoadResult.Error(e)
+        } catch (e: Exception) {
             return LoadResult.Error(e)
         }
     }

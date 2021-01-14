@@ -1,10 +1,7 @@
 package com.ecreditpal.danaflash.net
 
 import com.ecreditpal.danaflash.BuildConfig
-import com.ecreditpal.danaflash.model.BaseResponse
-import com.ecreditpal.danaflash.model.LoginRes
-import com.ecreditpal.danaflash.model.ProductRes
-import com.ecreditpal.danaflash.model.VersionRes
+import com.ecreditpal.danaflash.model.*
 import okhttp3.RequestBody
 import retrofit2.http.*
 
@@ -38,6 +35,13 @@ interface DanaApi {
 
     @POST("/adakita/contact_list")
     suspend fun uploadContacts(@Body body: RequestBody): BaseResponse<Void>
+
+    @GET("/adakita/loan_order/list")
+    suspend fun getOrderList(
+        @Query("pageIndex") pageIndex: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("status") status: Int
+    ): BaseResponse<List<OrderRes>>
 }
 
 

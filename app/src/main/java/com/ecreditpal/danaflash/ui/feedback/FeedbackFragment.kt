@@ -20,6 +20,7 @@ class FeedbackFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentFeedbackBinding.inflate(inflater, container, false)
+        _binding.lifecycleOwner = this
         return _binding.root
     }
 

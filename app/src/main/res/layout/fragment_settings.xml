@@ -59,7 +59,7 @@
             android:layout_marginStart="@dimen/def_edge_margin"
             android:layout_marginEnd="@dimen/def_edge_margin"
             android:layout_marginBottom="@dimen/def_edge_margin"
-            android:background="@drawable/shape_red_solid_r30"
+            android:background="@drawable/shape_red_solid_r20"
             android:text="@string/sing_out"
             android:textSize="18sp"
             android:visibleGone="@{UserFace.INSTANCE.login}"
