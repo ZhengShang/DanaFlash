@@ -12,6 +12,7 @@ import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.data.OrderStatus
 import com.ecreditpal.danaflash.databinding.FragmentMyOrdersBinding
+import com.ecreditpal.danaflash.widget.StatusView
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -50,17 +51,18 @@ class MyOrdersFragment : BaseFragment() {
 
     private fun generateList(status: Int): View {
         return View.inflate(context, R.layout.view_pull_list, null).apply {
+            val adapter = OrderAdapter()
             val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
             swipeRefreshLayout.setOnRefreshListener {
-
+                adapter.refresh()
             }
-
-            val adapter = OrderAdapter()
+            findViewById<StatusView>(R.id.status_view).bindAdapter(adapter)
             val recyclerView = findViewById<RecyclerView>(R.id.recycler)
             recyclerView.adapter = adapter
             lifecycleScope.launch {
                 orderViewModel.getOrderByStatus(status).collectLatest {
                     adapter.submitData(it)
+                    swipeRefreshLayout.isRefreshing = false
                 }
             }
         } ?: View(context)

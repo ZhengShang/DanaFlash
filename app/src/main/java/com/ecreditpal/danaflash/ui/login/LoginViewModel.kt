@@ -4,8 +4,10 @@ import DataStoreKeys
 import android.app.Application
 import android.os.CountDownTimer
 import android.text.Editable
-import androidx.lifecycle.*
-import com.blankj.utilcode.util.LogUtils
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.App
@@ -16,6 +18,7 @@ import com.ecreditpal.danaflash.helper.writeDsData
 import com.ecreditpal.danaflash.net.dfApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -51,15 +54,14 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
         viewModelScope.launch(Dispatchers.Main) {
             LoadingTips.showLoading()
-            val res = kotlin.runCatching {
-                dfApi().getVCode(phone.toString())
-            }.getOrElse {
-                LogUtils.e(it)
-                LoadingTips.dismissLoading()
-                ToastUtils.showLong(R.string.failed_to_get_verify_code)
-                return@launch
+            val res = withContext(Dispatchers.IO) {
+                kotlin.runCatching {
+                    dfApi().getVCode(phone.toString()).throwIfNotSuccess()
+                }.getOrNull()
             }
-            if (res.isSuccess()) {
+            LoadingTips.dismissLoading()
+
+            if (res?.isSuccess() == true) {
                 startCountDown()
             } else {
                 ToastUtils.showLong(R.string.failed_to_get_verify_code)
@@ -78,14 +80,11 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     phone.toString(),
                     UserFace.getGoogleId(),
                     code.toString()
-                )
-            }.getOrElse {
-                LogUtils.e(it)
-                LoadingTips.dismissLoading()
-                ToastUtils.showLong(R.string.failed_to_login)
-                return@launch
-            }
-            if (res.isSuccess()) {
+                ).throwIfNotSuccess()
+            }.getOrNull()
+            LoadingTips.dismissLoading()
+
+            if (res?.isSuccess() == true) {
                 viewModelScope.launch(Dispatchers.IO) {
                     UserFace.token = res.data?.token ?: ""
                     UserFace.phone = res.data?.number ?: ""

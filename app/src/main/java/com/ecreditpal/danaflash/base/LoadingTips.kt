@@ -15,7 +15,12 @@ object LoadingTips {
     }
 
     fun dismissLoading() {
-        loadingDialog.dismiss()
+        val fa = ActivityUtils.getTopActivity() as? FragmentActivity ?: return
+        fa.supportFragmentManager
+            .findFragmentByTag(loadingDialog.tag)
+            ?.let {
+                loadingDialog.dismissAllowingStateLoss()
+            }
     }
 
 }

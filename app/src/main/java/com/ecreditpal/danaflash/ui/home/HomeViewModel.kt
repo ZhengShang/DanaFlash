@@ -2,16 +2,14 @@ package com.ecreditpal.danaflash.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
+import androidx.paging.*
 import com.ecreditpal.danaflash.data.PAGE_SIZE
 import com.ecreditpal.danaflash.data.ProductPagingSource
+import com.ecreditpal.danaflash.model.ProductUiModel
+import kotlinx.coroutines.flow.map
 
 class HomeViewModel : ViewModel() {
     val flow = Pager(
-        // Configure how data is loaded by passing additional properties to
-        // PagingConfig, such as prefetchDistance.
         PagingConfig(pageSize = PAGE_SIZE)
     ) {
         ProductPagingSource(
@@ -21,5 +19,21 @@ class HomeViewModel : ViewModel() {
             )
         )
     }.flow
+        .map { pagingData -> pagingData.map { ProductUiModel.ProductItem(it) } }
+        .map {
+            it.insertSeparators { before, after ->
+                if (after == null) {
+                    // we're at the end of the list
+                    return@insertSeparators null
+                }
+
+                if (before == null) {
+                    // we're at the beginning of the list
+                    return@insertSeparators ProductUiModel.BannerItem("banner desc")
+                } else {
+                    null
+                }
+            }
+        }
         .cachedIn(viewModelScope)
 }

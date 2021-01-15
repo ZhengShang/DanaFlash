@@ -38,4 +38,13 @@
     <string name="fill_information">信息填写</string>
     <string name="base_info">主要信息</string>
     <string name="other_info">其他信息</string>
+    <string name="online_loan">在线借款</string>
+    <string name="retry">重试</string>
+    <string name="order_number_colon">订单号:</string>
+    <string name="loan_amount_colon">借款金额:</string>
+    <string name="loan_term_colon">借款周期:</string>
+    <string name="loading">加载中</string>
+    <string name="back">返回</string>
+    <string name="refresh">刷新</string>
+    <string name="content_empty">没有内容</string>
 </resources>

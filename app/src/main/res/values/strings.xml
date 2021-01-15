@@ -42,4 +42,8 @@
     <string name="order_number_colon">Order number:</string>
     <string name="loan_amount_colon">Loan amount:</string>
     <string name="loan_term_colon">Loan term:</string>
+    <string name="loading">Loading</string>
+    <string name="back">Back</string>
+    <string name="refresh">Refresh</string>
+    <string name="content_empty">No content</string>
 </resources>

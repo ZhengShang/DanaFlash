@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.blankj.utilcode.util.KeyboardUtils
 import com.ecreditpal.danaflash.BuildConfig
 import com.ecreditpal.danaflash.R
@@ -27,7 +27,7 @@ class LoginFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val loginVM = ViewModelProvider(this).get(LoginViewModel::class.java)
+        val loginVM: LoginViewModel by viewModels()
         loginVM.loginResult.observe(viewLifecycleOwner, { login ->
             if (login) {
                 activity?.finish()

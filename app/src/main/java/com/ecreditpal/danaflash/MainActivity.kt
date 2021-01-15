@@ -39,6 +39,10 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        finish()
+    }
+
     fun requestAllPermissions() {
         val requestArray = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,

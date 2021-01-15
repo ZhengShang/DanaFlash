@@ -1,9 +1,9 @@
 package com.ecreditpal.danaflash.ui.orders
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.databinding.ItemOrderBinding
 import com.ecreditpal.danaflash.model.OrderRes
 import com.ecreditpal.danaflash.ui.comm.BindingViewHolder
@@ -21,9 +21,7 @@ class OrderAdapter :
         parent: ViewGroup,
         viewType: Int
     ): BindingViewHolder<ItemOrderBinding> {
-        val binding = ItemOrderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        binding.executePendingBindings()
-        return BindingViewHolder(binding)
+        return BindingViewHolder.create(parent, R.layout.item_order)
     }
 }
 
