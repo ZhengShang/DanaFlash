@@ -9,6 +9,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.createDataStore
 import androidx.navigation.Navigation
+import com.ecreditpal.danaflash.data.H5_PREFIX
+import com.ecreditpal.danaflash.data.UserFace
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -56,4 +58,12 @@ suspend fun <T> Context?.readDsData(
             preferences[key] ?: defaultValue
         }
         .firstOrNull() ?: defaultValue
+}
+
+fun String?.combineH5Url(): String {
+    return H5_PREFIX.plus(this)
+        .plus("&")
+        .plus("phone=${UserFace.phone}")
+        .plus("&")
+        .plus("token=${UserFace.token}")
 }

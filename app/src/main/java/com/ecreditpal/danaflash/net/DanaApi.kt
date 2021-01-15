@@ -42,6 +42,11 @@ interface DanaApi {
         @Query("pageSize") pageSize: Int,
         @Query("status") status: Int
     ): BaseResponse<List<OrderRes>>
+
+    @GET("/adakita/ad/imgs")
+    suspend fun getAds(
+        @Query("title") title: String
+    ): BaseResponse<AdRes>
 }
 
 

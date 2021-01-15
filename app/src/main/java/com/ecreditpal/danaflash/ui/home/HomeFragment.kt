@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
+import com.ecreditpal.danaflash.data.AD_TITLE_APIPOP
 import com.ecreditpal.danaflash.ui.comm.CommLoadStateAdapter
 import com.ecreditpal.danaflash.widget.StatusView
 import kotlinx.coroutines.flow.collectLatest
@@ -29,6 +30,8 @@ class HomeFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val homeViewModel: HomeViewModel by activityViewModels()
+        homeViewModel.getAd(AD_TITLE_APIPOP)
+
         val pageAdapter = ProductAdapter().apply {
             withLoadStateFooter(CommLoadStateAdapter(this::retry))
             clickListener = { viewId, product ->

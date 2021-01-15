@@ -9,7 +9,7 @@
         android:id="@+id/navigation_home"
         android:name="com.ecreditpal.danaflash.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home">
+        tools:layout="@layout/view_pull_list">
         <action
             android:id="@+id/action_navigation_home_to_productActivity"
             app:destination="@id/productActivity" />
@@ -60,9 +60,24 @@
         tools:layout="@layout/fragment_my_orders">
         <argument
             android:name="status"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </activity>
+    <action
+        android:id="@+id/action_global_permissionTipsDialog"
+        app:destination="@id/permissionTipsDialog" />
+    <dialog
+        android:id="@+id/adDialog"
+        android:name="com.ecreditpal.danaflash.ui.comm.AdDialog"
+        android:label="AdDialog"
+        tools:layout="@layout/dialog_ad">
+        <argument
+            android:name="adRes"
+            app:argType="com.ecreditpal.danaflash.model.AdRes" />
+    </dialog>
+    <action
+        android:id="@+id/action_global_adDialog"
+        app:destination="@id/adDialog" />
 
 
 </navigation>
