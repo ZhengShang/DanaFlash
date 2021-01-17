@@ -81,8 +81,8 @@ class AdDialog : BaseDialogFragment() {
         ) {
             holder?.imageView?.let {
                 setImageUrl(it, data)
-                it.setOnClickListener {
-                    ToastUtils.showLong("Nav h5: ${dataMap.getValue(data as String)}")
+                it.setOnClickListener { v ->
+                    WebActivity.loadUrl(v.context, dataMap.getValue(data as String))
                 }
             }
         }

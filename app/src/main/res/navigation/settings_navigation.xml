@@ -11,8 +11,8 @@
         android:label="@string/settings"
         tools:layout="@layout/fragment_settings">
         <action
-            android:id="@+id/action_settingsFragment_to_privacyFragment"
-            app:destination="@id/privacyFragment"
+            android:id="@+id/action_settingsFragment_to_policyFragment"
+            app:destination="@id/policyFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -22,9 +22,16 @@
             app:destination="@id/updateDialog" />
     </fragment>
     <fragment
-        android:id="@+id/privacyFragment"
-        android:name="com.ecreditpal.danaflash.ui.settings.PrivacyFragment"
-        android:label="@string/privacy_policy" />
+        android:id="@+id/policyFragment"
+        android:name="com.ecreditpal.danaflash.ui.settings.PolicyFragment"
+        android:label="@string/privacy_policy">
+        <argument
+            android:name="policy_file_name"
+            app:argType="string" />
+        <argument
+            android:name="label"
+            app:argType="string" />
+    </fragment>
     <dialog
         android:id="@+id/updateDialog"
         android:name="com.ecreditpal.danaflash.ui.comm.UpdateDialog"

@@ -9,9 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.blankj.utilcode.util.ConvertUtils
+import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
+import com.ecreditpal.danaflash.base.BaseNavActivity
 
-class PrivacyFragment : BaseFragment() {
+class PolicyFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,17 +32,23 @@ class PrivacyFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val args = arguments?.let { PolicyFragmentArgs.fromBundle(it) } ?: return
+        if (activity is BaseNavActivity) {
+            (activity as SettingsActivity).findViewById<TextView>(R.id.title).text = args.label
+        }
+
         val textView = view as? TextView ?: return
-        val privacyHtml = view.context.applicationContext.assets
-            .open("privacy_policies.html").bufferedReader()
+        val policyHtml = view.context.applicationContext.assets
+            .open(args.policyFileName).bufferedReader()
             .use {
                 it.readText()
             }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             textView.text =
-                Html.fromHtml(privacyHtml, Html.FROM_HTML_MODE_COMPACT);
+                Html.fromHtml(policyHtml, Html.FROM_HTML_MODE_COMPACT);
         } else {
-            textView.text = Html.fromHtml(privacyHtml);
+            textView.text = Html.fromHtml(policyHtml);
         }
     }
 }

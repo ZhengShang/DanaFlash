@@ -15,6 +15,7 @@ import com.ecreditpal.danaflash.base.BaseActivity
 import com.ecreditpal.danaflash.helper.readDsData
 import com.ecreditpal.danaflash.ui.home.HomeFragmentDirections
 import com.ecreditpal.danaflash.ui.home.HomeViewModel
+import com.ecreditpal.danaflash.ui.settings.VersionViewModel
 import com.ecreditpal.danaflash.worker.UploadContactsWorker
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
@@ -47,6 +48,12 @@ class MainActivity : BaseActivity() {
                 HomeFragmentDirections.actionGlobalAdDialog(it)
             )
         }
+
+        val versionViewModel: VersionViewModel by viewModels()
+        versionViewModel.versionRes.observe(this) {
+            navController.navigate(R.id.action_global_updateDialog2)
+        }
+        versionViewModel.checkVersion()
     }
 
     override fun onBackPressed() {

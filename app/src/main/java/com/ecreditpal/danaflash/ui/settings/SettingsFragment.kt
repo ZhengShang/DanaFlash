@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.databinding.FragmentSettingsBinding
@@ -30,6 +31,22 @@ class SettingsFragment : BaseFragment() {
         binding.versionVm = versionViewModel
         versionViewModel.checkVersion()
 
+        binding.privacy.setOnClickListener {
+            findNavController().navigate(
+                SettingsFragmentDirections.actionSettingsFragmentToPolicyFragment(
+                    "privacy_policies.html",
+                    getString(R.string.privacy_policy)
+                )
+            )
+        }
+        binding.registerProtocol.setOnClickListener {
+            findNavController().navigate(
+                SettingsFragmentDirections.actionSettingsFragmentToPolicyFragment(
+                    "register_policies.html",
+                    getString(R.string.register_protocol)
+                )
+            )
+        }
         binding.signOut.setOnClickListener {
             activity?.onBackPressed()
             UserFace.clearData()
