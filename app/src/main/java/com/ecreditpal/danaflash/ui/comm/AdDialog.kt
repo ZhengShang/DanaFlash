@@ -1,14 +1,11 @@
 package com.ecreditpal.danaflash.ui.comm
 
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseDialogFragment
 import com.ecreditpal.danaflash.data.IMAGE_PREFIX
@@ -44,17 +41,20 @@ class AdDialog : BaseDialogFragment() {
 
         view.findViewById<Banner<String, BannerAdapter>>(R.id.banner).apply {
             addBannerLifecycleObserver(this@AdDialog)
-            adapter = BannerAdapter(dataMap)
+            adapter = BannerAdapter(dataMap) {
+                WebActivity.loadUrl(context, it)
+                dismissAllowingStateLoss()
+            }
             setIndicator(CircleIndicator(context))
         }
 
-        view.findViewById<TextView>(R.id.content).apply {
-            movementMethod = ScrollingMovementMethod.getInstance()
-            text = "Here show the tips of permissions required"
-            setOnClickListener {
-                ToastUtils.showLong("navigate to h5 page")
-            }
-        }
+//        view.findViewById<TextView>(R.id.content).apply {
+//            movementMethod = ScrollingMovementMethod.getInstance()
+//            text = "Here show the tips of permissions required"
+//            setOnClickListener {
+//                ToastUtils.showLong("navigate to h5 page")
+//            }
+//        }
         view.findViewById<ImageView>(R.id.close).setOnClickListener { dismiss() }
     }
 
@@ -70,7 +70,8 @@ class AdDialog : BaseDialogFragment() {
     }
 
     private class BannerAdapter(
-        val dataMap: Map<String, String>
+        val dataMap: Map<String, String>,
+        val click: (url: String) -> Unit
     ) : BannerImageAdapter<String>(dataMap.keys.toList()) {
 
         override fun onBindView(
@@ -82,7 +83,7 @@ class AdDialog : BaseDialogFragment() {
             holder?.imageView?.let {
                 setImageUrl(it, data)
                 it.setOnClickListener { v ->
-                    WebActivity.loadUrl(v.context, dataMap.getValue(data as String))
+                    click.invoke(dataMap.getValue(data as String))
                 }
             }
         }

@@ -34,7 +34,7 @@ class HomeFragment : BaseFragment() {
 
         val pageAdapter = ProductAdapter().apply {
             withLoadStateFooter(CommLoadStateAdapter(this::retry))
-            clickListener = { viewId, product ->
+            productClick = { viewId, product ->
                 if (viewId == R.id.loan && product != null) {
                     findNavController().navigate(
                         HomeFragmentDirections.actionNavigationHomeToProductActivity(product)

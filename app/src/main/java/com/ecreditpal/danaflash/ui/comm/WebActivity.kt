@@ -5,8 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.webkit.WebSettings
 import android.webkit.WebView
-import android.webkit.WebViewClient
-import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseActivity
 
@@ -26,37 +25,44 @@ class WebActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_web)
+        window?.statusBarColor = ContextCompat.getColor(this, R.color.dana_orange)
+        webView = WebView(this)
+        setContentView(webView)
 
         val url: String = intent?.getStringExtra(URL) ?: ""
         if (url.isEmpty()) {
             finish()
             return
         }
-        webView = findViewById<WebView>(R.id.web).apply {
+        webView.apply {
             settings.javaScriptEnabled = true
-            settings.cacheMode = WebSettings.LOAD_NO_CACHE; // 不用cache
-            settings.javaScriptCanOpenWindowsAutomatically = true;
-            settings.setSupportZoom(false);
-            settings.builtInZoomControls = false;
-            settings.domStorageEnabled = true;
-            settings.databaseEnabled = true;
-            settings.blockNetworkLoads = false;
-            settings.blockNetworkImage = false;
-            settings.useWideViewPort = true;
-            settings.loadWithOverviewMode = true;
-            settings.setAppCacheEnabled(true);
-            settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK; //关闭webview中缓存
-            settings.allowFileAccess = true; //设置可以访问文件
-            settings.javaScriptCanOpenWindowsAutomatically = true; //支持通过JS打开新窗口
-            settings.loadsImagesAutomatically = true; //支持自动加载图片
-            settings.defaultTextEncodingName = "utf-8";//设置编码格式
+            settings.cacheMode = WebSettings.LOAD_NO_CACHE // 不用cache
+            settings.javaScriptCanOpenWindowsAutomatically = true
+            settings.setSupportZoom(false)
+            settings.builtInZoomControls = false
+            settings.domStorageEnabled = true
+            settings.databaseEnabled = true
+            settings.blockNetworkLoads = false
+            settings.blockNetworkImage = false
+            settings.useWideViewPort = true
+            settings.loadWithOverviewMode = true
+            settings.setAppCacheEnabled(true)
+            settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK //关闭webview中缓存
+            settings.allowFileAccess = true //设置可以访问文件
+            settings.javaScriptCanOpenWindowsAutomatically = true //支持通过JS打开新窗口
+            settings.loadsImagesAutomatically = true //支持自动加载图片
+            settings.defaultTextEncodingName = "utf-8"//设置编码格式
 
-
-            webViewClient = WebViewClient()
 
         }
         webView.loadUrl(url)
-        findViewById<ImageView>(R.id.back).setOnClickListener { onBackPressed() }
+    }
+
+    override fun onBackPressed() {
+        if (webView.canGoBack()) {
+            webView.goBack()
+        } else {
+            super.onBackPressed()
+        }
     }
 }

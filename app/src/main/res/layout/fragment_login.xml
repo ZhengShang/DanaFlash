@@ -171,7 +171,7 @@
 
         <Button
             android:id="@+id/login"
-            style="@style/BottomButton"
+            style="@style/MainButton"
             android:layout_marginTop="50dp"
             android:enabled="@{phoneNumber.text.length() > 0 &amp;&amp; verifyCode.text.length() > 0}"
             android:onClick="@{()-> viewMoel.login(phoneNumber.getText(), verifyCode.getText())}"

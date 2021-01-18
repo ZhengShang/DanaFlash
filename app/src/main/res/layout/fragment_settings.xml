@@ -53,15 +53,10 @@
 
         <Button
             android:id="@+id/sign_out"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginStart="@dimen/def_edge_margin"
-            android:layout_marginEnd="@dimen/def_edge_margin"
-            android:layout_marginBottom="@dimen/def_edge_margin"
-            android:background="@drawable/shape_red_solid_r20"
+            style="@style/MainButton"
+            android:layout_marginTop="@dimen/main_button_margin_top"
             android:text="@string/sing_out"
-            android:textSize="18sp"
             android:visibleGone="@{UserFace.INSTANCE.login}"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/version" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

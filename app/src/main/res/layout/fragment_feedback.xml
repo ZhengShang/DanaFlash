@@ -36,8 +36,10 @@
 
         <Button
             android:id="@+id/submit"
-            style="@style/BottomButton"
+            style="@style/MainButton"
+            android:layout_marginTop="@dimen/main_button_margin_top"
             android:enabled="@{input.text.length() > 0}"
-            android:text="@string/submit" />
+            android:text="@string/submit"
+            app:layout_constraintTop_toBottomOf="@id/input_layout" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

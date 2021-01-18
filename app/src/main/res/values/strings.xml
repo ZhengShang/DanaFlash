@@ -48,4 +48,8 @@
     <string name="content_empty">No content</string>
     <string name="feedback_success">The submission is successful, thanks for your feedback</string>
     <string name="feedback_failed">Submission failed, please resubmit</string>
+    <string name="failed_to_open_camera_without_permission">Please grant camera permission before you can use the camera</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="photo_authentication">Photo authentication</string>
 </resources>

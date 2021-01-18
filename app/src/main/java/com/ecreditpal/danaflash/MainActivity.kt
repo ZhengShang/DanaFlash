@@ -65,7 +65,6 @@ class MainActivity : BaseActivity() {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.CAMERA,
             Manifest.permission.READ_CONTACTS
         ).filter {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_DENIED
@@ -94,8 +93,6 @@ class MainActivity : BaseActivity() {
                     Manifest.permission.READ_EXTERNAL_STORAGE -> {
                     }
                     Manifest.permission.WRITE_EXTERNAL_STORAGE -> {
-                    }
-                    Manifest.permission.CAMERA -> {
                     }
                     Manifest.permission.READ_CONTACTS -> if (entry.value) {
                         startUploadContactsWorker()

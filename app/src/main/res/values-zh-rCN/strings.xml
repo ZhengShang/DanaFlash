@@ -49,4 +49,8 @@
     <string name="content_empty">没有内容</string>
     <string name="feedback_success">提交成功, 感谢您的反馈</string>
     <string name="feedback_failed">提交失败, 请重新提交</string>
+    <string name="failed_to_open_camera_without_permission">请授予相机权限后才可以使用摄像头</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="photo_authentication">Photo authentication</string>
 </resources>

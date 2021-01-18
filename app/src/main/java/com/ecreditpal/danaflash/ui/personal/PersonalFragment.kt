@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.ecreditpal.danaflash.base.BaseFragment
+import com.ecreditpal.danaflash.data.AD_TITLE_PERSONALPOP
 import com.ecreditpal.danaflash.databinding.FragmentPersonalBinding
+import com.ecreditpal.danaflash.ui.home.HomeViewModel
 
 class PersonalFragment : BaseFragment() {
 
@@ -18,6 +21,9 @@ class PersonalFragment : BaseFragment() {
         activity?.onBackPressedDispatcher?.addCallback {
             activity?.finish()
         }
+
+        val homeViewModel: HomeViewModel by activityViewModels()
+        homeViewModel.getAd(AD_TITLE_PERSONALPOP)
     }
 
     override fun onCreateView(

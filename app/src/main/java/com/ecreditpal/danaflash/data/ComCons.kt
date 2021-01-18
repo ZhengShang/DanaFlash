@@ -11,3 +11,15 @@ const val AD_TITLE_APIPOP = "apiPop"
 const val AD_TITLE_POP = "pop"
 const val AD_TITLE_INDEX = "index"
 const val AD_TITLE_PERSONALPOP = "personalPop"
+
+
+const val H5_ONE_CLICK_APPLY = "/oneClickApplySelect" //一件申请
+const val H5_BASE_INFO = "/apiBaseInfo" //个人资料填写
+const val H5_OTHER_INFO = "/apiOtherInfo" //其他信息
+const val H5_CONTACT_PEOPLE = "/contactPeople" //紧急联系人
+const val H5_BANK_INFO = "/bindBankCard" //银行卡信息
+const val H5_ORDER_DETAIL = "/orderDetail" //订单详情
+const val H5_ORDER_CONFIRM = "/pushCaculate" //订单确认
+const val H5_PAY_ORDER_XINGHE = "/payDetail" //订单还款（星河）
+const val H5_PAY_ORDER = "/choosePay" //订单还款
+const val H5_EDIT_BANK = "/apiEditBankcard" //订单-修改银行卡

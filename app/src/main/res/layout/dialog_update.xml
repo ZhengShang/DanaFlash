@@ -64,7 +64,7 @@
 
         <Button
             android:id="@+id/update"
-            style="@style/BottomButton"
+            style="@style/MainButton"
             android:layout_width="wrap_content"
             android:layout_marginBottom="25dp"
             android:text="@string/update_now"

@@ -5,7 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.ecreditpal.danaflash.base.BaseFragment
+import com.ecreditpal.danaflash.data.H5_BASE_INFO
+import com.ecreditpal.danaflash.data.H5_OTHER_INFO
 import com.ecreditpal.danaflash.databinding.FragmentProductDetailBinding
+import com.ecreditpal.danaflash.helper.combineH5Url
+import com.ecreditpal.danaflash.model.ProductRes
+import com.ecreditpal.danaflash.ui.comm.WebActivity
 
 class ProductDetailFragment : BaseFragment() {
 
@@ -21,10 +26,31 @@ class ProductDetailFragment : BaseFragment() {
         return binding.root
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        val product = activity?.intent?.extras?.let { ProductActivityArgs.fromBundle(it).product }
-        binding.product = product
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        val product: ProductRes.Product =
+            activity?.intent?.extras?.let { ProductActivityArgs.fromBundle(it).product }
+                ?: return
+        binding.product = product
+        binding.baseInfo.setOnClickListener {
+            toInfoDetail(H5_BASE_INFO, product)
+        }
+        binding.otherInfo.setOnClickListener {
+            toInfoDetail(H5_OTHER_INFO, product)
+        }
+    }
+
+    private fun toInfoDetail(url: String, product: ProductRes.Product) {
+        WebActivity.loadUrl(
+            context, url.combineH5Url(
+                mapOf(
+                    "id" to product.id,
+                    "amount" to product.amountMax,
+                    "productName" to product.name,
+                    "trackCode" to "" // TODO: 2021/1/18 add trackCode
+                )
+            )
+        )
     }
 }

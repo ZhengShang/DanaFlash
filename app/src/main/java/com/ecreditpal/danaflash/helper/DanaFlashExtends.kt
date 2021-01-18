@@ -60,8 +60,20 @@ suspend fun <T> Context?.readDsData(
         .firstOrNull() ?: defaultValue
 }
 
-fun String?.combineH5Url(): String {
+/**
+ * 在给定的url的前后拼接特定的部分, 然后作为一个整体来加载
+ * @param paramMap 参数map
+ * @return 返回一个完整可以直接加载的url
+ */
+fun String?.combineH5Url(paramMap: Map<String, Any?>? = null): String {
+    var paramStr = paramMap?.entries?.joinToString(separator = "&", transform = {
+        it.key.plus("=").plus(it.value)
+    })
+    if (paramStr.isNullOrEmpty().not()) {
+        paramStr = "?".plus(paramStr)
+    }
     return H5_PREFIX.plus(this)
+        .plus(paramStr)
         .plus("&")
         .plus("phone=${UserFace.phone}")
         .plus("&")

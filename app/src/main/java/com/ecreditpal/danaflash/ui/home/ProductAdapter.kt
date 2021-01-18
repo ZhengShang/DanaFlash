@@ -1,9 +1,9 @@
 package com.ecreditpal.danaflash.ui.home
 
 import android.view.ViewGroup
+import androidx.databinding.ObservableInt
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.databinding.ItemProductBinding
 import com.ecreditpal.danaflash.databinding.ViewHomeBannerBinding
@@ -14,7 +14,19 @@ import com.ecreditpal.danaflash.ui.comm.BindingViewHolder
 class ProductAdapter :
     PagingDataAdapter<ProductUiModel, BindingViewHolder<*>>(DiffCallback()) {
 
-    var clickListener: ((Int, product: ProductRes.Product?) -> Unit)? = null
+    val productType = ObservableInt(PRODUCT_TYPE_API)
+    val bannerClick: ((clickType: Int) -> Unit)? = null
+    var productClick: ((Int, product: ProductRes.Product?) -> Unit)? = null
+
+    companion object {
+        const val PRODUCT_TYPE_ALL = 0
+        const val PRODUCT_TYPE_API = 1
+        const val PRODUCT_TYPE_GP = 2
+        const val CLICK_TYPE_BANNER = 0
+        const val CLICK_TYPE_API = 1
+        const val CLICK_TYPE_GP = 2
+    }
+
 
     override fun onBindViewHolder(holder: BindingViewHolder<*>, position: Int) {
         val uiModel = getItem(position)
@@ -24,13 +36,16 @@ class ProductAdapter :
                     (holder as BindingViewHolder<ItemProductBinding>).binding.apply {
                         info = uiModel.product
                         loan.setOnClickListener {
-                            clickListener?.invoke(it.id, uiModel.product)
+                            productClick?.invoke(it.id, uiModel.product)
                         }
                     }
                 }
                 is ProductUiModel.BannerItem -> {
-                    holder.itemView.setOnClickListener {
-                        ToastUtils.showLong("navigate to h5 page")
+                    (holder as BindingViewHolder<ViewHomeBannerBinding>).binding.apply {
+                        type = productType
+                        root.setOnClickListener { bannerClick?.invoke(CLICK_TYPE_BANNER) }
+                        tabApi.setOnClickListener { bannerClick?.invoke(CLICK_TYPE_API) }
+                        tabGp.setOnClickListener { bannerClick?.invoke(CLICK_TYPE_GP) }
                     }
                 }
                 else -> {

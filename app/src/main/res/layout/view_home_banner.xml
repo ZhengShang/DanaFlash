@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
+        <import type="com.ecreditpal.danaflash.ui.home.ProductAdapter" />
+
+        <variable
+            name="type"
+            type="androidx.databinding.ObservableInt" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,6 +32,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/def_edge_margin"
@@ -34,5 +41,48 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name" />
+
+        <CheckedTextView
+            android:id="@+id/tab_api"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/selector_home_tab"
+            android:checked="@{type == ProductAdapter.PRODUCT_TYPE_API}"
+            android:gravity="center"
+            android:text="Ga Perlu Download"
+            android:textAlignment="center"
+            android:textColor="@color/selector_home_tab_text"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:visibleGone="@{type == ProductAdapter.PRODUCT_TYPE_ALL}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tab_gp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image"
+            tools:checked="true" />
+
+        <CheckedTextView
+            android:id="@+id/tab_gp"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/selector_home_tab"
+            android:checked="@{type == ProductAdapter.PRODUCT_TYPE_GP}"
+            android:gravity="center"
+            android:text="Ga Perlu Isi Data"
+            android:textAlignment="center"
+            android:textColor="@color/selector_home_tab_text"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:visibleGone="@{type == ProductAdapter.PRODUCT_TYPE_ALL}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tab_api"
+            app:layout_constraintTop_toBottomOf="@id/image" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -19,7 +19,7 @@
         <item name="android:windowBackground">@drawable/layer_start</item>
     </style>
 
-    <style name="BottomButton">
+    <style name="MainButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">40dp</item>
         <item name="android:layout_marginStart">@dimen/def_edge_margin</item>
@@ -27,6 +27,5 @@
         <item name="android:layout_marginBottom">@dimen/def_edge_margin</item>
         <item name="android:background">@drawable/selector_dash_btn</item>
         <item name="android:textSize">18sp</item>
-        <item name="layout_constraintBottom_toBottomOf">parent</item>
     </style>
 </resources>

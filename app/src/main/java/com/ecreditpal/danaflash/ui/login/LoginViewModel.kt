@@ -14,11 +14,11 @@ import com.ecreditpal.danaflash.App
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.LoadingTips
 import com.ecreditpal.danaflash.data.UserFace
+import com.ecreditpal.danaflash.helper.danaRequestResult
 import com.ecreditpal.danaflash.helper.writeDsData
 import com.ecreditpal.danaflash.net.dfApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -54,14 +54,12 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
         viewModelScope.launch(Dispatchers.Main) {
             LoadingTips.showLoading()
-            val res = withContext(Dispatchers.IO) {
-                kotlin.runCatching {
-                    dfApi().getVCode(phone.toString()).throwIfNotSuccess()
-                }.getOrNull()
+            val res = danaRequestResult {
+                dfApi().getVCode(phone.toString())
             }
             LoadingTips.dismissLoading()
 
-            if (res?.isSuccess() == true) {
+            if (res) {
                 startCountDown()
             } else {
                 ToastUtils.showLong(R.string.failed_to_get_verify_code)
