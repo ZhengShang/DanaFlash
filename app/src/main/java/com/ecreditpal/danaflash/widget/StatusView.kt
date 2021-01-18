@@ -45,6 +45,10 @@ class StatusView @JvmOverloads constructor(
     }
 
     private fun loadStatusChanged(combinedLoadStates: CombinedLoadStates) {
+        if (adapter?.itemCount ?: 0 > 0) {
+            visibility = View.GONE
+            return
+        }
         visibility = View.VISIBLE
         when (val loadState = combinedLoadStates.source.refresh) {
             is LoadState.Loading -> {
@@ -62,16 +66,12 @@ class StatusView @JvmOverloads constructor(
             }
             is LoadState.NotLoading -> {
                 //Show empty page
-                if (combinedLoadStates.append.endOfPaginationReached && adapter?.itemCount ?: 0 < 1) {
-                    progressBar.visibility = View.GONE
-                    button.visibility = View.GONE
-                    message.visibility = View.VISIBLE
-                    image.visibility = View.VISIBLE
-                    message.text = context.getString(R.string.content_empty)
-                    image.setImageResource(R.drawable.pic_empty)
-                } else {
-                    visibility = View.GONE
-                }
+                progressBar.visibility = View.GONE
+                button.visibility = View.GONE
+                message.visibility = View.VISIBLE
+                image.visibility = View.VISIBLE
+                message.text = context.getString(R.string.content_empty)
+                image.setImageResource(R.drawable.pic_empty)
             }
             else -> {
                 visibility = View.GONE

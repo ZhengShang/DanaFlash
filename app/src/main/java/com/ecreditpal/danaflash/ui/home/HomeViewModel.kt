@@ -48,6 +48,26 @@ class HomeViewModel : ViewModel() {
         }
         .cachedIn(viewModelScope)
 
+    /**
+     * 检查是否有GP产品
+     * @return true表示有GP产品
+     *          false表示没有GP产品
+     */
+    suspend fun isGpSupported(): Boolean {
+        return kotlin.runCatching {
+            dfApi().product(
+                mapOf(
+                    "pageIndex" to PAGE_FIRST,
+                    "pageSize" to 1,
+                    "selectIds" to "",
+                    "type" to 1,
+                    "orderType" to 1,
+                    "api" to 0
+                )
+            )
+        }.getOrNull()?.data?.list.isNullOrEmpty().not()
+    }
+
     fun getAd(title: String) {
         viewModelScope.launch {
             if (!checkRequestAdValid(title)) {

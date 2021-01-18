@@ -82,7 +82,7 @@ class AdDialog : BaseDialogFragment() {
         ) {
             holder?.imageView?.let {
                 setImageUrl(it, data)
-                it.setOnClickListener { v ->
+                it.setOnClickListener {
                     click.invoke(dataMap.getValue(data as String))
                 }
             }

@@ -15,7 +15,7 @@ class ProductAdapter :
     PagingDataAdapter<ProductUiModel, BindingViewHolder<*>>(DiffCallback()) {
 
     val productType = ObservableInt(PRODUCT_TYPE_API)
-    val bannerClick: ((clickType: Int) -> Unit)? = null
+    var bannerClick: ((clickType: Int) -> Unit)? = null
     var productClick: ((Int, product: ProductRes.Product?) -> Unit)? = null
 
     companion object {
