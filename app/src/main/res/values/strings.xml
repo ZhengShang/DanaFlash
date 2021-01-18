@@ -21,7 +21,7 @@
     <string name="get_verification_code">Get verification code</string>
     <string name="login">Login</string>
     <string name="reacquire">Reacquire</string>
-    <string name="login_privacy_declare">By logging in, you agree to Dana Flash\'s privacy agreement</string>
+    <string name="login_protocol_declare">By logging in, you agree to Dana Flash\'s Register protocol</string>
     <string name="failed_to_get_verify_code">Get verification code failed.</string>
     <string name="dismatch_phone_with_first_not_8">Please enter 9-13 digits starting with 8</string>
     <string name="failed_to_login">Login failed</string>

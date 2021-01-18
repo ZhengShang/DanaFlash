@@ -1,12 +1,21 @@
 package com.ecreditpal.danaflash.ui.login
 
+import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.text.Spannable
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.content.ContextCompat
+import androidx.core.text.toSpannable
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.ecreditpal.danaflash.BuildConfig
 import com.ecreditpal.danaflash.R
@@ -21,6 +30,8 @@ class LoginFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        activity?.window?.statusBarColor = Color.WHITE
+        BarUtils.setStatusBarLightMode(requireActivity(), true)
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
@@ -59,6 +70,37 @@ class LoginFragment : BaseFragment() {
                         true
                     }
                     else -> false
+                }
+            }
+
+            val declare = getString(R.string.login_protocol_declare)
+            val protocol = getString(R.string.register_protocol)
+            val index = declare.indexOf(protocol)
+            val clickableSpan = object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    findNavController().navigate(
+                        LoginFragmentDirections.actionLoginFragmentToPolicyFragment2(
+                            policyFileName = "register_policies.html",
+                            label = getString(R.string.register_protocol),
+                            hideTitle = false
+                        )
+                    )
+                }
+
+                override fun updateDrawState(ds: TextPaint) {
+                    super.updateDrawState(ds)
+                    ds.color = ContextCompat.getColor(view.context, R.color.dana_red)
+                }
+            }
+
+            privacyTips.movementMethod = LinkMovementMethod.getInstance()
+            privacyTips.text = declare.toSpannable().apply {
+                if (index != -1) {
+                    setSpan(
+                        clickableSpan, index,
+                        index + protocol.length,
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                    )
                 }
             }
         }

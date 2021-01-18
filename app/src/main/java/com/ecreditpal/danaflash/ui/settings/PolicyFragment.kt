@@ -7,8 +7,10 @@ import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
-import com.blankj.utilcode.util.ConvertUtils
+import androidx.core.content.ContextCompat
+import com.blankj.utilcode.util.BarUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.base.BaseNavActivity
@@ -19,15 +21,7 @@ class PolicyFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return TextView(context).apply {
-            movementMethod = ScrollingMovementMethod.getInstance()
-            setPadding(
-                ConvertUtils.dp2px(14f),
-                ConvertUtils.dp2px(18f),
-                ConvertUtils.dp2px(14f),
-                ConvertUtils.dp2px(25f)
-            )
-        }
+        return inflater.inflate(R.layout.fragment_policy, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,10 +29,23 @@ class PolicyFragment : BaseFragment() {
 
         val args = arguments?.let { PolicyFragmentArgs.fromBundle(it) } ?: return
         if (activity is BaseNavActivity) {
-            (activity as SettingsActivity).findViewById<TextView>(R.id.title).text = args.label
+            (activity as BaseNavActivity).findViewById<TextView>(R.id.title).text = args.label
         }
 
-        val textView = view as? TextView ?: return
+        val title = view.findViewById<TextView>(R.id.title)
+        view.findViewById<View>(R.id.title_bar).visibility =
+            if (args.hideTitle) View.GONE else {
+                activity?.window?.statusBarColor =
+                    ContextCompat.getColor(view.context, R.color.dana_red)
+                BarUtils.setStatusBarLightMode(requireActivity(), false)
+                title.text = args.label
+                View.VISIBLE
+            }
+
+        view.findViewById<ImageView>(R.id.back).setOnClickListener { activity?.onBackPressed() }
+
+        val textView = view.findViewById<TextView>(R.id.content)
+        textView.movementMethod = ScrollingMovementMethod.getInstance()
         val policyHtml = view.context.applicationContext.assets
             .open(args.policyFileName).bufferedReader()
             .use {
@@ -46,9 +53,9 @@ class PolicyFragment : BaseFragment() {
             }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             textView.text =
-                Html.fromHtml(policyHtml, Html.FROM_HTML_MODE_COMPACT);
+                Html.fromHtml(policyHtml, Html.FROM_HTML_MODE_COMPACT)
         } else {
-            textView.text = Html.fromHtml(policyHtml);
+            textView.text = Html.fromHtml(policyHtml)
         }
     }
 }

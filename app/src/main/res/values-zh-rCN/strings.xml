@@ -22,7 +22,7 @@
     <string name="get_verification_code">获取验证码</string>
     <string name="login">登陆</string>
     <string name="reacquire">重发验证码</string>
-    <string name="login_privacy_declare">登录即代表您同意Dana Flash的隐私协议</string>
+    <string name="login_protocol_declare">登录即代表您同意Dana Flash的注册协议</string>
     <string name="failed_to_get_verify_code">获取验证码失败</string>
     <string name="dismatch_phone_with_first_not_8">请输入8开头9-13位数字</string>
     <string name="failed_to_login">登陆失败</string>

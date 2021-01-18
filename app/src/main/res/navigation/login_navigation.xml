@@ -9,5 +9,29 @@
         android:id="@+id/loginFragment"
         android:name="com.ecreditpal.danaflash.ui.login.LoginFragment"
         android:label="LoginFragment"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_policyFragment2"
+            app:destination="@id/policyFragment2"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/policyFragment2"
+        android:name="com.ecreditpal.danaflash.ui.settings.PolicyFragment"
+        android:label="PolicyFragment"
+        tools:layout="@layout/fragment_policy">
+        <argument
+            android:name="policy_file_name"
+            app:argType="string" />
+        <argument
+            android:name="label"
+            app:argType="string" />
+        <argument
+            android:name="hideTitle"
+            app:argType="boolean"
+            android:defaultValue="true" />
+    </fragment>
 </navigation>

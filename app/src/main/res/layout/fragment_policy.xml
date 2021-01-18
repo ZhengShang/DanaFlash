@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/view_titlebar" />
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/def_edge_margin"
+        android:paddingTop="@dimen/def_edge_margin"
+        android:paddingEnd="@dimen/def_edge_margin"
+        android:paddingBottom="25dp"
+        android:textColor="@color/text"
+        tools:text="@string/privacy_policy" />
+</LinearLayout>
