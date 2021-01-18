@@ -46,4 +46,6 @@
     <string name="back">Back</string>
     <string name="refresh">Refresh</string>
     <string name="content_empty">No content</string>
+    <string name="feedback_success">The submission is successful, thanks for your feedback</string>
+    <string name="feedback_failed">Submission failed, please resubmit</string>
 </resources>

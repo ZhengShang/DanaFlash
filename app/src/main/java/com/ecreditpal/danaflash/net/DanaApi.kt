@@ -47,6 +47,11 @@ interface DanaApi {
     suspend fun getAds(
         @Query("title") title: String
     ): BaseResponse<AdRes>
+
+    @FormUrlEncoded
+    @POST("/adakita/feedback/add")
+    suspend fun feedback(@Field("content") content: String): BaseResponse<Void>
+
 }
 
 

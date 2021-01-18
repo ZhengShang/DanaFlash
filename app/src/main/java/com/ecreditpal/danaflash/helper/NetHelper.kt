@@ -10,3 +10,15 @@ suspend fun <T> danaRequest(block: suspend () -> BaseResponse<T>): T? {
     }
 
 }
+
+/**
+ * api请求结果, 已经处理了异常情况
+ */
+suspend fun <T> danaRequestResult(block: suspend () -> BaseResponse<T>): Boolean {
+    return runCatching {
+        withContext(Dispatchers.IO) {
+            block.invoke()
+        }
+    }.getOrNull()?.isSuccess() ?: false
+
+}

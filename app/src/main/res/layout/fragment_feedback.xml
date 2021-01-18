@@ -37,6 +37,7 @@
         <Button
             android:id="@+id/submit"
             style="@style/BottomButton"
+            android:enabled="@{input.text.length() > 0}"
             android:text="@string/submit" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

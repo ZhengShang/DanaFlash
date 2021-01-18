@@ -47,4 +47,6 @@
     <string name="back">返回</string>
     <string name="refresh">刷新</string>
     <string name="content_empty">没有内容</string>
+    <string name="feedback_success">提交成功, 感谢您的反馈</string>
+    <string name="feedback_failed">提交失败, 请重新提交</string>
 </resources>
