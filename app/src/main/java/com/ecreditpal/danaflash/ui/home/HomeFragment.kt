@@ -83,7 +83,6 @@ class HomeFragment : BaseFragment() {
             when (it.first) {
                 AD_TITLE_POP,
                 AD_TITLE_INDEX -> {
-                    binding.bannerLayout.image.visibility = View.GONE
                     setImageUrl(binding.bannerLayout.bg, IMAGE_PREFIX + url)
                     bannerClickUrl = clickUrl.combineH5Url()
                 }

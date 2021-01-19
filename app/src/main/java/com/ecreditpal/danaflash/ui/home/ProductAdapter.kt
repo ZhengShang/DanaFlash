@@ -11,14 +11,10 @@ import com.ecreditpal.danaflash.ui.comm.BindingViewHolder
 class ProductAdapter(
     private val productType: Int
 ) :
-    PagingDataAdapter<ProductRes.Product, BindingViewHolder<ItemProductBinding>>(DiffCallback()) {
+    PagingDataAdapter<ProductRes.Product, BindingViewHolder<ItemProductBinding>>(PRODUCT_COMPARATOR) {
 
     var productClick: ((Int, product: ProductRes.Product?) -> Unit)? = null
 
-    companion object {
-        const val PRODUCT_TYPE_API = 1
-        const val PRODUCT_TYPE_GP = 0
-    }
 
     override fun onBindViewHolder(holder: BindingViewHolder<ItemProductBinding>, position: Int) {
         holder.binding.apply {
@@ -36,20 +32,26 @@ class ProductAdapter(
     ): BindingViewHolder<ItemProductBinding> {
         return BindingViewHolder.create(parent, R.layout.item_product)
     }
-}
 
-internal class DiffCallback : DiffUtil.ItemCallback<ProductRes.Product>() {
-    override fun areItemsTheSame(
-        oldItem: ProductRes.Product,
-        newItem: ProductRes.Product
-    ): Boolean {
-        return oldItem.id == newItem.id
-    }
 
-    override fun areContentsTheSame(
-        oldItem: ProductRes.Product,
-        newItem: ProductRes.Product
-    ): Boolean {
-        return oldItem == newItem
+    companion object {
+        const val PRODUCT_TYPE_API = 1
+        const val PRODUCT_TYPE_GP = 0
+
+        private val PRODUCT_COMPARATOR = object : DiffUtil.ItemCallback<ProductRes.Product>() {
+            override fun areItemsTheSame(
+                oldItem: ProductRes.Product,
+                newItem: ProductRes.Product
+            ): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(
+                oldItem: ProductRes.Product,
+                newItem: ProductRes.Product
+            ): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 }
