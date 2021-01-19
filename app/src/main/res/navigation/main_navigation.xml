@@ -3,32 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/mainFragment">
 
-    <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.ecreditpal.danaflash.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/view_pull_list">
-        <action
-            android:id="@+id/action_navigation_home_to_productActivity"
-            app:destination="@id/productActivity" />
-    </fragment>
-    <fragment
-        android:id="@+id/navigation_personal"
-        android:name="com.ecreditpal.danaflash.ui.personal.PersonalFragment"
-        android:label="PersonalFragment"
-        tools:layout="@layout/fragment_personal">
-        <action
-            android:id="@+id/action_navigation_personal_to_settingsActivity"
-            app:destination="@id/settingsActivity" />
-        <action
-            android:id="@+id/action_navigation_personal_to_feedbackActivity"
-            app:destination="@id/feedbackActivity" />
-        <action
-            android:id="@+id/action_navigation_personal_to_ordersActivity"
-            app:destination="@id/ordersActivity" />
-    </fragment>
     <activity
         android:id="@+id/settingsActivity"
         android:name="com.ecreditpal.danaflash.ui.settings.SettingsActivity"
@@ -86,6 +62,24 @@
     <action
         android:id="@+id/action_global_updateDialog2"
         app:destination="@id/updateDialog2" />
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.ecreditpal.danaflash.ui.home.MainFragment"
+        android:label="MainFragment"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_mainFragment_to_productActivity"
+            app:destination="@id/productActivity" />
+        <action
+            android:id="@+id/action_mainFragment_to_settingsActivity"
+            app:destination="@id/settingsActivity" />
+        <action
+            android:id="@+id/action_mainFragment_to_feedbackActivity"
+            app:destination="@id/feedbackActivity" />
+        <action
+            android:id="@+id/action_mainFragment_to_ordersActivity"
+            app:destination="@id/ordersActivity" />
+    </fragment>
 
 
 </navigation>

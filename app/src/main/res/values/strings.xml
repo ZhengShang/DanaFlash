@@ -25,7 +25,8 @@
     <string name="failed_to_get_verify_code">Get verification code failed.</string>
     <string name="dismatch_phone_with_first_not_8">Please enter 9-13 digits starting with 8</string>
     <string name="failed_to_login">Login failed</string>
-    <string name="loan">Loan</string>
+    <string name="loan_now">Loan now</string>
+    <string name="download">Download</string>
     <string name="update_now">Update now</string>
     <string name="new_version_detect_and_update">There is a new version, go to update</string>
     <string name="your_app_is_newest">Your app is already the latest version</string>

@@ -11,42 +11,36 @@ import com.ecreditpal.danaflash.helper.danaRequest
 import com.ecreditpal.danaflash.helper.readDsData
 import com.ecreditpal.danaflash.helper.writeDsData
 import com.ecreditpal.danaflash.model.AdRes
-import com.ecreditpal.danaflash.model.ProductUiModel
+import com.ecreditpal.danaflash.model.ProductRes
 import com.ecreditpal.danaflash.net.dfApi
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
 
-    val adLiveData = MutableLiveData<AdRes>()
+    /**
+     * 广告
+     * 第一部分string是指请求的title, 需要根据这个区分, 因为api和gp产品不需要弹窗, 只需要显示对应图片就行
+     * 第二部分是具体的数据model
+     */
+    val adLiveData = MutableLiveData<Pair<String, AdRes>>()
 
-    val flow = Pager(
-        PagingConfig(pageSize = PAGE_SIZE)
-    ) {
-        ProductPagingSource(
-            mutableMapOf(
-                "type" to 1,
-                "orderType" to 1
+    val apiFlow = buildFlow(ProductAdapter.PRODUCT_TYPE_API)
+    val gpFlow = buildFlow(ProductAdapter.PRODUCT_TYPE_GP)
+    private fun buildFlow(api: Int): Flow<PagingData<ProductRes.Product>> {
+        return Pager(
+            PagingConfig(pageSize = PAGE_SIZE)
+        ) {
+            ProductPagingSource(
+                mutableMapOf(
+                    "type" to 1,
+                    "orderType" to 1,
+                    "api" to api
+                )
             )
-        )
-    }.flow
-        .map { pagingData -> pagingData.map { ProductUiModel.ProductItem(it) } }
-        .map {
-            it.insertSeparators { before, after ->
-                if (after == null) {
-                    // we're at the end of the list
-                    return@insertSeparators null
-                }
-
-                if (before == null) {
-                    // we're at the beginning of the list
-                    return@insertSeparators ProductUiModel.BannerItem("banner desc")
-                } else {
-                    null
-                }
-            }
-        }
-        .cachedIn(viewModelScope)
+        }.flow
+            .cachedIn(viewModelScope)
+    }
 
     /**
      * 检查是否有GP产品
@@ -79,7 +73,7 @@ class HomeViewModel : ViewModel() {
                     dfApi().getAds(title).throwIfNotSuccess()
                 }
             }.getOrNull()?.let {
-                adLiveData.value = it
+                adLiveData.value = Pair(title, it)
                 writeLastAdShowStamp(title)
             }
         }
@@ -93,10 +87,10 @@ class HomeViewModel : ViewModel() {
     private suspend fun checkRequestAdValid(title: String): Boolean {
         val key = when (title) {
             AD_TITLE_APIPOP -> DataStoreKeys.AD_APIPOP_LAST_STAMP
-            AD_TITLE_POP -> DataStoreKeys.AD_POP_LAST_STAMP
-            AD_TITLE_INDEX -> DataStoreKeys.AD_INDEX_LAST_STAMP
+//            AD_TITLE_POP -> DataStoreKeys.AD_POP_LAST_STAMP
+//            AD_TITLE_INDEX -> DataStoreKeys.AD_INDEX_LAST_STAMP
             AD_TITLE_PERSONALPOP -> DataStoreKeys.AD_PERSONALPOP_LAST_STAMP
-            else -> throw IllegalArgumentException("No supported ad title")
+            else -> return true // FIXME: 2021/1/19 暂时其他类型不检测, 允许请求
         }
 
         val lastTramp = App.context.readDsData(key, 0)

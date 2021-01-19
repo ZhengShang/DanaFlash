@@ -7,6 +7,12 @@
 
         <import type="com.ecreditpal.danaflash.data.ComConsKt" />
 
+        <import type="com.ecreditpal.danaflash.ui.home.ProductAdapter" />
+
+        <variable
+            name="type"
+            type="Integer" />
+
         <variable
             name="info"
             type="com.ecreditpal.danaflash.model.ProductRes.Product" />
@@ -135,12 +141,13 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:stateListAnimator="@animator/press_alpha2down"
-            android:text="@string/loan"
+            android:text="@{type == ProductAdapter.PRODUCT_TYPE_API ? @string/loan_now : @string/download}"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/border1" />
+            app:layout_constraintTop_toBottomOf="@id/border1"
+            tools:text="@string/loan_now" />
 
         <TextView
             android:id="@+id/summary"

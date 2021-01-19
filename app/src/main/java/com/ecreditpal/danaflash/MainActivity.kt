@@ -9,15 +9,15 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import androidx.navigation.ui.setupWithNavController
 import androidx.work.*
 import com.ecreditpal.danaflash.base.BaseActivity
+import com.ecreditpal.danaflash.data.AD_TITLE_APIPOP
+import com.ecreditpal.danaflash.data.AD_TITLE_PERSONALPOP
 import com.ecreditpal.danaflash.helper.readDsData
-import com.ecreditpal.danaflash.ui.home.HomeFragmentDirections
 import com.ecreditpal.danaflash.ui.home.HomeViewModel
+import com.ecreditpal.danaflash.ui.home.MainFragmentDirections
 import com.ecreditpal.danaflash.ui.settings.VersionViewModel
 import com.ecreditpal.danaflash.worker.UploadContactsWorker
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
@@ -27,10 +27,10 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val navView = findViewById<BottomNavigationView>(R.id.nav_view)
+//        val navView = findViewById<BottomNavigationView>(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        navView.setupWithNavController(navController)
+//        navView.setupWithNavController(navController)
 
         lifecycleScope.launch {
             val showTips = readDsData(DataStoreKeys.IS_SHOW_PERMISSION_TIPS, true)
@@ -44,9 +44,11 @@ class MainActivity : BaseActivity() {
 
         val homeViewModel: HomeViewModel by viewModels()
         homeViewModel.adLiveData.observe(this) {
-            navController.navigate(
-                HomeFragmentDirections.actionGlobalAdDialog(it)
-            )
+            if (it.first == AD_TITLE_APIPOP || it.first == AD_TITLE_PERSONALPOP) {
+                navController.navigate(
+                    MainFragmentDirections.actionGlobalAdDialog(it.second)
+                )
+            }
         }
 
         val versionViewModel: VersionViewModel by viewModels()

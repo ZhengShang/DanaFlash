@@ -12,6 +12,7 @@ import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.data.AD_TITLE_PERSONALPOP
 import com.ecreditpal.danaflash.databinding.FragmentPersonalBinding
 import com.ecreditpal.danaflash.ui.home.HomeViewModel
+import com.ecreditpal.danaflash.ui.home.MainFragmentDirections
 
 class PersonalFragment : BaseFragment() {
 
@@ -42,7 +43,7 @@ class PersonalFragment : BaseFragment() {
 
     fun nav(status: Int) {
         findNavController().navigate(
-            PersonalFragmentDirections.actionNavigationPersonalToOrdersActivity(status)
+            MainFragmentDirections.actionMainFragmentToOrdersActivity(status)
         )
     }
 }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.ecreditpal.danaflash.ui.home.ProductAdapter" />
+
+        <variable
+            name="type"
+            type="androidx.databinding.ObservableInt" />
+    </data>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/banner_layout"
+                    layout="@layout/view_home_banner"
+                    bind:type="@{type}" />
+
+                <include
+                    android:id="@+id/api_list"
+                    layout="@layout/view_recycler_status"
+                    android:visibleGone="@{type == ProductAdapter.PRODUCT_TYPE_API}" />
+
+                <include
+                    android:id="@+id/gp_list"
+                    layout="@layout/view_recycler_status"
+                    android:visibleGone="@{type == ProductAdapter.PRODUCT_TYPE_GP}" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</layout>
