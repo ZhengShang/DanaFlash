@@ -31,13 +31,18 @@ class AdDialog : BaseDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adRes: AdRes = arguments?.let { AdDialogArgs.fromBundle(it).adRes } ?: return
+        val adRes: AdRes? = arguments?.let { AdDialogArgs.fromBundle(it).adRes }
 
-        val dataMap = adRes.imgs
+        val dataMap = adRes?.imgs
             ?.filterNotNull()
             ?.filter { it.img.isNullOrEmpty().not() }
             ?.associateBy({ IMAGE_PREFIX.plus(it.img) }, { it.url.combineH5Url() })
             ?: return
+
+        if (dataMap.isNullOrEmpty()) {
+            dismiss()
+            return
+        }
 
         view.findViewById<Banner<String, BannerAdapter>>(R.id.banner).apply {
             addBannerLifecycleObserver(this@AdDialog)

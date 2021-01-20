@@ -56,7 +56,9 @@ class MainActivity : BaseActivity() {
 
         val versionViewModel: VersionViewModel by viewModels()
         versionViewModel.versionRes.observe(this) {
-            navController.navigate(R.id.action_global_updateDialog2)
+            navController.navigate(
+                MainFragmentDirections.actionGlobalUpdateDialog2(it)
+            )
         }
         versionViewModel.checkVersion()
     }

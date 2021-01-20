@@ -6,13 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseDialogFragment
 import com.ecreditpal.danaflash.databinding.DialogUpdateBinding
-import com.ecreditpal.danaflash.ui.settings.VersionViewModel
 
 class UpdateDialog : BaseDialogFragment() {
     override fun onCreateView(
@@ -26,11 +24,13 @@ class UpdateDialog : BaseDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val versionVm = ViewModelProvider(requireActivity()).get(VersionViewModel::class.java)
-
         val versionRes = arguments?.let {
             UpdateDialogArgs.fromBundle(it).versionRes
-        } ?: return
+        }
+        if (versionRes == null) {
+            dismiss()
+            return
+        }
         isCancelable = versionRes.updateStatus != 2
 
         val binding = DialogUpdateBinding.bind(view)

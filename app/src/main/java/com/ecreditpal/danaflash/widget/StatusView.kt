@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingDataAdapter
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ecreditpal.danaflash.R
 import retrofit2.HttpException
 import java.io.IOException
@@ -39,9 +40,21 @@ class StatusView @JvmOverloads constructor(
         }
     }
 
-    fun <T : PagingDataAdapter<*, *>> bindAdapter(pageAdapter: T) {
+    fun <T : PagingDataAdapter<*, *>> bindAdapter(
+        pageAdapter: T,
+        refreshLayout: SwipeRefreshLayout? = null
+    ) {
         adapter = pageAdapter
-        pageAdapter.addLoadStateListener { loadStatusChanged(it) }
+
+        refreshLayout?.setOnRefreshListener {
+            pageAdapter.refresh()
+        }
+        pageAdapter.addLoadStateListener {
+            if (it.source.refresh !is LoadState.Loading) {
+                refreshLayout?.isRefreshing = false
+            }
+            loadStatusChanged(it)
+        }
     }
 
     private fun loadStatusChanged(combinedLoadStates: CombinedLoadStates) {

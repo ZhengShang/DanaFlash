@@ -53,16 +53,12 @@ class MyOrdersFragment : BaseFragment() {
         return View.inflate(context, R.layout.view_pull_list, null).apply {
             val adapter = OrderAdapter()
             val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
-            swipeRefreshLayout.setOnRefreshListener {
-                adapter.refresh()
-            }
-            findViewById<StatusView>(R.id.status_view).bindAdapter(adapter)
+            findViewById<StatusView>(R.id.status_view).bindAdapter(adapter, swipeRefreshLayout)
             val recyclerView = findViewById<RecyclerView>(R.id.recycler)
             recyclerView.adapter = adapter
             lifecycleScope.launch {
                 orderViewModel.getOrderByStatus(status).collectLatest {
                     adapter.submitData(it)
-                    swipeRefreshLayout.isRefreshing = false
                 }
             }
         } ?: View(context)

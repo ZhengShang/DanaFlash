@@ -54,14 +54,6 @@ class HomeFragment : BaseFragment() {
         binding.lifecycleOwner = this
         binding.type = type
 
-        binding.swipeRefresh.setOnRefreshListener {
-            if (type.get() == ProductAdapter.PRODUCT_TYPE_API) {
-                apiAdapter.refresh()
-            } else {
-                gpAdapter.refresh()
-            }
-        }
-
         initList(binding.apiList, ProductAdapter.PRODUCT_TYPE_API)
         initList(binding.gpList, ProductAdapter.PRODUCT_TYPE_GP)
 
@@ -115,7 +107,8 @@ class HomeFragment : BaseFragment() {
             isNestedScrollingEnabled = true
         }
 
-        view.findViewById<StatusView>(R.id.status_view).bindAdapter(pageAdapter)
+        view.findViewById<StatusView>(R.id.status_view)
+            .bindAdapter(pageAdapter, binding.swipeRefresh)
 
         lifecycleScope.launch(Dispatchers.IO) {
             val flow: Flow<PagingData<ProductRes.Product>> =
@@ -126,7 +119,6 @@ class HomeFragment : BaseFragment() {
                 }
             flow.collectLatest {
                 pageAdapter.submitData(it)
-                binding.swipeRefresh.isRefreshing = false
             }
         }
     }

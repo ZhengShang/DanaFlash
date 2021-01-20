@@ -57,8 +57,12 @@
     <dialog
         android:id="@+id/updateDialog2"
         android:name="com.ecreditpal.danaflash.ui.comm.UpdateDialog"
-        tools:layout="@layout/dialog_update"
-        android:label="UpdateDialog" />
+        android:label="UpdateDialog"
+        tools:layout="@layout/dialog_update">
+        <argument
+            android:name="versionRes"
+            app:argType="com.ecreditpal.danaflash.model.VersionRes" />
+    </dialog>
     <action
         android:id="@+id/action_global_updateDialog2"
         app:destination="@id/updateDialog2" />
