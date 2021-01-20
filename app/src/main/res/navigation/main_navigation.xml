@@ -83,7 +83,14 @@
         <action
             android:id="@+id/action_mainFragment_to_ordersActivity"
             app:destination="@id/ordersActivity" />
+        <action
+            android:id="@+id/action_mainFragment_to_faqActivity"
+            app:destination="@id/faqActivity" />
     </fragment>
+    <activity
+        android:id="@+id/faqActivity"
+        android:name="com.ecreditpal.danaflash.ui.faq.FaqActivity"
+        android:label="FaqActivity" />
 
 
 </navigation>
