@@ -10,7 +10,7 @@ class RequestInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        return addToken(chain, request)!!
+        return addHeaders(chain, request)!!
     }
 
     /**
@@ -18,7 +18,7 @@ class RequestInterceptor : Interceptor {
      * @return response
      */
     @Throws(IOException::class)
-    private fun addToken(chain: Interceptor.Chain, request: Request): Response? {
+    private fun addHeaders(chain: Interceptor.Chain, request: Request): Response? {
         val q = request.newBuilder()
             .addHeader("phone", UserFace.phone)
             .addHeader("token", UserFace.token)

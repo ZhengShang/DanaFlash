@@ -1,6 +1,5 @@
 package com.ecreditpal.danaflash.ui.login
 
-import DataStoreKeys
 import android.app.Application
 import android.os.CountDownTimer
 import android.text.Editable
@@ -10,12 +9,10 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.ecreditpal.danaflash.App
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.LoadingTips
 import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.helper.danaRequestResult
-import com.ecreditpal.danaflash.helper.writeDsData
 import com.ecreditpal.danaflash.net.dfApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -83,12 +80,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             LoadingTips.dismissLoading()
 
             if (res?.isSuccess() == true) {
-                viewModelScope.launch(Dispatchers.IO) {
-                    UserFace.token = res.data?.token ?: ""
-                    UserFace.phone = res.data?.number ?: ""
-                    App.context.writeDsData(DataStoreKeys.TOKEN, res.data?.token ?: "")
-                    App.context.writeDsData(DataStoreKeys.PHONE, res.data?.nationalNumber ?: "")
-                }
+                UserFace.token = res.data?.token ?: ""
+                UserFace.phone = res.data?.nationalNumber ?: ""
                 loginResult.value = true
             } else {
                 ToastUtils.showLong(R.string.failed_to_login)

@@ -7,6 +7,7 @@ object DataStoreKeys {
     val IS_UPLOAD_CONTACTS = preferencesKey<Boolean>("is_upload_contacts")
     val TOKEN = preferencesKey<String>("token")
     val PHONE = preferencesKey<String>("phone")
+    val DEVICE_ID = preferencesKey<String>("device_id")
 
     //广告上次显示的时间戳
     val AD_APIPOP_LAST_STAMP = preferencesKey<Long>("ad_apipop_last_stamp")
