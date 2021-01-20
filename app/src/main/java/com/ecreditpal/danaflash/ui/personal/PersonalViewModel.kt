@@ -6,5 +6,5 @@ import com.ecreditpal.danaflash.data.UserFace
 
 class PersonalViewModel : ViewModel() {
 
-    val phone = liveData<String> { UserFace.phone }
+    val phone = liveData { emit(UserFace.phone) }
 }

@@ -12,26 +12,32 @@ object UserFace {
 
     var token: String = ""
         set(value) {
-            GlobalScope.launch(Dispatchers.IO) {
-                App.context.writeDsData(DataStoreKeys.TOKEN, value)
+            if (field != value) {
+                GlobalScope.launch(Dispatchers.IO) {
+                    App.context.writeDsData(DataStoreKeys.TOKEN, value)
+                }
+                field = value
             }
-            field = value
         }
 
     var phone: String = ""
         set(value) {
-            GlobalScope.launch(Dispatchers.IO) {
-                App.context.writeDsData(DataStoreKeys.PHONE, value)
+            if (field != value) {
+                GlobalScope.launch(Dispatchers.IO) {
+                    App.context.writeDsData(DataStoreKeys.PHONE, value)
+                }
+                field = value
             }
-            field = value
         }
 
     var deviceId: String = ""
         set(value) {
-            GlobalScope.launch(Dispatchers.IO) {
-                App.context.writeDsData(DataStoreKeys.DEVICE_ID, value)
+            if (field != value) {
+                GlobalScope.launch(Dispatchers.IO) {
+                    App.context.writeDsData(DataStoreKeys.DEVICE_ID, value)
+                }
+                field = value
             }
-            field = value
         }
 
     fun isLogin(): Boolean {
@@ -51,13 +57,8 @@ object UserFace {
     }
 
     fun clearData() {
-        GlobalScope.launch(Dispatchers.IO) {
-            token = ""
-            phone = ""
-            deviceId = ""
-            App.context.writeDsData(DataStoreKeys.TOKEN, "")
-            App.context.writeDsData(DataStoreKeys.PHONE, "")
-            App.context.writeDsData(DataStoreKeys.DEVICE_ID, "")
-        }
+        token = ""
+        phone = ""
+        deviceId = ""
     }
 }

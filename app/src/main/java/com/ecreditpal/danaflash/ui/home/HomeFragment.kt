@@ -57,6 +57,15 @@ class HomeFragment : BaseFragment() {
         initList(binding.apiList, ProductAdapter.PRODUCT_TYPE_API)
         initList(binding.gpList, ProductAdapter.PRODUCT_TYPE_GP)
 
+        //重新设置一边, 覆盖statusView里面的设置. 因为这里需要区分不同的产品来刷新
+        binding.swipeRefresh.setOnRefreshListener {
+            if (type.get() == ProductAdapter.PRODUCT_TYPE_API) {
+                apiAdapter.refresh()
+            } else {
+                gpAdapter.refresh()
+            }
+        }
+
         binding.bannerLayout.root.setOnClickListener {
             WebActivity.loadUrl(context, bannerClickUrl)
         }

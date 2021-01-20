@@ -155,6 +155,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:drawablePadding="4dp"
+            android:text="@{info.summary}"
             android:textColor="@color/sub_text"
             android:textSize="12sp"
             android:visibility="gone"
@@ -164,6 +165,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/loan"
-            tools:text="Persen approval 95%/Area dixukung selurgh" />
+            tools:text="Persen approval 95%/Area dixukung selurgh"
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
