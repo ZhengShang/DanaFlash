@@ -9,18 +9,5 @@
         android:id="@+id/productDetailFragment"
         android:name="com.ecreditpal.danaflash.ui.detail.ProductDetailFragment"
         android:label=""
-        tools:layout="@layout/fragment_product_detail">
-        <action
-            android:id="@+id/action_productDetailFragment_to_takePictureFragment"
-            app:destination="@id/takePictureFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-    </fragment>
-    <fragment
-        android:id="@+id/takePictureFragment"
-        android:name="com.ecreditpal.danaflash.ui.detail.TakePictureFragment"
-        android:label="@string/photo_authentication"
-        tools:layout="@layout/fragment_take_picture" />
+        tools:layout="@layout/fragment_product_detail" />
 </navigation>

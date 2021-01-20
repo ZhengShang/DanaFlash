@@ -1,5 +1,6 @@
 package com.ecreditpal.danaflash.ui.personal
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +9,11 @@ import androidx.activity.addCallback
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.ecreditpal.danaflash.BuildConfig
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.data.AD_TITLE_PERSONALPOP
 import com.ecreditpal.danaflash.databinding.FragmentPersonalBinding
+import com.ecreditpal.danaflash.ui.camera.CameraActivity
 import com.ecreditpal.danaflash.ui.home.HomeViewModel
 import com.ecreditpal.danaflash.ui.home.MainFragmentDirections
 
@@ -38,6 +41,14 @@ class PersonalFragment : BaseFragment() {
         binding.lifecycleOwner = this
         binding.pf = this
         binding.vm = personalViewModel
+
+        // FIXME: 2021/1/20 test only
+        if (BuildConfig.DEBUG) {
+            binding.avatar.setOnClickListener {
+                startActivity(Intent(context, CameraActivity::class.java))
+            }
+        }
+
         return binding.root
     }
 

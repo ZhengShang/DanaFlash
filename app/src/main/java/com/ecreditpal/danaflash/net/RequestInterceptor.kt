@@ -23,6 +23,7 @@ class RequestInterceptor : Interceptor {
             .addHeader("phone", UserFace.phone)
             .addHeader("token", UserFace.token)
             .addHeader("appName", "DanaFlash")
+            .addHeader("deviceId", UserFace.deviceId)
             .build()
         return chain.proceed(q)
     }

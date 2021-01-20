@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.blankj.utilcode.util.ScreenUtils
 import com.ecreditpal.danaflash.App
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseDialogFragment
@@ -14,6 +15,7 @@ class ConfirmDialog(
     private val contentStr: String? = null,
     private val positiveStr: String = App.context.getString(R.string.confirm),
     private val negativeStr: String = App.context.getString(R.string.cancel),
+    private val negativeClickListener: (() -> Unit)? = null,
     private val positiveClickListener: (() -> Unit)? = null
 ) : BaseDialogFragment() {
     override fun onCreateView(
@@ -31,11 +33,25 @@ class ConfirmDialog(
             content.text = contentStr
             cancel.text = negativeStr
             confirm.text = positiveStr
-            cancel.setOnClickListener { dismiss() }
+            cancel.setOnClickListener {
+                negativeClickListener?.invoke()
+                dismiss()
+            }
             confirm.setOnClickListener {
                 positiveClickListener?.invoke()
                 dismiss()
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.apply {
+            setBackgroundDrawableResource(R.drawable.shape_product_card)
+            setLayout(
+                (ScreenUtils.getScreenWidth() * 0.77f).toInt(),
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
         }
     }
 }

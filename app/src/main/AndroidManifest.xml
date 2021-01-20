@@ -2,10 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ecreditpal.danaflash">
 
+    <uses-feature android:name="android.hardware.camera.any" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -39,6 +43,7 @@
         <activity android:name=".ui.orders.OrdersActivity" />
         <activity android:name=".ui.comm.WebActivity" />
         <activity android:name=".ui.faq.FaqActivity" />
+        <activity android:name=".ui.camera.CameraActivity" />
     </application>
 
 </manifest>
