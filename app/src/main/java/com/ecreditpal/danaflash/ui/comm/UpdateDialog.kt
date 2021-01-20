@@ -31,11 +31,13 @@ class UpdateDialog : BaseDialogFragment() {
         val versionRes = arguments?.let {
             UpdateDialogArgs.fromBundle(it).versionRes
         } ?: return
-//        isCancelable = versionRes.updateStatus != 2
+        isCancelable = versionRes.updateStatus != 2
 
         val binding = DialogUpdateBinding.bind(view)
         binding.lifecycleOwner = this
         binding.versionRes = versionRes
+        binding.close.setOnClickListener { dismiss() }
+        binding.close.visibility = if (isCancelable) View.VISIBLE else View.GONE
         binding.update.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse(versionRes.link)
