@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">DanaFlash</string>
+    <string name="empty_string" translatable="false" />
     <string name="title_home">Home</string>
     <string name="title_personal">Personal</string>
     <string name="disagree">Disagree</string>
@@ -52,5 +53,27 @@
     <string name="failed_to_open_camera_without_permission">Please grant camera permission before you can use the camera</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
-    <string name="photo_authentication">Photo authentication</string>
+    <string name="bank_account_no_colon">Bank Account no:</string>
+    <string name="paid_in_full_colon">Amount to be paid in full:</string>
+    <string name="payment_deadline_colon">Payment deadline:</string>
+    <string name="rebind_card">Rebind card</string>
+    <string name="derating_confirm">Derating confirm</string>
+    <string name="i_want_to_repay">I want to repay</string>
+    <string name="borrow_another_order">Borrow another order</string>
+    <string name="i_want_to_extend">I want to extend</string>
+    <string name="order_status_all"></string>
+    <string name="order_status_pushing"></string>
+    <string name="order_status_audit_failed"></string>
+    <string name="order_status_apply_failed"></string>
+    <string name="order_status_loan_success"></string>
+    <string name="order_status_repaymenting"></string>
+    <string name="order_status_overdue"></string>
+    <string name="order_status_repaymented"></string>
+    <string name="order_status_checked"></string>
+    <string name="order_status_audit_success"></string>
+    <string name="order_status_canceled"></string>
+    <string name="order_status_verification_failed"></string>
+    <string name="order_status_loan_failed"></string>
+    <string name="order_status_manual_audit"></string>
+    <string name="order_app_status_order_cancel"></string>
 </resources>

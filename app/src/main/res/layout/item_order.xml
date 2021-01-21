@@ -52,6 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/def_edge_margin"
+            android:text='@{"current status is " + info.status}'
             android:textColor="@color/sub_text"
             app:layout_constraintBottom_toBottomOf="@id/name"
             app:layout_constraintEnd_toEndOf="parent"
@@ -130,6 +131,84 @@
             app:layout_constraintTop_toTopOf="@id/loan_term"
             tools:text="7 Hari" />
 
+        <TextView
+            android:id="@+id/bank_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="8dp"
+            android:text="@string/bank_account_no_colon"
+            android:textColor="@color/summary"
+            android:textSize="16sp"
+            android:visibleGone="@{info.moreInfoVisible()}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/loan_term" />
+
+        <TextView
+            android:id="@+id/bank_account_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:text="@{info.debitBankCard}"
+            android:textColor="@color/text"
+            android:textSize="16sp"
+            android:visibleGone="@{info.moreInfoVisible()}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/bank_account"
+            tools:text="Bank BIN (6759)" />
+
+        <TextView
+            android:id="@+id/paid_in_full"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="8dp"
+            android:text="@string/paid_in_full_colon"
+            android:textColor="@color/summary"
+            android:textSize="16sp"
+            android:visibleGone="@{info.moreInfoVisible()}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bank_account" />
+
+        <TextView
+            android:id="@+id/paid_in_full_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:text="@{info.currentRepaymentAmount.toString()}"
+            android:textColor="@color/text"
+            android:textSize="16sp"
+            android:visibleGone="@{info.moreInfoVisible()}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/paid_in_full"
+            tools:text="Rp.560.000" />
+
+        <TextView
+            android:id="@+id/payment_deadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="8dp"
+            android:text="@string/payment_deadline_colon"
+            android:textColor="@color/summary"
+            android:textSize="16sp"
+            android:visibleGone="@{info.moreInfoVisible()}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/paid_in_full" />
+
+        <TextView
+            android:id="@+id/payment_deadline_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:text="@{info.repaymentTime}"
+            android:textColor="@color/text"
+            android:textSize="16sp"
+            android:visibleGone="@{info.moreInfoVisible()}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/payment_deadline"
+            tools:text="2019.09.09" />
+
         <View
             android:id="@+id/divider1"
             android:layout_width="match_parent"
@@ -138,7 +217,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="@dimen/def_edge_margin"
             android:background="@color/divider"
-            app:layout_constraintTop_toBottomOf="@id/loan_term" />
+            android:visibleGone="@{info.lineBtnVisible() || info.twoBtnVisible()}"
+            app:layout_constraintTop_toBottomOf="@id/payment_deadline" />
 
         <TextView
             android:id="@+id/line_button"
@@ -148,9 +228,11 @@
             android:layout_marginEnd="@dimen/def_edge_margin"
             android:gravity="center"
             android:stateListAnimator="@animator/press_alpha2down"
+            android:text='@{info.lineBtnTextRes() == 0 ? "" : context.getString(info.lineBtnTextRes)}'
             android:textColor="@color/dana_purple"
             android:textSize="17sp"
             android:textStyle="bold"
+            android:visibleGone="@{info.lineBtnVisible()}"
             app:layout_constraintTop_toBottomOf="@id/divider1"
             tools:text="Pinjam Kembali" />
 
@@ -159,6 +241,7 @@
             android:layout_width="1dp"
             android:layout_height="0dp"
             android:background="@color/divider"
+            android:visibleGone="@{info.twoBtnVisible()}"
             app:layout_constraintBottom_toBottomOf="@id/left_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -171,9 +254,11 @@
             android:layout_marginStart="@dimen/def_edge_margin"
             android:gravity="center"
             android:stateListAnimator="@animator/press_alpha2down"
+            android:text="@string/i_want_to_extend"
             android:textColor="@color/dana_purple"
             android:textSize="17sp"
             android:textStyle="bold"
+            android:visibleGone="@{info.twoBtnVisible()}"
             app:layout_constraintEnd_toStartOf="@id/divider2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider1"
@@ -187,9 +272,11 @@
             android:layout_marginEnd="@dimen/def_edge_margin"
             android:gravity="center"
             android:stateListAnimator="@animator/press_alpha2down"
+            android:text="@string/i_want_to_repay"
             android:textColor="@color/dana_purple"
             android:textSize="17sp"
             android:textStyle="bold"
+            android:visibleGone="@{info.twoBtnVisible()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/divider2"
             app:layout_constraintTop_toBottomOf="@id/divider1"

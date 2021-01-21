@@ -1,5 +1,7 @@
 package com.ecreditpal.danaflash.model
 
+import com.ecreditpal.danaflash.R
+import com.ecreditpal.danaflash.data.OrderStatus
 import java.math.BigDecimal
 
 data class OrderRes(
@@ -36,6 +38,54 @@ data class OrderRes(
                 "Day"
             }
         )
+    }
+
+    fun statusStringRes() = when (status) {
+        OrderStatus.ALL -> R.string.OrderStatus.STATUS_PUSHING
+        -> R.string.OrderStatus.STATUS_AUDIT_FAILED
+        -> R.string.OrderStatus.STATUS_APPLY_FAILED
+        -> R.string.OrderStatus.STATUS_LOAN_SUCCESS
+        -> R.string.OrderStatus.STATUS_REPAYMENTING
+        -> R.string.OrderStatus.STATUS_OVERDUE
+        -> R.string.OrderStatus.STATUS_REPAYMENTED
+        -> R.string.OrderStatus.STATUS_CHECKED
+        -> R.string.OrderStatus.STATUS_AUDIT_SUCCESS
+        -> R.string.OrderStatus.STATUS_CANCELED
+        -> R.string.OrderStatus.STATUS_VERIFICATION_FAILED
+        -> R.string.OrderStatus.STATUS_LOAN_FAILED
+        -> R.string.OrderStatus.STATUS_MANUAL_AUDIT
+        -> R.string.OrderStatus.APP_STATUS_ORDER_CANCEL
+        -> R.string.
+        else -> R.string.empty_string
+    }
+
+    /**
+     * 到账银行卡, 应还金额, 到期日等是否显示
+     */
+    fun moreInfoVisible() = status == 5 || status == 6 || status == 7
+
+    fun lineBtnVisible(): Boolean {
+        return (status == 1 && fillStatus == 0)
+                || status == 8
+                || (status == 5 && allowDelay == 0)
+                || (status == 6 && allowDelay == 0)
+                || (status == 7 && cooperation == 1)
+    }
+
+    fun lineBtnTextRes(): Int {
+        return when {
+            (status == 1 && fillStatus == 0) -> R.string.rebind_card
+            status == 8 -> R.string.derating_confirm
+            (status == 5 && allowDelay == 0) ||
+                    (status == 6 && allowDelay == 0) -> R.string.i_want_to_repay
+            (status == 7 && cooperation == 1) -> R.string.borrow_another_order
+            else -> R.string.empty_string
+        }
+    }
+
+    fun twoBtnVisible(): Boolean {
+        return (status == 5 && allowDelay == 1)
+                || (status == 5 && allowDelay == 1)
     }
 
     data class Bank(
