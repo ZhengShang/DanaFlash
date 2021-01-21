@@ -61,4 +61,21 @@
     <string name="i_want_to_repay">我要还款</string>
     <string name="borrow_another_order">再借一单</string>
     <string name="i_want_to_extend">我要展期</string>
+    <string name="order_status_all">所有状态</string>
+    <string name="order_status_pushing">提交成功</string>
+    <string name="order_status_audit_failed">审批不通过</string>
+    <string name="order_status_apply_failed">申请失败</string>
+    <string name="order_status_loan_success">放款成功</string>
+    <string name="order_status_repaymenting">还款中</string>
+    <string name="order_status_overdue">已逾期</string>
+    <string name="order_status_repaymented">已结清</string>
+    <string name="order_status_checked">待确认</string>
+    <string name="order_status_audit_success">审批成功</string>
+    <string name="order_status_canceled">贷款取消</string>
+    <string name="order_status_verification_failed">验证失败</string>
+    <string name="order_status_loan_failed">放款失败</string>
+    <string name="order_status_manual_audit">人工审核中</string>
+    <string name="order_app_status_order_cancel">订单取消</string>
+    <string name="derating_success">降额成功</string>
+    <string name="failed_to_derating">降额失败</string>
 </resources>

@@ -52,6 +52,10 @@ interface DanaApi {
     @POST("/adakita/feedback/add")
     suspend fun feedback(@Field("content") content: String): BaseResponse<Void>
 
+    @FormUrlEncoded
+    @POST("/adakita/loan_order/amount/drop")
+    suspend fun amountDrop(@Field("orderId") orderId: String): BaseResponse<Void>
+
 }
 
 

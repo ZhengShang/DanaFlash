@@ -42,8 +42,10 @@ class PersonalFragment : BaseFragment() {
     }
 
     fun nav(status: Int) {
-        findNavController().navigate(
-            MainFragmentDirections.actionMainFragmentToOrdersActivity(status)
-        )
+        kotlin.runCatching {
+            findNavController().navigate(
+                MainFragmentDirections.actionMainFragmentToOrdersActivity(status)
+            )
+        }
     }
 }

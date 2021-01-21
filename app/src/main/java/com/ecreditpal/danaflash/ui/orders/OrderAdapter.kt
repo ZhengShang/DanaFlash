@@ -8,12 +8,26 @@ import com.ecreditpal.danaflash.databinding.ItemOrderBinding
 import com.ecreditpal.danaflash.model.OrderRes
 import com.ecreditpal.danaflash.ui.comm.BindingViewHolder
 
-class OrderAdapter :
+class OrderAdapter(
+    private val clickListener: ((clickType: Int, orderRes: OrderRes) -> Unit)
+) :
     PagingDataAdapter<OrderRes, BindingViewHolder<ItemOrderBinding>>(DiffCallback()) {
 
+    companion object {
+        const val CLICK_CARD = 0
+        const val CLICK_LINE_BTN = 1
+        const val CLICK_LEFT_BTN = 2
+        const val CLICK_RIGHT_BTN = 3
+    }
+
     override fun onBindViewHolder(holder: BindingViewHolder<ItemOrderBinding>, position: Int) {
+        val orderRes = getItem(position) ?: return
         holder.binding.apply {
-            info = getItem(position)
+            info = orderRes
+            root.setOnClickListener { clickListener.invoke(CLICK_CARD, orderRes) }
+            lineButton.setOnClickListener { clickListener.invoke(CLICK_LINE_BTN, orderRes) }
+            leftButton.setOnClickListener { clickListener.invoke(CLICK_LEFT_BTN, orderRes) }
+            rightButton.setOnClickListener { clickListener.invoke(CLICK_RIGHT_BTN, orderRes) }
         }
     }
 

@@ -1,7 +1,21 @@
 package com.ecreditpal.danaflash.model
 
+import android.graphics.Color
 import com.ecreditpal.danaflash.R
-import com.ecreditpal.danaflash.data.OrderStatus
+import com.ecreditpal.danaflash.data.OrderStatus.ALL
+import com.ecreditpal.danaflash.data.OrderStatus.APP_STATUS_ORDER_CANCEL
+import com.ecreditpal.danaflash.data.OrderStatus.STATUS_APPLY_FAILED
+import com.ecreditpal.danaflash.data.OrderStatus.STATUS_AUDIT_FAILED
+import com.ecreditpal.danaflash.data.OrderStatus.STATUS_AUDIT_SUCCESS
+import com.ecreditpal.danaflash.data.OrderStatus.STATUS_CANCELED
+import com.ecreditpal.danaflash.data.OrderStatus.STATUS_CHECKED
+import com.ecreditpal.danaflash.data.OrderStatus.STATUS_LOAN_FAILED
+import com.ecreditpal.danaflash.data.OrderStatus.STATUS_LOAN_SUCCESS
+import com.ecreditpal.danaflash.data.OrderStatus.STATUS_MANUAL_AUDIT
+import com.ecreditpal.danaflash.data.OrderStatus.STATUS_OVERDUE
+import com.ecreditpal.danaflash.data.OrderStatus.STATUS_REPAYMENTED
+import com.ecreditpal.danaflash.data.OrderStatus.STATUS_REPAYMENTING
+import com.ecreditpal.danaflash.data.OrderStatus.STATUS_VERIFICATION_FAILED
 import java.math.BigDecimal
 
 data class OrderRes(
@@ -41,22 +55,27 @@ data class OrderRes(
     }
 
     fun statusStringRes() = when (status) {
-        OrderStatus.ALL -> R.string.OrderStatus.STATUS_PUSHING
-        -> R.string.OrderStatus.STATUS_AUDIT_FAILED
-        -> R.string.OrderStatus.STATUS_APPLY_FAILED
-        -> R.string.OrderStatus.STATUS_LOAN_SUCCESS
-        -> R.string.OrderStatus.STATUS_REPAYMENTING
-        -> R.string.OrderStatus.STATUS_OVERDUE
-        -> R.string.OrderStatus.STATUS_REPAYMENTED
-        -> R.string.OrderStatus.STATUS_CHECKED
-        -> R.string.OrderStatus.STATUS_AUDIT_SUCCESS
-        -> R.string.OrderStatus.STATUS_CANCELED
-        -> R.string.OrderStatus.STATUS_VERIFICATION_FAILED
-        -> R.string.OrderStatus.STATUS_LOAN_FAILED
-        -> R.string.OrderStatus.STATUS_MANUAL_AUDIT
-        -> R.string.OrderStatus.APP_STATUS_ORDER_CANCEL
-        -> R.string.
+        ALL -> R.string.order_status_all
+        STATUS_AUDIT_FAILED -> R.string.order_status_pushing
+        STATUS_APPLY_FAILED -> R.string.order_status_audit_failed
+        STATUS_LOAN_SUCCESS -> R.string.order_status_apply_failed
+        STATUS_REPAYMENTING -> R.string.order_status_loan_success
+        STATUS_OVERDUE -> R.string.order_status_repaymenting
+        STATUS_REPAYMENTED -> R.string.order_status_overdue
+        STATUS_CHECKED -> R.string.order_status_repaymented
+        STATUS_AUDIT_SUCCESS -> R.string.order_status_checked
+        STATUS_CANCELED -> R.string.order_status_audit_success
+        STATUS_VERIFICATION_FAILED -> R.string.order_status_canceled
+        STATUS_LOAN_FAILED -> R.string.order_status_verification_failed
+        STATUS_MANUAL_AUDIT -> R.string.order_status_loan_failed
+        APP_STATUS_ORDER_CANCEL -> R.string.order_status_manual_audit
         else -> R.string.empty_string
+    }
+
+    fun statusColor() = when (status) {
+        STATUS_OVERDUE -> Color.parseColor("#E84F4F")
+        STATUS_REPAYMENTED -> Color.parseColor("#7ED321")
+        else -> Color.parseColor("#999999")
     }
 
     /**
