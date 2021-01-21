@@ -5,7 +5,6 @@ import com.ecreditpal.danaflash.data.BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.fastjson.FastJsonConverterFactory
-import java.net.Proxy
 import java.util.concurrent.TimeUnit
 
 object RetrofitService {
@@ -20,7 +19,6 @@ object RetrofitService {
             .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
             .writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
             .addInterceptor(RequestInterceptor())
-            .proxy(Proxy.NO_PROXY)
             .apply {
                 if (BuildConfig.DEBUG) {
                     addNetworkInterceptor(ApiLogInterceptor())

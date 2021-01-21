@@ -19,6 +19,7 @@ import com.ecreditpal.danaflash.data.AD_TITLE_APIPOP
 import com.ecreditpal.danaflash.data.AD_TITLE_PERSONALPOP
 import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.helper.readDsData
+import com.ecreditpal.danaflash.helper.writeDsData
 import com.ecreditpal.danaflash.ui.home.HomeViewModel
 import com.ecreditpal.danaflash.ui.home.MainFragmentDirections
 import com.ecreditpal.danaflash.ui.settings.VersionViewModel
@@ -102,11 +103,7 @@ class MainActivity : BaseActivity() {
             map.entries.forEach { entry ->
                 when (entry.key) {
                     Manifest.permission.READ_PHONE_STATE -> {
-                        UserFace.deviceId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            PhoneUtils.getIMEI()
-                        } else {
-                            PhoneUtils.getDeviceId()
-                        }
+                        saveDeviceId()
                     }
                     Manifest.permission.ACCESS_FINE_LOCATION -> {
                     }
@@ -120,6 +117,19 @@ class MainActivity : BaseActivity() {
                 }
             }
         }
+
+    @SuppressLint("MissingPermission")
+    private fun saveDeviceId() {
+        val deviceId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            PhoneUtils.getIMEI()
+        } else {
+            PhoneUtils.getDeviceId()
+        }
+        UserFace.deviceId = deviceId
+        lifecycleScope.launch {
+            writeDsData(DataStoreKeys.DEVICE_ID, deviceId)
+        }
+    }
 
     private fun startUploadContactsWorker() {
         val uploadWorkRequest: WorkRequest =

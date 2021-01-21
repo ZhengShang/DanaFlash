@@ -107,7 +107,7 @@ class LoginFragment : BaseFragment() {
         bind.viewMoel = loginVM
 
         if (BuildConfig.DEBUG) {
-            bind.phoneNumber.setText("888899991234")
+            bind.phoneNumber.setText("88889999457")
         }
     }
 }
