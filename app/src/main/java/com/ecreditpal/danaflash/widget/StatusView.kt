@@ -111,4 +111,29 @@ class StatusView @JvmOverloads constructor(
             }
         }
     }
+
+    fun showErrorWithRetry(errorMsg: String?, function: () -> Unit) {
+        visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
+        image.visibility = View.VISIBLE
+        button.visibility = View.VISIBLE
+
+        image.setImageResource(R.drawable.pic_failed_net)
+        message.text = errorMsg
+        button.text = context.getString(R.string.retry)
+        button.setOnClickListener { function.invoke() }
+    }
+
+    fun showLoading() {
+        visibility = View.VISIBLE
+        progressBar.visibility = View.VISIBLE
+        image.visibility = View.GONE
+        button.visibility = View.GONE
+
+        message.text = context.getText(R.string.loading)
+    }
+
+    fun hideStatus() {
+        visibility = View.GONE
+    }
 }

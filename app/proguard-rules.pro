@@ -146,6 +146,8 @@
 -keep class com.alibaba.fastjson.** { *; }
 -keepattributes Signature
 -keepattributes *Annotation*
+-keep class kotlin.** { *; }
+-keep class org.jetbrains.** { *; }
 
 # 地图服务
 -keep class com.map.api.services.** {*;}

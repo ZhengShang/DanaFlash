@@ -92,7 +92,8 @@
                 android:visibleGone="@{phoneNumber.text.length() > 0}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/black" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -134,7 +135,8 @@
                 android:visibleGone="@{verifyCode.text.length() > 0}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/cold_down"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/black" />
 
             <TextView
                 android:id="@+id/cold_down"
