@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableInt
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -12,10 +13,7 @@ import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
-import com.ecreditpal.danaflash.data.AD_TITLE_APIPOP
-import com.ecreditpal.danaflash.data.AD_TITLE_INDEX
-import com.ecreditpal.danaflash.data.AD_TITLE_POP
-import com.ecreditpal.danaflash.data.IMAGE_PREFIX
+import com.ecreditpal.danaflash.data.*
 import com.ecreditpal.danaflash.databinding.FragmentHomeBinding
 import com.ecreditpal.danaflash.helper.combineH5Url
 import com.ecreditpal.danaflash.helper.setImageUrl
@@ -32,7 +30,8 @@ import kotlinx.coroutines.launch
 class HomeFragment : BaseFragment() {
 
     private val homeViewModel: HomeViewModel by activityViewModels()
-    private val type = ObservableInt(ProductAdapter.PRODUCT_TYPE_API)
+    private val type = ObservableInt(PRODUCT_TYPE_API)
+    private val tabVisible = ObservableBoolean(false)
     private lateinit var binding: FragmentHomeBinding
 
     private lateinit var apiAdapter: ProductAdapter
@@ -54,13 +53,14 @@ class HomeFragment : BaseFragment() {
         binding = FragmentHomeBinding.bind(view)
         binding.lifecycleOwner = this
         binding.type = type
+        binding.tabVisible = tabVisible
 
-        initList(binding.apiList, ProductAdapter.PRODUCT_TYPE_API)
-        initList(binding.gpList, ProductAdapter.PRODUCT_TYPE_GP)
+        initList(binding.apiList, PRODUCT_TYPE_API)
+        initList(binding.gpList, PRODUCT_TYPE_GP)
 
         //重新设置一边, 覆盖statusView里面的设置. 因为这里需要区分不同的产品来刷新
         binding.swipeRefresh.setOnRefreshListener {
-            if (type.get() == ProductAdapter.PRODUCT_TYPE_API) {
+            if (type.get() == PRODUCT_TYPE_API) {
                 apiAdapter.refresh()
             } else {
                 gpAdapter.refresh()
@@ -71,14 +71,22 @@ class HomeFragment : BaseFragment() {
             WebActivity.loadUrl(context, bannerClickUrl)
         }
         binding.bannerLayout.tabApi.setOnClickListener {
-            type.set(ProductAdapter.PRODUCT_TYPE_API)
+            type.set(PRODUCT_TYPE_API)
             homeViewModel.getAd(AD_TITLE_APIPOP)
         }
         binding.bannerLayout.tabGp.setOnClickListener {
-            type.set(ProductAdapter.PRODUCT_TYPE_GP)
+            type.set(PRODUCT_TYPE_GP)
             homeViewModel.getAd(AD_TITLE_POP)
         }
 
+        homeViewModel.productSupportIndex.observe(viewLifecycleOwner) {
+            tabVisible.set(it == 2)
+            if (it != 2) {
+                type.set(if (it == 0) PRODUCT_TYPE_API else PRODUCT_TYPE_GP)
+                //第一次主动请求广告
+                homeViewModel.getAd(if (it == 0) AD_TITLE_APIPOP else AD_TITLE_POP)
+            }
+        }
         homeViewModel.adLiveData.observe(viewLifecycleOwner) {
             val url = it.second.imgs?.firstOrNull()?.img ?: return@observe
             val clickUrl = it.second.imgs?.firstOrNull()?.url
@@ -89,6 +97,7 @@ class HomeFragment : BaseFragment() {
                 }
             }
         }
+        //请求banner广告
         homeViewModel.getAd(AD_TITLE_INDEX)
     }
 
@@ -104,7 +113,7 @@ class HomeFragment : BaseFragment() {
                 }
             }
         }.also {
-            if (productType == ProductAdapter.PRODUCT_TYPE_API) {
+            if (productType == PRODUCT_TYPE_API) {
                 apiAdapter = it
             } else {
                 gpAdapter = it
@@ -121,7 +130,7 @@ class HomeFragment : BaseFragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             val flow: Flow<PagingData<ProductRes.Product>> =
-                if (productType == ProductAdapter.PRODUCT_TYPE_API) {
+                if (productType == PRODUCT_TYPE_API) {
                     homeViewModel.apiFlow
                 } else {
                     homeViewModel.gpFlow

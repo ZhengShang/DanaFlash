@@ -13,10 +13,19 @@ import com.ecreditpal.danaflash.helper.writeDsData
 import com.ecreditpal.danaflash.model.AdRes
 import com.ecreditpal.danaflash.model.ProductRes
 import com.ecreditpal.danaflash.net.dfApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
+
+    /**
+     * 首页支持的产品数量, 分为3个数:
+     * 0)表示只支持api产品,  默认打开的是api产品
+     * 1)表示只支持gp产品
+     * 2)表示两者都支持, 此时需要显示顶部的tab栏
+     */
+    val productSupportIndex = MutableLiveData<Int>()
 
     /**
      * 广告
@@ -25,8 +34,8 @@ class HomeViewModel : ViewModel() {
      */
     val adLiveData = MutableLiveData<Pair<String, AdRes>>()
 
-    val apiFlow = buildFlow(ProductAdapter.PRODUCT_TYPE_API)
-    val gpFlow = buildFlow(ProductAdapter.PRODUCT_TYPE_GP)
+    val apiFlow = buildFlow(PRODUCT_TYPE_API)
+    val gpFlow = buildFlow(PRODUCT_TYPE_GP)
     private fun buildFlow(api: Int): Flow<PagingData<ProductRes.Product>> {
         return Pager(
             PagingConfig(pageSize = PAGE_SIZE)
@@ -42,12 +51,32 @@ class HomeViewModel : ViewModel() {
             .cachedIn(viewModelScope)
     }
 
+    init {
+        detectProductSupported()
+    }
+
     /**
-     * 检查是否有GP产品
-     * @return true表示有GP产品
-     *          false表示没有GP产品
+     * 检查API产品和GP产品是否都存在, 都存在就需要在顶部显示tab栏
      */
-    suspend fun isGpSupported(): Boolean {
+    private fun detectProductSupported() {
+        viewModelScope.launch {
+            val apiSupported = async { singleRequest(PRODUCT_TYPE_API) }
+            val gpSupported = async { singleRequest(PRODUCT_TYPE_GP) }
+
+            productSupportIndex.value = if (apiSupported.await() && gpSupported.await()) {
+                2
+            } else if (gpSupported.await()) {
+                1
+            } else {
+                0
+            }
+        }
+    }
+
+    /**
+     * 是否支持当前产品, 即当前的请求是否有大于一个的item返回
+     */
+    private suspend fun singleRequest(api: Int): Boolean {
         return kotlin.runCatching {
             dfApi().product(
                 mapOf(
@@ -56,7 +85,7 @@ class HomeViewModel : ViewModel() {
                     "selectIds" to "",
                     "type" to 1,
                     "orderType" to 1,
-                    "api" to 0
+                    "api" to api
                 )
             )
         }.getOrNull()?.data?.list.isNullOrEmpty().not()

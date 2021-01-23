@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.base.LoadingTips
 import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.databinding.FragmentFeedbackBinding
+import com.ecreditpal.danaflash.helper.CommUtils
 import com.ecreditpal.danaflash.helper.danaRequestResult
 import com.ecreditpal.danaflash.net.dfApi
 import kotlinx.coroutines.launch
@@ -33,7 +33,7 @@ class FeedbackFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (!UserFace.isLogin()) {
-            findNavController().navigate(R.id.action_feedbackFragment_to_loginActivity)
+            CommUtils.navLogin()
         }
 
         _binding.submit.setOnClickListener {

@@ -6,11 +6,15 @@
 
     <data>
 
-        <import type="com.ecreditpal.danaflash.ui.home.ProductAdapter" />
+        <import type="com.ecreditpal.danaflash.data.ComConsKt" />
 
         <variable
             name="type"
             type="androidx.databinding.ObservableInt" />
+
+        <variable
+            name="tabVisible"
+            type="androidx.databinding.ObservableBoolean" />
     </data>
 
 
@@ -47,13 +51,14 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:background="@drawable/selector_home_tab"
-            android:checked="@{type == ProductAdapter.PRODUCT_TYPE_API}"
+            android:checked="@{type == ComConsKt.PRODUCT_TYPE_API}"
             android:gravity="center"
             android:text="Ga Perlu Download"
             android:textAlignment="center"
             android:textColor="@color/selector_home_tab_text"
             android:textSize="15sp"
             android:textStyle="bold"
+            android:visibleGone="@{tabVisible}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tab_gp"
             app:layout_constraintStart_toStartOf="parent"
@@ -66,13 +71,14 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:background="@drawable/selector_home_tab"
-            android:checked="@{type == ProductAdapter.PRODUCT_TYPE_GP}"
+            android:checked="@{type == ComConsKt.PRODUCT_TYPE_GP}"
             android:gravity="center"
             android:text="Ga Perlu Isi Data"
             android:textAlignment="center"
             android:textColor="@color/selector_home_tab_text"
             android:textSize="15sp"
             android:textStyle="bold"
+            android:visibleGone="@{tabVisible}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tab_api" />

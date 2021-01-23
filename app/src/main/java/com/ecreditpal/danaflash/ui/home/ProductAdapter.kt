@@ -35,9 +35,6 @@ class ProductAdapter(
 
 
     companion object {
-        const val PRODUCT_TYPE_API = 1
-        const val PRODUCT_TYPE_GP = 0
-
         private val PRODUCT_COMPARATOR = object : DiffUtil.ItemCallback<ProductRes.Product>() {
             override fun areItemsTheSame(
                 oldItem: ProductRes.Product,
