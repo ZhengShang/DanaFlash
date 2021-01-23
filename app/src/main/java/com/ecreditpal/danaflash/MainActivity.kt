@@ -17,6 +17,7 @@ import com.blankj.utilcode.util.PhoneUtils
 import com.ecreditpal.danaflash.base.BaseActivity
 import com.ecreditpal.danaflash.data.AD_TITLE_APIPOP
 import com.ecreditpal.danaflash.data.AD_TITLE_PERSONALPOP
+import com.ecreditpal.danaflash.data.AD_TITLE_POP
 import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.helper.readDsData
 import com.ecreditpal.danaflash.helper.writeDsData
@@ -52,7 +53,10 @@ class MainActivity : BaseActivity() {
 
         val homeViewModel: HomeViewModel by viewModels()
         homeViewModel.adLiveData.observe(this) {
-            if (it.first == AD_TITLE_APIPOP || it.first == AD_TITLE_PERSONALPOP) {
+            if (it.first == AD_TITLE_APIPOP
+                || it.first == AD_TITLE_POP
+                || it.first == AD_TITLE_PERSONALPOP
+            ) {
                 navController.navigate(
                     MainFragmentDirections.actionGlobalAdDialog(it.second)
                 )

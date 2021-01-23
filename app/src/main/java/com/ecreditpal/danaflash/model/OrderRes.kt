@@ -73,8 +73,12 @@ data class OrderRes(
     }
 
     fun statusColor() = when (status) {
-        STATUS_OVERDUE -> Color.parseColor("#E84F4F")
-        STATUS_REPAYMENTED -> Color.parseColor("#7ED321")
+        STATUS_MANUAL_AUDIT,
+        STATUS_AUDIT_SUCCESS -> Color.parseColor("##7ED321")
+        STATUS_CHECKED,
+        STATUS_OVERDUE -> Color.parseColor("#E59A37")
+        STATUS_REPAYMENTING -> Color.parseColor("#E84F4F")
+        STATUS_REPAYMENTED -> Color.parseColor("#333333")
         else -> Color.parseColor("#999999")
     }
 

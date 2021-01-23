@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ScreenUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseDialogFragment
@@ -40,7 +41,7 @@ class AdDialog : BaseDialogFragment() {
             ?: return
 
         if (dataMap.isNullOrEmpty()) {
-            dismiss()
+            findNavController().popBackStack()
             return
         }
 
@@ -48,7 +49,7 @@ class AdDialog : BaseDialogFragment() {
             addBannerLifecycleObserver(this@AdDialog)
             adapter = BannerAdapter(dataMap) {
                 WebActivity.loadUrl(context, it)
-                dismissAllowingStateLoss()
+                findNavController().popBackStack()
             }
             setIndicator(CircleIndicator(context))
         }
@@ -60,7 +61,8 @@ class AdDialog : BaseDialogFragment() {
 //                ToastUtils.showLong("navigate to h5 page")
 //            }
 //        }
-        view.findViewById<ImageView>(R.id.close).setOnClickListener { dismiss() }
+        view.findViewById<ImageView>(R.id.close)
+            .setOnClickListener { findNavController().popBackStack() }
     }
 
     override fun onStart() {

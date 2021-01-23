@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.R
@@ -27,8 +28,8 @@ class UpdateDialog : BaseDialogFragment() {
         val versionRes = arguments?.let {
             UpdateDialogArgs.fromBundle(it).versionRes
         }
-        if (versionRes == null) {
-            dismiss()
+        if (versionRes == null || versionRes.updateStatus == 0) {
+            findNavController().popBackStack()
             return
         }
         isCancelable = versionRes.updateStatus != 2
@@ -36,7 +37,7 @@ class UpdateDialog : BaseDialogFragment() {
         val binding = DialogUpdateBinding.bind(view)
         binding.lifecycleOwner = this
         binding.versionRes = versionRes
-        binding.close.setOnClickListener { dismiss() }
+        binding.close.setOnClickListener { findNavController().popBackStack() }
         binding.close.visibility = if (isCancelable) View.VISIBLE else View.GONE
         binding.update.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW).apply {

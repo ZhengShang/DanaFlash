@@ -12,6 +12,7 @@ import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
+import com.ecreditpal.danaflash.data.AD_TITLE_APIPOP
 import com.ecreditpal.danaflash.data.AD_TITLE_INDEX
 import com.ecreditpal.danaflash.data.AD_TITLE_POP
 import com.ecreditpal.danaflash.data.IMAGE_PREFIX
@@ -71,25 +72,24 @@ class HomeFragment : BaseFragment() {
         }
         binding.bannerLayout.tabApi.setOnClickListener {
             type.set(ProductAdapter.PRODUCT_TYPE_API)
-            homeViewModel.getAd(AD_TITLE_POP)
+            homeViewModel.getAd(AD_TITLE_APIPOP)
         }
         binding.bannerLayout.tabGp.setOnClickListener {
             type.set(ProductAdapter.PRODUCT_TYPE_GP)
-            homeViewModel.getAd(AD_TITLE_INDEX)
+            homeViewModel.getAd(AD_TITLE_POP)
         }
 
         homeViewModel.adLiveData.observe(viewLifecycleOwner) {
             val url = it.second.imgs?.firstOrNull()?.img ?: return@observe
             val clickUrl = it.second.imgs?.firstOrNull()?.url
             when (it.first) {
-                AD_TITLE_POP,
                 AD_TITLE_INDEX -> {
                     setImageUrl(binding.bannerLayout.bg, IMAGE_PREFIX + url)
                     bannerClickUrl = clickUrl.combineH5Url()
                 }
             }
         }
-        homeViewModel.getAd(AD_TITLE_POP)
+        homeViewModel.getAd(AD_TITLE_INDEX)
     }
 
     private fun initList(view: View, productType: Int) {

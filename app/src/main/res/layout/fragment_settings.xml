@@ -8,7 +8,9 @@
             name="versionVm"
             type="com.ecreditpal.danaflash.ui.settings.VersionViewModel" />
 
-        <import type="com.ecreditpal.danaflash.data.UserFace" />
+        <variable
+            name="loginState"
+            type="androidx.databinding.ObservableBoolean" />
 
         <import type="com.ecreditpal.danaflash.BuildConfig" />
     </data>
@@ -55,8 +57,7 @@
             android:id="@+id/sign_out"
             style="@style/MainButton"
             android:layout_marginTop="@dimen/main_button_margin_top"
-            android:text="@string/sing_out"
-            android:visibleGone="@{UserFace.INSTANCE.login}"
+            android:text="@{loginState ? @string/sing_out : @string/login}"
             app:layout_constraintTop_toBottomOf="@id/version" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

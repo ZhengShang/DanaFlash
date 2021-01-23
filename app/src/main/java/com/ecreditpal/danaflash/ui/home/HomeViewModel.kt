@@ -87,7 +87,7 @@ class HomeViewModel : ViewModel() {
     private suspend fun checkRequestAdValid(title: String): Boolean {
         val key = when (title) {
             AD_TITLE_APIPOP -> DataStoreKeys.AD_APIPOP_LAST_STAMP
-//            AD_TITLE_POP -> DataStoreKeys.AD_POP_LAST_STAMP
+            AD_TITLE_POP -> DataStoreKeys.AD_POP_LAST_STAMP
 //            AD_TITLE_INDEX -> DataStoreKeys.AD_INDEX_LAST_STAMP
             AD_TITLE_PERSONALPOP -> DataStoreKeys.AD_PERSONALPOP_LAST_STAMP
             else -> return true // FIXME: 2021/1/19 暂时其他类型不检测, 允许请求

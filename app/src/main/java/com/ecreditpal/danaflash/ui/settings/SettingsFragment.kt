@@ -4,16 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.databinding.FragmentSettingsBinding
+import com.ecreditpal.danaflash.helper.CommUtils
+import com.ecreditpal.danaflash.ui.comm.ConfirmDialog
 
 class SettingsFragment : BaseFragment() {
 
     private lateinit var binding: FragmentSettingsBinding
+    private val loginStateObserve = ObservableBoolean(UserFace.isLogin())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,6 +33,7 @@ class SettingsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         val versionViewModel = ViewModelProvider(this).get(VersionViewModel::class.java)
         binding.versionVm = versionViewModel
+        binding.loginState = loginStateObserve
         versionViewModel.checkVersion()
 
         binding.privacy.setOnClickListener {
@@ -48,8 +53,19 @@ class SettingsFragment : BaseFragment() {
             )
         }
         binding.signOut.setOnClickListener {
-            activity?.onBackPressed()
-            UserFace.clearData()
+            if (UserFace.isLogin()) {
+                ConfirmDialog(
+                    titleStr = "Notifikasi",
+                    contentStr = "Yakin Ingin Keluar？",
+                    positiveClickListener = {
+                        activity?.onBackPressed()
+                        UserFace.clearData()
+                    }
+                )
+                    .show(childFragmentManager)
+            } else {
+                CommUtils.navLogin()
+            }
         }
         binding.version.setOnClickListener { v ->
             if (binding.version.siEndText.isNullOrEmpty()) {
@@ -63,5 +79,10 @@ class SettingsFragment : BaseFragment() {
             }
             v.postDelayed({ v.isEnabled = true }, 500)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        loginStateObserve.set(UserFace.isLogin())
     }
 }
