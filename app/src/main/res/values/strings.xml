@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DanaFlash</string>
+    <string name="app_name" translatable="false">Dana Flash</string>
     <string name="empty_string" translatable="false" />
     <string name="title_home">Home</string>
     <string name="title_personal">Personal</string>
@@ -17,10 +17,10 @@
     <string name="version">Version</string>
     <string name="sing_out">Sign out</string>
     <string name="submit">Submit</string>
-    <string name="plz_input_phone">Please input phone number</string>
-    <string name="plz_input_verification_code">Please input verification code</string>
-    <string name="get_verification_code">Get verification code</string>
-    <string name="login">Login</string>
+    <string name="plz_input_phone">Enter the phone number</string>
+    <string name="plz_input_verification_code">Input verification code</string>
+    <string name="get_verification_code">Get the verifying code</string>
+    <string name="login">Sign in</string>
     <string name="reacquire">Reacquire</string>
     <string name="login_protocol_declare">By logging in, you agree to Dana Flash\'s Register protocol</string>
     <string name="failed_to_get_verify_code">Get verification code failed.</string>
@@ -34,7 +34,7 @@
     <string name="failed_to_download">Download failed</string>
     <string name="download_success">Download success</string>
     <string name="update_download_progress">Downloading %d</string>
-    <string name="failed_to_update_in_google_store">Cannot enter the Google store to update</string>
+    <string name="failed_to_donwload_in_google_store">Cannot enter the Google store to download</string>
     <string name="product_detail">Product detail</string>
     <string name="fill_information">Fill in the information</string>
     <string name="base_info">Main information</string>
@@ -78,4 +78,9 @@
     <string name="order_app_status_order_cancel">cancel the order</string>
     <string name="derating_success">Derating success</string>
     <string name="failed_to_derating">Derating failed</string>
+    <string name="month">Month</string>
+    <string name="day">Day</string>
+    <string name="complete">Completed</string>
+    <string name="verified">Verified</string>
+    <string name="go_verify">Go verify</string>
 </resources>

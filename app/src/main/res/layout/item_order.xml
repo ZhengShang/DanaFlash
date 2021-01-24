@@ -98,10 +98,10 @@
 
         <TextView
             android:id="@+id/loan_amount_value"
+            rpAmount="@{info.loanAmount}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/def_edge_margin"
-            android:text="@{info.loanAmount.toString()}"
             android:textColor="@color/text"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"

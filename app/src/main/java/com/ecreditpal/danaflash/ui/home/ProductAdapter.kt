@@ -20,9 +20,8 @@ class ProductAdapter(
         holder.binding.apply {
             type = productType
             info = getItem(position)
-            loan.setOnClickListener {
-                productClick?.invoke(it.id, getItem(position))
-            }
+            loan.setOnClickListener { productClick?.invoke(it.id, getItem(position)) }
+            root.setOnClickListener { productClick?.invoke(it.id, getItem(position)) }
         }
     }
 

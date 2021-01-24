@@ -1,17 +1,15 @@
 package com.ecreditpal.danaflash.ui.comm
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseDialogFragment
 import com.ecreditpal.danaflash.databinding.DialogUpdateBinding
+import com.ecreditpal.danaflash.helper.CommUtils
 
 class UpdateDialog : BaseDialogFragment() {
     override fun onCreateView(
@@ -40,15 +38,7 @@ class UpdateDialog : BaseDialogFragment() {
         binding.close.setOnClickListener { findNavController().popBackStack() }
         binding.close.visibility = if (isCancelable) View.VISIBLE else View.GONE
         binding.update.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse(versionRes.link)
-                setPackage(view.context.packageName)
-            }
-            try {
-                startActivity(intent)
-            } catch (e: Exception) {
-                ToastUtils.showLong(R.string.failed_to_update_in_google_store)
-            }
+            CommUtils.navGoogleDownload(it.context, versionRes.link)
         }
     }
 

@@ -21,7 +21,6 @@ class SettingItem @JvmOverloads constructor(
     private var subTitleView: TextView
     private var endIconView: ImageView
     var endTextView: TextView
-        private set
 
     init {
 
@@ -50,6 +49,10 @@ class SettingItem @JvmOverloads constructor(
                         }
                         R.styleable.SettingItem_siEndText -> {
                             siEndText = getString(R.styleable.SettingItem_siEndText)
+                        }
+                        R.styleable.SettingItem_siEndTextBackground -> {
+                            endTextView.background =
+                                getDrawable(R.styleable.SettingItem_siEndTextBackground)
                         }
                         R.styleable.SettingItem_siEndTextColor -> {
                             siEndTextColor = getColor(

@@ -1,6 +1,7 @@
 package com.ecreditpal.danaflash.model
 
 import android.graphics.Color
+import com.ecreditpal.danaflash.App
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.data.OrderStatus.ALL
 import com.ecreditpal.danaflash.data.OrderStatus.APP_STATUS_ORDER_CANCEL
@@ -13,6 +14,7 @@ import com.ecreditpal.danaflash.data.OrderStatus.STATUS_LOAN_FAILED
 import com.ecreditpal.danaflash.data.OrderStatus.STATUS_LOAN_SUCCESS
 import com.ecreditpal.danaflash.data.OrderStatus.STATUS_MANUAL_AUDIT
 import com.ecreditpal.danaflash.data.OrderStatus.STATUS_OVERDUE
+import com.ecreditpal.danaflash.data.OrderStatus.STATUS_PUSHING
 import com.ecreditpal.danaflash.data.OrderStatus.STATUS_REPAYMENTED
 import com.ecreditpal.danaflash.data.OrderStatus.STATUS_REPAYMENTING
 import com.ecreditpal.danaflash.data.OrderStatus.STATUS_VERIFICATION_FAILED
@@ -44,31 +46,31 @@ data class OrderRes(
 ) {
 
     fun loanTermString(): String {
-        // TODO: 2021/1/14 maybe need translate
         return loanTerm.toString().plus(
             if (loanTermUnit == 0) {
-                "Month"
+                App.context.getString(R.string.month)
             } else {
-                "Day"
+                App.context.getString(R.string.day)
             }
         )
     }
 
     fun statusStringRes() = when (status) {
         ALL -> R.string.order_status_all
-        STATUS_AUDIT_FAILED -> R.string.order_status_pushing
-        STATUS_APPLY_FAILED -> R.string.order_status_audit_failed
-        STATUS_LOAN_SUCCESS -> R.string.order_status_apply_failed
-        STATUS_REPAYMENTING -> R.string.order_status_loan_success
-        STATUS_OVERDUE -> R.string.order_status_repaymenting
-        STATUS_REPAYMENTED -> R.string.order_status_overdue
-        STATUS_CHECKED -> R.string.order_status_repaymented
-        STATUS_AUDIT_SUCCESS -> R.string.order_status_checked
-        STATUS_CANCELED -> R.string.order_status_audit_success
-        STATUS_VERIFICATION_FAILED -> R.string.order_status_canceled
-        STATUS_LOAN_FAILED -> R.string.order_status_verification_failed
-        STATUS_MANUAL_AUDIT -> R.string.order_status_loan_failed
-        APP_STATUS_ORDER_CANCEL -> R.string.order_status_manual_audit
+        STATUS_PUSHING -> R.string.order_status_pushing
+        STATUS_AUDIT_FAILED -> R.string.order_status_audit_failed
+        STATUS_APPLY_FAILED -> R.string.order_status_apply_failed
+        STATUS_LOAN_SUCCESS -> R.string.order_status_loan_success
+        STATUS_REPAYMENTING -> R.string.order_status_repaymenting
+        STATUS_OVERDUE -> R.string.order_status_overdue
+        STATUS_REPAYMENTED -> R.string.order_status_repaymented
+        STATUS_CHECKED -> R.string.order_status_checked
+        STATUS_AUDIT_SUCCESS -> R.string.order_status_audit_success
+        STATUS_CANCELED -> R.string.order_status_canceled
+        STATUS_VERIFICATION_FAILED -> R.string.order_status_verification_failed
+        STATUS_LOAN_FAILED -> R.string.order_status_loan_failed
+        STATUS_MANUAL_AUDIT -> R.string.order_status_manual_audit
+        APP_STATUS_ORDER_CANCEL -> R.string.order_app_status_order_cancel
         else -> R.string.empty_string
     }
 

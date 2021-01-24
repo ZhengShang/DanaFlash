@@ -6,6 +6,7 @@
         <attr name="siSubTitle" format="string|reference" />
         <attr name="siEndText" format="string|reference" />
         <attr name="siEndTextColor" format="color|reference" />
+        <attr name="siEndTextBackground" format="color|reference" />
         <attr name="siEndIcon" format="reference" />
     </declare-styleable>
 </resources>

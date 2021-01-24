@@ -17,6 +17,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
@@ -68,10 +69,10 @@
 
         <TextView
             android:id="@+id/amount"
+            rupiahAmount="@{info.amountMax}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text='@{info.amountMax.toString()}'
             android:textColor="@color/dana_purple"
             android:textSize="16sp"
             android:textStyle="bold"

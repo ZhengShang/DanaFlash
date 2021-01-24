@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">DanaFlash</string>
     <string name="title_home">首页</string>
     <string name="title_personal">我的</string>
     <string name="disagree">不同意</string>
@@ -32,7 +31,7 @@
     <string name="failed_to_download">下载失败</string>
     <string name="download_success">下载成功</string>
     <string name="update_download_progress">已下载 %d</string>
-    <string name="failed_to_update_in_google_store">无法进入Google store更新</string>
+    <string name="failed_to_donwload_in_google_store">无法进入Google store下载</string>
     <string name="product_detail">产品详情</string>
     <string name="fill_information">信息填写</string>
     <string name="base_info">主要信息</string>
@@ -78,4 +77,9 @@
     <string name="order_app_status_order_cancel">订单取消</string>
     <string name="derating_success">降额成功</string>
     <string name="failed_to_derating">降额失败</string>
+    <string name="month">月</string>
+    <string name="day">天</string>
+    <string name="complete">已完成</string>
+    <string name="verified">已认证</string>
+    <string name="go_verify">去认证</string>
 </resources>

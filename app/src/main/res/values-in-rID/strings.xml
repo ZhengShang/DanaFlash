@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_home">"Home "</string>
+    <string name="title_personal">"Personal "</string>
+    <string name="privacy_policy">"Kebijakan Privasi "</string>
+    <string name="settings">Pengaturan</string>
+    <string name="plz_input_phone">Enter the phone number</string>
+    <string name="plz_input_verification_code">Input verification code</string>
+    <string name="get_verification_code">Get the verifying code</string>
+    <string name="login">Sign in</string>
+    <string name="confirm">Ya, Yakin</string>
+    <string name="agree">Ya</string>
+    <string name="disagree">Tidak</string>
+    <string name="cancel">Batalkan</string>
+    <string name="loan_amount_colon">Jumlah Pinjaman:</string>
+    <string name="bank_account_no_colon">No Rekening:</string>
+    <string name="paid_in_full_colon">Jumlah Yang harus dilunasi:</string>
+    <string name="order_status_all">Semua</string>
+    <string name="order_status_loan_success">Pencairan Berhasil</string>
+    <string name="submit">Selanjutnya</string>
+    <string name="other_info">Informasi Tambahan</string>
+    <string name="base_info">Informasi Umum</string>
+    <string name="order_status_pushing">Pengajuan Berhasil</string>
+    <string name="order_status_audit_failed">Pengajuan ditolak</string>
+    <string name="order_status_apply_failed">Pengajuan Gagal</string>
+    <string name="order_status_repaymenting">Proses Pengembalian</string>
+    <string name="order_status_overdue">Sudah Jatuh Tempo</string>
+    <string name="order_status_repaymented">Pinjaman Lunas</string>
+    <string name="i_want_to_extend">Saya Ingin Perpanjang</string>
+    <string name="i_want_to_repay">Saya Ingin Melunasi</string>
+    <string name="borrow_another_order">Pinjam Kembali</string>
+    <string name="payment_deadline_colon">Batas Tanggal Pelunasan:</string>
+    <string name="product_detail">Detail Produk</string>
+    <string name="sing_out">Keluar</string>
+    <string name="register_protocol">Perjanjian Pendaftaran Pengguna</string>
+    <string name="login_protocol_declare">"Perjanjian Pendaftaran Pengguna  Perjanjian Pendaftaran Pengguna "</string>
+    <string name="failed_to_login">Login Gagal</string>
+    <string name="retry">"Kirim Ulang "</string>
+    <string name="feedback_success">"Pengajuan Berhasil "</string>
+    <string name="month">Bulan</string>
+    <string name="day">Hari</string>
+    <string name="complete">Komplit</string>
+    <string name="verified">Sudah Lengkap</string>
+    <string name="go_verify">Lengkapi Info</string>
+</resources>

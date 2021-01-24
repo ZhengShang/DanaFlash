@@ -23,19 +23,24 @@ import kotlinx.coroutines.launch
 
 class MyOrdersFragment : BaseFragment() {
 
+    private lateinit var binding: FragmentMyOrdersBinding
     private val orderViewModel: OrderViewModel by viewModels()
+
+    //保存三个adapter刷新用
+    private val adapterList = mutableListOf<OrderAdapter>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_my_orders, container, false)
+        binding = FragmentMyOrdersBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentMyOrdersBinding.bind(view)
+
         binding.lifecycleOwner = this
         binding.vm = orderViewModel
         binding.viewFlipper.addView(generateList(OrderStatus.ALL))
@@ -51,24 +56,30 @@ class MyOrdersFragment : BaseFragment() {
                 OrderStatus.STATUS_REPAYMENTED -> 2
                 else -> 0
             }
+            //需求要求每次切换都刷新列表
+            refreshList()
         }
         orderViewModel.amountDropResult.observe(viewLifecycleOwner) {
             if (it) {
                 ToastUtils.showLong(R.string.derating_success)
-//                val cv = binding.viewFlipper.currentView
-//                (cv as? SwipeRefreshLayout)?.let { refreshLayout ->
-//                    refreshLayout.isRefreshing = true
-//                }
-                // TODO: 2021/1/21 may need to refresh the list
+                refreshList()
             } else {
                 ToastUtils.showLong(R.string.failed_to_derating)
             }
         }
     }
 
+    override fun onDestroy() {
+        adapterList.clear()
+        super.onDestroy()
+    }
+
     private fun generateList(status: Int): View {
         return View.inflate(context, R.layout.view_pull_list, null).apply {
             val adapter = OrderAdapter(clickListener)
+            if (adapter !in adapterList) {
+                adapterList.add(adapter)
+            }
             val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
             findViewById<StatusView>(R.id.status_view).bindAdapter(adapter, swipeRefreshLayout)
             val recyclerView = findViewById<RecyclerView>(R.id.recycler)
@@ -81,6 +92,10 @@ class MyOrdersFragment : BaseFragment() {
         } ?: View(context)
     }
 
+    private fun refreshList() {
+        adapterList[binding.viewFlipper.displayedChild].refresh()
+    }
+
     private val clickListener: (clickType: Int, orderRes: OrderRes) -> Unit =
         { clickType, orderRes ->
             when (clickType) {
@@ -89,7 +104,7 @@ class MyOrdersFragment : BaseFragment() {
                         context, H5_ORDER_DETAIL.combineH5Url(
                             mapOf(
                                 "from" to "%2ForderPage",
-                                "orderId" to orderRes
+                                "orderId" to orderRes.orderId
                             )
                         )
                     )

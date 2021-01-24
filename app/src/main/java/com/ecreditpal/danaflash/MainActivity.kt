@@ -76,16 +76,16 @@ class MainActivity : BaseActivity() {
         finish()
     }
 
-    fun requestAllPermissions() {
-        val requestArray = arrayOf(
-            Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_CONTACTS
-        ).filter {
+    fun isAllPermissionGranted() = PERMISSIONS
+        .filter {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_DENIED
-        }.toTypedArray()
+        }.count() == 0
+
+    fun requestAllPermissions() {
+        val requestArray = PERMISSIONS
+            .filter {
+                ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_DENIED
+            }.toTypedArray()
 
         requestPermissionsLauncher.launch(requestArray)
 
@@ -147,5 +147,15 @@ class MainActivity : BaseActivity() {
         WorkManager
             .getInstance(this)
             .enqueue(uploadWorkRequest)
+    }
+
+    companion object {
+        val PERMISSIONS = arrayOf(
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_CONTACTS
+        )
     }
 }

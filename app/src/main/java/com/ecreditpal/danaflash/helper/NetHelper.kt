@@ -11,6 +11,12 @@ suspend fun <T> danaRequest(block: suspend () -> BaseResponse<T>): T? {
 
 }
 
+suspend fun <T> danaRequestWithCatch(block: suspend () -> BaseResponse<T>): T? {
+    return runCatching {
+        danaRequest(block)
+    }.getOrNull()
+}
+
 /**
  * api请求结果, 已经处理了异常情况
  */

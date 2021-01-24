@@ -65,6 +65,14 @@ interface DanaApi {
     @NoNeedToken
     @GET("/adakita/faq")
     suspend fun getFaq(): BaseResponse<FaqRes>
+
+    @GET("/adakita/user/info/status")
+    suspend fun getUserInfoStatus(): BaseResponse<UserInfoStatusRes>
+
+    @GET("/adakita/loan_order/order_processing")
+    suspend fun orderProcessing(
+        @Query("productId") productId: Int
+    ): BaseResponse<OrderProcessingRes>
 }
 
 

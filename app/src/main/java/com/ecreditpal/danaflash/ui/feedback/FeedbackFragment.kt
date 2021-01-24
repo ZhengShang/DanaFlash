@@ -46,6 +46,7 @@ class FeedbackFragment : BaseFragment() {
                 if (success) {
                     ToastUtils.showLong(R.string.feedback_success)
                     _binding.input.text = null
+                    activity?.finish()
                 } else {
                     ToastUtils.showLong(R.string.feedback_failed)
                 }
