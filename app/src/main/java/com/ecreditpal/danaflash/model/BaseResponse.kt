@@ -1,6 +1,6 @@
 package com.ecreditpal.danaflash.model
 
-import java.io.IOException
+import com.ecreditpal.danaflash.net.DanaException
 
 data class BaseResponse<T>(
     val code: Int = 0,
@@ -13,7 +13,7 @@ data class BaseResponse<T>(
 
     fun throwIfNotSuccess(): BaseResponse<T> {
         if (code != 200) {
-            throw IOException(desc)
+            throw DanaException(code, desc)
         }
         return this
     }

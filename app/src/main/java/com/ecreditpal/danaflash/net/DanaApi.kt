@@ -7,6 +7,7 @@ import retrofit2.http.*
 
 interface DanaApi {
 
+    @NoNeedToken
     @FormUrlEncoded
     @POST("/adakita/sms_login/vcode")
     suspend fun getVCode(
@@ -14,6 +15,7 @@ interface DanaApi {
         @Field("code") code: String = "62"
     ): BaseResponse<Void>
 
+    @NoNeedToken
     @FormUrlEncoded
     @POST("/adakita//sms_login")
     suspend fun login(
@@ -23,6 +25,7 @@ interface DanaApi {
         @Field("code") code: String = "62"
     ): BaseResponse<LoginRes>
 
+    @NoNeedToken
     @GET("/adakita/version/manage")
     suspend fun versionMange(
         @Query("channel") channel: String,
@@ -30,12 +33,14 @@ interface DanaApi {
         @Query("versionCode") versionCode: Int = BuildConfig.VERSION_CODE
     ): BaseResponse<VersionRes>
 
+    @NoNeedToken
     @GET("/adakita/product")
     suspend fun product(@QueryMap map: Map<String, @JvmSuppressWildcards Any>): BaseResponse<ProductRes>
 
     @POST("/adakita/contact_list")
     suspend fun uploadContacts(@Body body: RequestBody): BaseResponse<Void>
 
+    @NoNeedToken
     @GET("/adakita/loan_order/list")
     suspend fun getOrderList(
         @Query("pageIndex") pageIndex: Int,
@@ -43,6 +48,7 @@ interface DanaApi {
         @Query("status") status: Int
     ): BaseResponse<List<OrderRes>>
 
+    @NoNeedToken
     @GET("/adakita/ad/imgs")
     suspend fun getAds(
         @Query("title") title: String
@@ -56,6 +62,7 @@ interface DanaApi {
     @POST("/adakita/loan_order/amount/drop")
     suspend fun amountDrop(@Field("orderId") orderId: String): BaseResponse<Void>
 
+    @NoNeedToken
     @GET("/adakita/faq")
     suspend fun getFaq(): BaseResponse<FaqRes>
 }
