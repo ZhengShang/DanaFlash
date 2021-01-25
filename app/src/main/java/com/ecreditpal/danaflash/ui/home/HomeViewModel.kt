@@ -19,6 +19,8 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
 
+    val allPermissionGranted = MutableLiveData<Boolean>()
+
     /**
      * 首页支持的产品数量, 分为3个数:
      * 0)表示只支持api产品,  默认打开的是api产品

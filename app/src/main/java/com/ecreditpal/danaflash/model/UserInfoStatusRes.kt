@@ -1,5 +1,6 @@
 package com.ecreditpal.danaflash.model
 
+//0 未完成 1 已完成 2 去修正
 data class UserInfoStatusRes(
     val bankInfo: Int?, // 1
     val basicInfo: Int?, // 1

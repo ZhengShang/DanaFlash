@@ -30,6 +30,8 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity() {
 
+    private val homeViewModel: HomeViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -51,7 +53,6 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        val homeViewModel: HomeViewModel by viewModels()
         homeViewModel.adLiveData.observe(this) {
             if (it.first == AD_TITLE_APIPOP
                 || it.first == AD_TITLE_POP
@@ -104,6 +105,13 @@ class MainActivity : BaseActivity() {
     @SuppressLint("MissingPermission")
     private val requestPermissionsLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { map ->
+            if (map.isEmpty()) {
+                return@registerForActivityResult
+            }
+            //Invoke liveData
+            val allGranted = map.values.all { true }
+            homeViewModel.allPermissionGranted.value = allGranted
+
             map.entries.forEach { entry ->
                 when (entry.key) {
                     Manifest.permission.READ_PHONE_STATE -> {

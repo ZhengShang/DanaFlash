@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.ecreditpal.danaflash.ui.camera.OcrFragment" />
+
+        <variable
+            name="step"
+            type="androidx.databinding.ObservableInt" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black">
+
+        <View
+            android:id="@+id/gray_bg"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="100dp"
+            android:background="#4E4E4E"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:rotation="90"
+            android:text="Sentuh bagian layar untuk fokus"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/viewFinder"
+            app:layout_constraintEnd_toStartOf="@id/viewFinder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/viewFinder" />
+
+        <androidx.camera.view.PreviewView
+            android:id="@+id/viewFinder"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="43dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="43dp"
+            android:layout_marginBottom="40dp"
+            android:visibleInvisible="@{step != OcrFragment.STEP_CAPTURED}"
+            app:layout_constraintBottom_toBottomOf="@id/gray_bg"
+            app:layout_constraintDimensionRatio="1:1.6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/gray_bg"
+            app:layout_constraintTop_toTopOf="@id/gray_bg"
+            tools:background="@color/daan_gray" />
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/pic_ocr_border"
+            app:layout_constraintBottom_toBottomOf="@id/viewFinder"
+            app:layout_constraintEnd_toEndOf="@id/viewFinder"
+            app:layout_constraintStart_toStartOf="@id/viewFinder"
+            app:layout_constraintTop_toTopOf="@id/viewFinder" />
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_back"
+            app:layout_constraintBottom_toTopOf="@id/gray_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/daan_gray" />
+
+        <TextView
+            android:id="@+id/capture"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/selector_capture"
+            android:stateListAnimator="@animator/press_alpha2down"
+            android:visibleGone="@{step == OcrFragment.STEP_START}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gray_bg" />
+
+        <ImageView
+            android:id="@+id/cancel"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_capture_cancel"
+            android:stateListAnimator="@animator/press_alpha2down"
+            android:visibleGone="@{step == OcrFragment.STEP_CAPTURED}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ok"
+            app:layout_constraintTop_toBottomOf="@id/gray_bg" />
+
+        <ImageView
+            android:id="@+id/ok"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_capture_okl"
+            android:stateListAnimator="@animator/press_alpha2down"
+            android:visibleGone="@{step == OcrFragment.STEP_CAPTURED}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/cancel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gray_bg" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

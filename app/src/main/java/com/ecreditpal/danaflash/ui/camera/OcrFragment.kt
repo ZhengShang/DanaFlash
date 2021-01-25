@@ -17,16 +17,17 @@ import androidx.databinding.ObservableInt
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.LogUtils
 import com.bumptech.glide.Glide
+import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
-import com.ecreditpal.danaflash.databinding.FragmentCaptureBinding
+import com.ecreditpal.danaflash.databinding.FragmentOcrBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class CaptureFragment : BaseFragment() {
-    private lateinit var binding: FragmentCaptureBinding
+class OcrFragment : BaseFragment() {
+    private lateinit var binding: FragmentOcrBinding
     private val captureStep = ObservableInt(STEP_START)
 
     private var imageCapture: ImageCapture? = null
@@ -41,7 +42,7 @@ class CaptureFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentCaptureBinding.inflate(inflater, container, false)
+        binding = FragmentOcrBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -58,6 +59,7 @@ class CaptureFragment : BaseFragment() {
             }
             cancel.setOnClickListener {
                 captureStep.set(STEP_START)
+                binding.image.setImageResource(R.drawable.pic_ocr_border)
                 deleteLastPhoto()
             }
             ok.setOnClickListener {

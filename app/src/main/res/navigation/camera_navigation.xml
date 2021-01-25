@@ -7,7 +7,11 @@
 
     <fragment
         android:id="@+id/captureFragment"
-        android:name="com.ecreditpal.danaflash.ui.camera.CaptureFragment"
+        android:name="com.ecreditpal.danaflash.ui.camera.OcrFragment"
         android:label="CaptureFragment"
-        tools:layout="@layout/fragment_capture" />
+        tools:layout="@layout/fragment_ocr" />
+    <fragment
+        android:id="@+id/faceRecognitionFragment"
+        android:name="com.ecreditpal.danaflash.ui.camera.FaceRecognitionFragment"
+        android:label="FaceRecognitionFragment" />
 </navigation>
