@@ -120,7 +120,7 @@
 
 -keep public class android.net.http.SslError
 # webView的混淆处理
--keepclassmembers class com.ecreditpal.danaflash.js.WebAppInterface {
+-keepclassmembers class com.ecreditpal.danaflash.js.AndroidAppInterface {
     public *;
 }
 -keepclassmembers class * extends android.webkit.webViewClient {

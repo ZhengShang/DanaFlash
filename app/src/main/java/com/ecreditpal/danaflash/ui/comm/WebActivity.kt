@@ -8,6 +8,7 @@ import android.webkit.WebView
 import androidx.core.content.ContextCompat
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseActivity
+import com.ecreditpal.danaflash.js.AndroidAppInterface
 
 class WebActivity : BaseActivity() {
 
@@ -55,6 +56,7 @@ class WebActivity : BaseActivity() {
 
 
         }
+        webView.addJavascriptInterface(AndroidAppInterface(this), "Android")
         webView.loadUrl(url)
     }
 
