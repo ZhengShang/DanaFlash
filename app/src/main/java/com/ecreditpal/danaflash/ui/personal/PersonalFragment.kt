@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.addCallback
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -22,10 +21,6 @@ class PersonalFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        activity?.onBackPressedDispatcher?.addCallback {
-            activity?.finish()
-        }
 
         val homeViewModel: HomeViewModel by activityViewModels()
         homeViewModel.getAd(AD_TITLE_PERSONALPOP)

@@ -1,6 +1,8 @@
 package com.ecreditpal.danaflash.ui.camera
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -53,7 +55,7 @@ class OcrFragment : BaseFragment() {
             step = captureStep
 
             viewFinder.clipToOutline = true
-            back.setOnClickListener { activity?.onBackPressed() }
+            back.setOnClickListener { activity?.finish() }
             capture.setOnClickListener {
                 takePhoto()
             }
@@ -63,7 +65,11 @@ class OcrFragment : BaseFragment() {
                 deleteLastPhoto()
             }
             ok.setOnClickListener {
-
+                activity?.setResult(
+                    Activity.RESULT_OK,
+                    Intent().putExtra(EXTRA_OCR_PHOTO_URI, photoUri)
+                )
+                activity?.finish()
             }
 
             //rotate to horizontal ui
@@ -169,6 +175,7 @@ class OcrFragment : BaseFragment() {
     }
 
     companion object {
+        const val EXTRA_OCR_PHOTO_URI = "extra_ocr_photo_uri"
         const val STEP_START = 0
         const val STEP_CAPTURING = 1
         const val STEP_CAPTURED = 2

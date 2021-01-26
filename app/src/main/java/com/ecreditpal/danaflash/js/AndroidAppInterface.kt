@@ -5,7 +5,6 @@ import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.ecreditpal.danaflash.BuildConfig
 import com.ecreditpal.danaflash.data.UserFace
-import com.ecreditpal.danaflash.ui.camera.CameraActivity
 
 class AndroidAppInterface(private val context: Context) {
     @JavascriptInterface
@@ -15,12 +14,12 @@ class AndroidAppInterface(private val context: Context) {
 
     @JavascriptInterface
     fun launchOCR(json: String) {
-        CameraActivity.start(context, CameraActivity.MODE_OCR)
+
     }
 
     @JavascriptInterface
     fun launchLiveness(json: String) {
-        CameraActivity.start(context, CameraActivity.MODE_FACE_RECOGNITION)
+
     }
 
     @JavascriptInterface

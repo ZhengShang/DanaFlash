@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Dana Flash</string>
     <string name="empty_string" translatable="false" />
+    <string name="facebook_app_id" translatable="false">Facebook App ID</string>
     <string name="title_home">Home</string>
     <string name="title_personal">Personal</string>
     <string name="disagree">Disagree</string>
@@ -83,4 +84,5 @@
     <string name="complete">Completed</string>
     <string name="verified">Verified</string>
     <string name="go_verify">Go verify</string>
+    <string name="liveness">Liveness</string>
 </resources>

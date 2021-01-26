@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.MainActivity
 import com.ecreditpal.danaflash.R
@@ -23,7 +24,7 @@ import com.ecreditpal.danaflash.helper.combineH5Url
 import com.ecreditpal.danaflash.helper.danaRequestWithCatch
 import com.ecreditpal.danaflash.model.ProductRes
 import com.ecreditpal.danaflash.net.dfApi
-import com.ecreditpal.danaflash.ui.camera.CameraActivity
+import com.ecreditpal.danaflash.ui.camera.StartLiveness
 import com.ecreditpal.danaflash.ui.comm.CommLoadStateAdapter
 import com.ecreditpal.danaflash.ui.comm.WebActivity
 import com.ecreditpal.danaflash.widget.StatusView
@@ -202,10 +203,10 @@ class HomeFragment : BaseFragment() {
                     WebActivity.loadUrl(context, H5_BASE_INFO.combineH5Url())
                 }
                 res.ocrComplete != 1 -> {
-                    CameraActivity.start(context, CameraActivity.MODE_OCR)
+                    testOcr()
                 }
                 res.faceRecognition == 2 -> {
-                    CameraActivity.start(context, CameraActivity.MODE_FACE_RECOGNITION)
+                    testOcr()
                 }
                 res.faceRecognition == 3 -> {
                     ToastUtils.showLong("Tes Gagal, Mohon untuk Hubungi CS")
@@ -224,5 +225,13 @@ class HomeFragment : BaseFragment() {
                 }
             }
         }
+    }
+
+    private fun testOcr() {
+        launcher.launch("json")
+    }
+
+    val launcher = registerForActivityResult(StartLiveness()) {
+        LogUtils.e("get result ori = $it")
     }
 }

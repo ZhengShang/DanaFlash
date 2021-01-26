@@ -3,15 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/camera_navigation.xml"
-    app:startDestination="@id/captureFragment">
+    app:startDestination="@id/ocrFragment">
 
     <fragment
-        android:id="@+id/captureFragment"
+        android:id="@+id/ocrFragment"
         android:name="com.ecreditpal.danaflash.ui.camera.OcrFragment"
         android:label="CaptureFragment"
         tools:layout="@layout/fragment_ocr" />
     <fragment
-        android:id="@+id/faceRecognitionFragment"
-        android:name="com.ecreditpal.danaflash.ui.camera.FaceRecognitionFragment"
-        android:label="FaceRecognitionFragment" />
+        android:id="@+id/livenessFragment"
+        android:name="com.ecreditpal.danaflash.ui.camera.LivenessFragment"
+        android:label="LivenessFragment"
+        tools:layout="@layout/fragment_liveness" />
+
 </navigation>

@@ -82,4 +82,5 @@
     <string name="complete">已完成</string>
     <string name="verified">已认证</string>
     <string name="go_verify">去认证</string>
+    <string name="liveness">活体认证</string>
 </resources>

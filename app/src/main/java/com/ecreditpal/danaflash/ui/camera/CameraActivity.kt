@@ -2,8 +2,6 @@ package com.ecreditpal.danaflash.ui.camera
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
@@ -18,17 +16,10 @@ import com.ecreditpal.danaflash.ui.comm.ConfirmDialog
 class CameraActivity : BaseNavActivity() {
 
     companion object {
+        const val KEY_JSON = "json"
         const val KEY_MODE = "mode"
         const val MODE_OCR = 0
         const val MODE_FACE_RECOGNITION = 1
-
-        fun start(context: Context?, mode: Int) {
-            context?.startActivity(Intent(
-                context, CameraActivity::class.java
-            ).apply {
-                putExtra(KEY_MODE, mode)
-            })
-        }
     }
 
     override fun navGraphId() = R.navigation.camera_navigation
@@ -46,6 +37,10 @@ class CameraActivity : BaseNavActivity() {
             }
         }
 
+    override fun onBackPressed() {
+        finish()
+    }
+
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +53,7 @@ class CameraActivity : BaseNavActivity() {
         val mode = intent?.getIntExtra(KEY_MODE, MODE_OCR)
         if (mode == MODE_FACE_RECOGNITION) {
             Navigation.findNavController(this, R.id.nav_host_fragment)
-                .popBackStack(R.id.faceRecognitionFragment, true)
+                .navigate(R.id.livenessFragment)
         }
 
         when {

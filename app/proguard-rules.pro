@@ -192,3 +192,6 @@
 
 # Retrolambda
 -dontwarn java.lang.invoke.*
+
+-dontwarn com.android.installreferrer
+-keep class com.appsflyer.** { *; }

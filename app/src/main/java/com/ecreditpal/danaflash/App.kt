@@ -10,6 +10,8 @@ import com.ecreditpal.danaflash.data.UserFace
  */
 class App : Application() {
     companion object {
+        private val devKey = "qrdZGj123456789"
+
         lateinit var context: Context
     }
 

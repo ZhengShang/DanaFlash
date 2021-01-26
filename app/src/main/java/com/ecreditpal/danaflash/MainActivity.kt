@@ -73,10 +73,6 @@ class MainActivity : BaseActivity() {
         versionViewModel.checkVersion()
     }
 
-    override fun onBackPressed() {
-        finish()
-    }
-
     fun isAllPermissionGranted() = PERMISSIONS
         .filter {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_DENIED
