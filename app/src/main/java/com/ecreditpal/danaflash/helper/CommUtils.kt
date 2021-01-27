@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.UriUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.ui.login.LoginActivity
 
@@ -32,5 +33,10 @@ object CommUtils {
         } catch (e: Exception) {
             ToastUtils.showLong(R.string.failed_to_donwload_in_google_store)
         }
+    }
+
+    fun getOssObjectKey(uri: Uri): String {
+        val fileName = UriUtils.uri2File(uri)?.name
+        return "adakita/staging/MemberData/${fileName}.jpeg"
     }
 }

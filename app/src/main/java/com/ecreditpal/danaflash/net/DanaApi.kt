@@ -77,6 +77,18 @@ interface DanaApi {
     @GET("/adakita/oss/sts")
     suspend fun ossSts(): BaseResponse<OssStsRes>
 
+    @POST("/adakita/face_recognition")
+    suspend fun getFaceCheckResult(): BaseResponse<FaceCheckRes>
+
+    @GET("/adakita/product/api/trial")
+    suspend fun amountTrial(
+        @Query("id") id: Int,
+        @Query("termUnit") termUnit: Int?,
+        @Query("applicationAmount") applicationAmount: Int?,
+        @Query("applicationTerm") applicationTerm: Int?
+    ): BaseResponse<AmountTrialRes>
+
+
 }
 
 

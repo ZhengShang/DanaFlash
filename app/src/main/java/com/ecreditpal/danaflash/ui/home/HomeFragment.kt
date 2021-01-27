@@ -11,11 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.MainActivity
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
+import com.ecreditpal.danaflash.base.ImageUploader
 import com.ecreditpal.danaflash.base.LoadingTips
 import com.ecreditpal.danaflash.data.*
 import com.ecreditpal.danaflash.databinding.FragmentHomeBinding
@@ -238,10 +238,31 @@ class HomeFragment : BaseFragment() {
         }
     }
 
-    private val ocrLauncher = registerForActivityResult(StartOcr()) {
-        LogUtils.e("get result = $it")
+    private val ocrLauncher = registerForActivityResult(StartOcr()) { uri ->
+        ImageUploader().uploadImage(lifecycleScope, uri)
     }
     private val livenessLauncher = registerForActivityResult(StartLiveness()) {
-        LogUtils.e("get result = $it")
+        if (it.isNullOrEmpty().not() && it != "0" && it != "-1") {
+            //check api
+            lifecycleScope.launch(Dispatchers.Main) {
+                LoadingTips.showLoading()
+                val res = danaRequestWithCatch {
+                    dfApi().getFaceCheckResult()
+                }
+                LoadingTips.dismissLoading()
+                when (res?.faceCheckBean?.handle) {
+                    "SIMILARITY_NOT_PASS" -> {
+                        ToastUtils.showLong("Identifikasi Gagal, Mohon Pastikan KTP sesuai dengan data Pribadi")
+                    }
+                    "LIVE_SECORE_NOT_PASS" -> {
+                        ToastUtils.showLong("Tes Gagal, Mohon Pastikan Foto Terang dan tidak Buram")
+                    }
+                    else -> {
+                        //进入订单确认页
+                        WebActivity.loadUrl(context, H5_ORDER_CONFIRM.combineH5Url())
+                    }
+                }
+            }
+        }
     }
 }

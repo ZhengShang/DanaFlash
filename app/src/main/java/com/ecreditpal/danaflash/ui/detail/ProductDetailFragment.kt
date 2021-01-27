@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
+import com.ecreditpal.danaflash.base.LoadingTips
 import com.ecreditpal.danaflash.data.H5_BASE_INFO
 import com.ecreditpal.danaflash.data.H5_ORDER_CONFIRM
 import com.ecreditpal.danaflash.data.H5_OTHER_INFO
@@ -15,8 +17,12 @@ import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.databinding.FragmentProductDetailBinding
 import com.ecreditpal.danaflash.helper.CommUtils
 import com.ecreditpal.danaflash.helper.combineH5Url
+import com.ecreditpal.danaflash.helper.danaRequestWithCatch
 import com.ecreditpal.danaflash.model.ProductRes
+import com.ecreditpal.danaflash.net.dfApi
 import com.ecreditpal.danaflash.ui.comm.WebActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ProductDetailFragment : BaseFragment() {
 
@@ -124,16 +130,32 @@ class ProductDetailFragment : BaseFragment() {
     }
 
     private fun navH5OrderConfirm() {
-        WebActivity.loadUrl(
-            context, H5_ORDER_CONFIRM.combineH5Url(
-                mapOf(
-                    "id" to product?.id, // 点击产品ID
-                    "amount" to product?.amountMax, // 产品试算金额列表返回data数组里的最大值 fixme 试算金额
-                    "productName" to product?.name, // 点击的产品名称
-                    "trackCode" to "", // 入口埋点（取埋点里code字段）
-                    // TODO: 2021/1/21 track code
+        val id = product?.id ?: return
+        lifecycleScope.launch(Dispatchers.Main) {
+            LoadingTips.showLoading()
+            val res = danaRequestWithCatch {
+                dfApi().amountTrial(
+                    id,
+                    product?.periodUnit,
+                    product?.amountMax?.intValueExact(),
+                    product?.periodMax
+                )
+            }
+            LoadingTips.dismissLoading()
+            if (res == null) {
+                return@launch
+            }
+            WebActivity.loadUrl(
+                context, H5_ORDER_CONFIRM.combineH5Url(
+                    mapOf(
+                        "id" to id, // 点击产品ID
+                        "amount" to res.getMaxAmount(), // 产品试算金额列表返回data数组里的最大值
+                        "productName" to product?.name, // 点击的产品名称
+                        "trackCode" to "", // 入口埋点（取埋点里code字段）
+                        // TODO: 2021/1/21 track code
+                    )
                 )
             )
-        )
+        }
     }
 }

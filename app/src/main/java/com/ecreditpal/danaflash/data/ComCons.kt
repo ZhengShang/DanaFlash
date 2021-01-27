@@ -1,5 +1,8 @@
 package com.ecreditpal.danaflash.data
 
+const val OSS_BUCKET = "tropic-hongkong"
+const val OSS_ENDPOINT = "oss-cn-hongkong.aliyuncs.com"
+
 const val PRODUCT_TYPE_API = 1
 const val PRODUCT_TYPE_GP = 0
 

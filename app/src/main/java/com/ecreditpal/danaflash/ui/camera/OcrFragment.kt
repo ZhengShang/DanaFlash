@@ -3,6 +3,7 @@ package com.ecreditpal.danaflash.ui.camera
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +18,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.lifecycleScope
+import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.LogUtils
 import com.bumptech.glide.Glide
 import com.ecreditpal.danaflash.R
@@ -152,9 +154,16 @@ class OcrFragment : BaseFragment() {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     captureStep.set(STEP_CAPTURED)
                     photoUri = output.savedUri ?: Uri.fromFile(photoFile)
+                    compressImage(photoFile)
                     loadImage()
                 }
             })
+    }
+
+    private fun compressImage(file: File) {
+        kotlin.runCatching {
+            ImageUtils.compressByQuality(BitmapFactory.decodeFile(file.path), 500_1024L)
+        }
     }
 
     private fun loadImage() {
@@ -168,8 +177,10 @@ class OcrFragment : BaseFragment() {
     private fun deleteLastPhoto() {
         lifecycleScope.launch(Dispatchers.IO) {
             photoUri?.let {
-                val path = it.path ?: return@launch
-                File(path).delete()
+                kotlin.runCatching {
+                    val path = it.path ?: return@launch
+                    File(path).delete()
+                }
             }
         }
     }

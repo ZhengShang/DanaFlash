@@ -121,7 +121,7 @@ class HomeViewModel : ViewModel() {
             AD_TITLE_POP -> DataStoreKeys.AD_POP_LAST_STAMP
 //            AD_TITLE_INDEX -> DataStoreKeys.AD_INDEX_LAST_STAMP
             AD_TITLE_PERSONALPOP -> DataStoreKeys.AD_PERSONALPOP_LAST_STAMP
-            else -> return true // FIXME: 2021/1/19 暂时其他类型不检测, 允许请求
+            else -> return true
         }
 
         val lastTramp = App.context.readDsData(key, 0)
