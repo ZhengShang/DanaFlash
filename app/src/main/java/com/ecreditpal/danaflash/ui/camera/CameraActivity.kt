@@ -2,6 +2,8 @@ package com.ecreditpal.danaflash.ui.camera
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
@@ -20,6 +22,7 @@ class CameraActivity : BaseNavActivity() {
         const val KEY_MODE = "mode"
         const val MODE_OCR = 0
         const val MODE_FACE_RECOGNITION = 1
+        private const val PERMISSION_DENIED = "-1"
     }
 
     override fun navGraphId() = R.navigation.camera_navigation
@@ -32,6 +35,10 @@ class CameraActivity : BaseNavActivity() {
                     showRational()
                 } else {
                     ToastUtils.showLong(R.string.failed_to_open_camera_without_permission)
+                    setResult(
+                        Activity.RESULT_OK,
+                        Intent().putExtra(LivenessFragment.EXTRA_RESULT, PERMISSION_DENIED)
+                    )
                     finish()
                 }
             }
@@ -75,6 +82,10 @@ class CameraActivity : BaseNavActivity() {
         ConfirmDialog(
             contentStr = getString(R.string.failed_to_open_camera_without_permission),
             negativeClickListener = {
+                setResult(
+                    Activity.RESULT_OK,
+                    Intent().putExtra(LivenessFragment.EXTRA_RESULT, PERMISSION_DENIED)
+                )
                 finish()
             },
             positiveClickListener = {

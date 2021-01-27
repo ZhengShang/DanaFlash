@@ -1,40 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <include
-        android:id="@+id/title_bar"
-        layout="@layout/view_titlebar" />
+    <data>
 
-    <ai.advance.liveness.lib.LivenessView
-        android:id="@+id/viewFinder"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/scan"
-        app:layout_constraintEnd_toEndOf="@id/scan"
-        app:layout_constraintStart_toStartOf="@id/scan"
-        app:layout_constraintTop_toTopOf="@id/scan" />
+        <variable
+            name="timerSec"
+            type="androidx.databinding.ObservableInt" />
 
-    <ImageView
-        android:id="@+id/scan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:src="@drawable/ic_scan"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_bar" />
+        <variable
+            name="tipsRes"
+            type="androidx.databinding.ObservableInt" />
+    </data>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="Silakan masukkan wajah Anda dalam bingkai"
-        android:textColor="@color/text"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/viewFinder" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/title_bar"
+            layout="@layout/view_titlebar" />
+
+        <ai.advance.liveness.lib.LivenessView
+            android:id="@+id/liveness_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/scan"
+            app:layout_constraintEnd_toEndOf="@id/scan"
+            app:layout_constraintStart_toStartOf="@id/scan"
+            app:layout_constraintTop_toTopOf="@id/scan" />
+
+        <ImageView
+            android:id="@+id/scan"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="50dp"
+            android:src="@drawable/ic_liveness_mask"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title_bar" />
+
+        <TextView
+            android:id="@+id/tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text='@{tipsRes == 0 ? "" : context.getString(tipsRes)}'
+            android:textColor="@color/text"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/liveness_view"
+            tools:text="Silakan masukkan wajah Anda dalam bingkai" />
+
+        <ImageView
+            android:id="@+id/tip_image_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintDimensionRatio="H,1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tips"
+            app:layout_constraintWidth_percent="0.3" />
+
+        <TextView
+            android:id="@+id/timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minWidth="50dp"
+            android:padding="@dimen/def_edge_margin"
+            android:text='@{timerSec + "s"}'
+            android:textColor="@color/text"
+            android:visibleGone="@{timerSec > 0}"
+            android:textSize="28sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title_bar"
+            tools:text="20s" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

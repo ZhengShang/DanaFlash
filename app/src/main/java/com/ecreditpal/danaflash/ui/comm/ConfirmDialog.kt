@@ -33,6 +33,9 @@ class ConfirmDialog(
             content.text = contentStr
             cancel.text = negativeStr
             confirm.text = positiveStr
+            if (negativeStr.isEmpty()) {
+                cancel.visibility = View.GONE
+            }
             cancel.setOnClickListener {
                 negativeClickListener?.invoke()
                 dismiss()

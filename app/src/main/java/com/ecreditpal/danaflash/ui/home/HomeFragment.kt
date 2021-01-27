@@ -25,6 +25,7 @@ import com.ecreditpal.danaflash.helper.danaRequestWithCatch
 import com.ecreditpal.danaflash.model.ProductRes
 import com.ecreditpal.danaflash.net.dfApi
 import com.ecreditpal.danaflash.ui.camera.StartLiveness
+import com.ecreditpal.danaflash.ui.camera.StartOcr
 import com.ecreditpal.danaflash.ui.comm.CommLoadStateAdapter
 import com.ecreditpal.danaflash.ui.comm.WebActivity
 import com.ecreditpal.danaflash.widget.StatusView
@@ -46,6 +47,9 @@ class HomeFragment : BaseFragment() {
 
     //过滤掉第一次的刷新页面操作, 只有从其他页面返回回来才需要刷新
     private var fromCreate = true
+
+    //是否请求过权限, 只有请求过权限, 才需要监听所有的权限结果回调
+    private var requestedPm = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,6 +81,7 @@ class HomeFragment : BaseFragment() {
                 if (mainActivity.isAllPermissionGranted()) {
                     navByUserInfoStatus()
                 } else {
+                    requestedPm = true
                     mainActivity.requestAllPermissions()
                 }
             } else {
@@ -101,7 +106,7 @@ class HomeFragment : BaseFragment() {
             }
         }
         homeViewModel.allPermissionGranted.observe(viewLifecycleOwner) { granted ->
-            if (granted) {
+            if (requestedPm and granted) {
                 navByUserInfoStatus()
             }
         }
@@ -203,10 +208,16 @@ class HomeFragment : BaseFragment() {
                     WebActivity.loadUrl(context, H5_BASE_INFO.combineH5Url())
                 }
                 res.ocrComplete != 1 -> {
-                    testOcr()
+                    ocrLauncher.launch("")
                 }
                 res.faceRecognition == 2 -> {
-                    testOcr()
+                    val json = """
+                            {
+                                "key": "157847f2cc0e94b9",
+                                "secret": "5fc3a4118948c486"
+                             }
+                    """.trimIndent()
+                    livenessLauncher.launch(json)
                 }
                 res.faceRecognition == 3 -> {
                     ToastUtils.showLong("Tes Gagal, Mohon untuk Hubungi CS")
@@ -227,11 +238,10 @@ class HomeFragment : BaseFragment() {
         }
     }
 
-    private fun testOcr() {
-        launcher.launch("json")
+    private val ocrLauncher = registerForActivityResult(StartOcr()) {
+        LogUtils.e("get result = $it")
     }
-
-    val launcher = registerForActivityResult(StartLiveness()) {
-        LogUtils.e("get result ori = $it")
+    private val livenessLauncher = registerForActivityResult(StartLiveness()) {
+        LogUtils.e("get result = $it")
     }
 }

@@ -73,6 +73,10 @@ interface DanaApi {
     suspend fun orderProcessing(
         @Query("productId") productId: Int
     ): BaseResponse<OrderProcessingRes>
+
+    @GET("/adakita/oss/sts")
+    suspend fun ossSts(): BaseResponse<OssStsRes>
+
 }
 
 
