@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.work.*
 import com.blankj.utilcode.util.PhoneUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.base.BaseActivity
 import com.ecreditpal.danaflash.data.AD_TITLE_APIPOP
 import com.ecreditpal.danaflash.data.AD_TITLE_PERSONALPOP
@@ -31,6 +32,17 @@ import java.util.concurrent.TimeUnit
 class MainActivity : BaseActivity() {
 
     private val homeViewModel: HomeViewModel by viewModels()
+    private var lastClickMills = 0L
+
+    override fun onBackPressed() {
+        val now = System.currentTimeMillis()
+        if (now - lastClickMills < 2000) {
+            super.onBackPressed()
+        } else {
+            lastClickMills = now
+            ToastUtils.showLong("Tekan sekali lagi untuk keluar")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -15,7 +15,6 @@ import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.MainActivity
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
-import com.ecreditpal.danaflash.base.ImageUploader
 import com.ecreditpal.danaflash.base.LoadingTips
 import com.ecreditpal.danaflash.data.*
 import com.ecreditpal.danaflash.databinding.FragmentHomeBinding
@@ -25,7 +24,6 @@ import com.ecreditpal.danaflash.helper.danaRequestWithCatch
 import com.ecreditpal.danaflash.model.ProductRes
 import com.ecreditpal.danaflash.net.dfApi
 import com.ecreditpal.danaflash.ui.camera.StartLiveness
-import com.ecreditpal.danaflash.ui.camera.StartOcr
 import com.ecreditpal.danaflash.ui.comm.CommLoadStateAdapter
 import com.ecreditpal.danaflash.ui.comm.WebActivity
 import com.ecreditpal.danaflash.widget.StatusView
@@ -207,20 +205,11 @@ class HomeFragment : BaseFragment() {
                 res.basicInfo != 1 -> {
                     WebActivity.loadUrl(context, H5_BASE_INFO.combineH5Url())
                 }
-                res.ocrComplete != 1 -> {
-                    ocrLauncher.launch("")
-                }
                 res.faceRecognition == 2 -> {
-                    val json = """
-                            {
-                                "key": "157847f2cc0e94b9",
-                                "secret": "5fc3a4118948c486"
-                             }
-                    """.trimIndent()
-                    livenessLauncher.launch(json)
+                    livenessLauncher.launch(null)
                 }
                 res.faceRecognition == 3 -> {
-                    ToastUtils.showLong("Tes Gagal, Mohon untuk Hubungi CS")
+                    ToastUtils.showLong(R.string.detection_failed_need_service)
                 }
                 res.emergencyInfo != 1 -> {
                     WebActivity.loadUrl(context, H5_CONTACT_PEOPLE.combineH5Url())
@@ -238,31 +227,7 @@ class HomeFragment : BaseFragment() {
         }
     }
 
-    private val ocrLauncher = registerForActivityResult(StartOcr()) { uri ->
-        ImageUploader().uploadImage(lifecycleScope, uri)
-    }
     private val livenessLauncher = registerForActivityResult(StartLiveness()) {
-        if (it.isNullOrEmpty().not() && it != "0" && it != "-1") {
-            //check api
-            lifecycleScope.launch(Dispatchers.Main) {
-                LoadingTips.showLoading()
-                val res = danaRequestWithCatch {
-                    dfApi().getFaceCheckResult()
-                }
-                LoadingTips.dismissLoading()
-                when (res?.faceCheckBean?.handle) {
-                    "SIMILARITY_NOT_PASS" -> {
-                        ToastUtils.showLong("Identifikasi Gagal, Mohon Pastikan KTP sesuai dengan data Pribadi")
-                    }
-                    "LIVE_SECORE_NOT_PASS" -> {
-                        ToastUtils.showLong("Tes Gagal, Mohon Pastikan Foto Terang dan tidak Buram")
-                    }
-                    else -> {
-                        //进入订单确认页
-                        WebActivity.loadUrl(context, H5_ORDER_CONFIRM.combineH5Url())
-                    }
-                }
-            }
-        }
+        CommUtils.stepAfterLiveness(lifecycleScope, context, it)
     }
 }

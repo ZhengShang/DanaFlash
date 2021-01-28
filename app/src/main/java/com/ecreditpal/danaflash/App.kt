@@ -2,6 +2,7 @@ package com.ecreditpal.danaflash
 
 import android.app.Application
 import android.content.Context
+import com.ecreditpal.danaflash.data.LivenessKeysSaver
 import com.ecreditpal.danaflash.data.UserFace
 
 /**
@@ -19,5 +20,6 @@ class App : Application() {
         super.onCreate()
         context = applicationContext
         UserFace.initData()
+        LivenessKeysSaver.init()
     }
 }

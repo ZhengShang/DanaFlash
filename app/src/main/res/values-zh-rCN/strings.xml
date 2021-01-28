@@ -80,8 +80,6 @@
     <string name="month">月</string>
     <string name="day">天</string>
     <string name="complete">已完成</string>
-    <string name="verified">已认证</string>
-    <string name="go_verify">去认证</string>
     <string name="liveness">活体认证</string>
     <string name="prompt">提示</string>
     <string name="liveness_blink">请眨眼</string>
@@ -112,4 +110,7 @@
     <string name="liveness_failed_reason_muchaction">检测到多个动作</string>
     <string name="liveness_failed_reason_auth_failed">授权失败，请检查网络</string>
     <string name="liveness_failed_reason_bad_network">请检查网络</string>
+    <string name="to_fill_in">去填写</string>
+    <string name="to_fix">去修正</string>
+    <string name="detection_failed_need_service">检测异常，请联系客服处理</string>
 </resources>

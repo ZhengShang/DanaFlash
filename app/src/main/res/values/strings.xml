@@ -82,8 +82,6 @@
     <string name="month">Month</string>
     <string name="day">Day</string>
     <string name="complete">Completed</string>
-    <string name="verified">Verified</string>
-    <string name="go_verify">Go verify</string>
     <string name="liveness">Liveness</string>
     <string name="prompt">Prompt</string>
     <string name="liveness_blink">Please blink</string>
@@ -114,4 +112,7 @@
     <string name="liveness_failed_reason_muchaction">Multiple motions detected</string>
     <string name="liveness_failed_reason_auth_failed">Authorization failed, please check network</string>
     <string name="liveness_failed_reason_bad_network">Please check network</string>
+    <string name="to_fill_in">To fill in</string>
+    <string name="to_fix">To fix</string>
+    <string name="detection_failed_need_service">Detect anomalies, please contact customer service processing</string>
 </resources>

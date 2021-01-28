@@ -7,19 +7,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.base.LoadingTips
-import com.ecreditpal.danaflash.data.H5_BASE_INFO
-import com.ecreditpal.danaflash.data.H5_ORDER_CONFIRM
-import com.ecreditpal.danaflash.data.H5_OTHER_INFO
-import com.ecreditpal.danaflash.data.UserFace
+import com.ecreditpal.danaflash.data.*
 import com.ecreditpal.danaflash.databinding.FragmentProductDetailBinding
 import com.ecreditpal.danaflash.helper.CommUtils
 import com.ecreditpal.danaflash.helper.combineH5Url
 import com.ecreditpal.danaflash.helper.danaRequestWithCatch
+import com.ecreditpal.danaflash.model.AmountTrialRes
 import com.ecreditpal.danaflash.model.ProductRes
+import com.ecreditpal.danaflash.model.UserInfoStatusRes
 import com.ecreditpal.danaflash.net.dfApi
+import com.ecreditpal.danaflash.ui.camera.StartLiveness
 import com.ecreditpal.danaflash.ui.comm.WebActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,6 +31,7 @@ class ProductDetailFragment : BaseFragment() {
     private val productViewModel: ProductViewModel by viewModels()
 
     private var product: ProductRes.Product? = null
+    private var amountTrialRes: AmountTrialRes? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,30 +56,35 @@ class ProductDetailFragment : BaseFragment() {
         binding.vm = productViewModel
 
         productViewModel.userInfoStatus.observe(viewLifecycleOwner) {
-            binding.baseInfo.siEndText = if (it.isBaseInfoVerified()) {
-                getString(R.string.verified)
-            } else {
-                getString(R.string.go_verify)
+            binding.baseInfo.siEndText = when {
+                it.isBaseInfoCompleted() -> {
+                    getString(R.string.complete)
+                }
+                it.isBaseToFix() -> {
+                    binding.baseInfo.endTextView.setBackgroundResource(R.drawable.shape_red_solid_r20)
+                    getString(R.string.to_fix)
+                }
+                else -> {
+                    getString(R.string.to_fill_in)
+                }
             }
-            binding.otherInfo.siEndText = if (it.isOtherInfoVerified()) {
-                getString(R.string.verified)
-            } else {
-                getString(R.string.go_verify)
+            binding.otherInfo.siEndText = when {
+                it.isOtherInfoComplete() -> {
+                    getString(R.string.complete)
+                }
+                it.isOtherToFix() -> {
+                    binding.otherInfo.endTextView.setBackgroundResource(R.drawable.shape_red_solid_r20)
+                    getString(R.string.to_fix)
+                }
+                else -> {
+                    getString(R.string.to_fill_in)
+                }
             }
         }
 
         binding.baseInfo.setOnClickListener { clickInfoItem(it.id) }
         binding.otherInfo.setOnClickListener { clickInfoItem(it.id) }
-
-        binding.loan.setOnClickListener {
-            productViewModel.orderProcessingRes.value?.let {
-                if (it.status == 2) {
-                    findNavController().navigate(R.id.action_productDetailFragment_to_ordersActivity2)
-                } else if (it.status == 0) {
-                    navH5OrderConfirm()
-                }
-            }
-        }
+        binding.loan.setOnClickListener { clickInfoItem(it.id) }
     }
 
     override fun onResume() {
@@ -101,61 +108,89 @@ class ProductDetailFragment : BaseFragment() {
             return
         }
         productViewModel.userInfoStatus.value?.let {
-            when (id) {
-                R.id.base_info -> {
-                    if (it.isBaseInfoVerified().not()) {
-                        toInfoDetail(H5_BASE_INFO)
+            lifecycleScope.launch(Dispatchers.Main) {
+                if (amountTrialRes == null) {
+                    LoadingTips.showLoading()
+                    calAmountTrial()
+                    LoadingTips.dismissLoading()
+                }
+                clickAction(id, it)
+            }
+        }
+    }
+
+    private fun clickAction(id: Int, it: UserInfoStatusRes) {
+        when (id) {
+            R.id.base_info -> {
+                when {
+                    it.basicInfo != 1
+                            || it.ocrComplete != 1
+                            || it.faceRecognition != 1 && it.faceRecognition != 2 -> {
+
+                        WebActivity.loadUrl(context, H5_BASE_INFO.combineH5Url(getH5Params()))
+                    }
+                    it.isBaseToFix() -> {
+                        livenessLauncher.launch(null)
+                    }
+                    it.faceRecognition == 3 -> {
+                        ToastUtils.showLong(R.string.detection_failed_need_service)
                     }
                 }
-                R.id.other_info -> {
-                    if (it.isOtherInfoVerified().not()) {
-                        toInfoDetail(H5_OTHER_INFO)
+            }
+            R.id.other_info -> {
+                when {
+                    it.emergencyInfo != 1 -> {
+                        WebActivity.loadUrl(context, H5_CONTACT_PEOPLE.combineH5Url(getH5Params()))
                     }
+                    it.bankInfo != 1 -> {
+                        WebActivity.loadUrl(context, H5_BANK_INFO.combineH5Url(getH5Params()))
+                    }
+                    it.otherInfo != 1 -> {
+                        WebActivity.loadUrl(context, H5_OTHER_INFO.combineH5Url(getH5Params()))
+                    }
+                }
+            }
+            R.id.loan -> {
+                if (binding.baseInfo.endTextView.text != getString(R.string.complete)) {
+                    binding.baseInfo.performClick()
+                } else if (binding.otherInfo.endTextView.text != getString(R.string.complete)) {
+                    binding.otherInfo.performClick()
+                } else {
+                    clickToLoan()
                 }
             }
         }
     }
 
-    private fun toInfoDetail(url: String) {
-        WebActivity.loadUrl(
-            context, url.combineH5Url(
-                mapOf(
-                    "id" to product?.id,
-                    "amount" to product?.amountMax,
-                    "productName" to product?.name,
-                    "trackCode" to "" // TODO: 2021/1/18 add trackCode
-                )
-            )
-        )
+    private fun clickToLoan() {
+        productViewModel.orderProcessingRes.value?.let {
+            if (it.status == 2) {
+                findNavController().navigate(R.id.action_productDetailFragment_to_ordersActivity2)
+            } else if (it.status == 0) {
+                WebActivity.loadUrl(context, H5_ORDER_CONFIRM.combineH5Url(getH5Params()))
+            }
+        }
     }
 
-    private fun navH5OrderConfirm() {
-        val id = product?.id ?: return
-        lifecycleScope.launch(Dispatchers.Main) {
-            LoadingTips.showLoading()
-            val res = danaRequestWithCatch {
-                dfApi().amountTrial(
-                    id,
-                    product?.periodUnit,
-                    product?.amountMax?.intValueExact(),
-                    product?.periodMax
-                )
-            }
-            LoadingTips.dismissLoading()
-            if (res == null) {
-                return@launch
-            }
-            WebActivity.loadUrl(
-                context, H5_ORDER_CONFIRM.combineH5Url(
-                    mapOf(
-                        "id" to id, // 点击产品ID
-                        "amount" to res.getMaxAmount(), // 产品试算金额列表返回data数组里的最大值
-                        "productName" to product?.name, // 点击的产品名称
-                        "trackCode" to "", // 入口埋点（取埋点里code字段）
-                        // TODO: 2021/1/21 track code
-                    )
-                )
+    private suspend fun calAmountTrial() {
+        amountTrialRes = danaRequestWithCatch {
+            dfApi().amountTrial(
+                id,
+                product?.periodUnit,
+                product?.amountMax?.intValueExact(),
+                product?.periodMax
             )
         }
     }
+
+    private val livenessLauncher = registerForActivityResult(StartLiveness()) {
+        CommUtils.stepAfterLiveness(lifecycleScope, context, it)
+    }
+
+    private fun getH5Params() = mutableMapOf(
+        "id" to product?.id, // 点击产品ID
+        "amount" to amountTrialRes?.getMaxAmount(), // 产品试算金额列表返回data数组里的最大值
+        "productName" to product?.name, // 点击的产品名称
+        "trackCode" to 1, // 入口埋点（取埋点里code字段） todo trackcode
+    )
 }

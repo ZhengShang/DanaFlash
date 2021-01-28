@@ -141,7 +141,7 @@
             android:layout_marginTop="1dp"
             android:background="@drawable/ripple_white_mask"
             app:layout_constraintTop_toBottomOf="@id/fill_info"
-            app:siEndTextBackground="@drawable/shape_red_solid_r20"
+            app:siEndTextBackground="@drawable/shape_daan_gray_solid_r20"
             app:siEndTextColor="@color/white"
             app:siStartIcon="@drawable/ic_base_info"
             app:siTitle="@string/base_info" />

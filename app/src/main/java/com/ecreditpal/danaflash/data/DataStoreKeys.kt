@@ -9,6 +9,9 @@ object DataStoreKeys {
     val PHONE = preferencesKey<String>("phone")
     val DEVICE_ID = preferencesKey<String>("device_id")
 
+    val LIVENESS_KEY = preferencesKey<String>("liveness_key")
+    val LIVENESS_SECRET = preferencesKey<String>("liveness_secret")
+
     //广告上次显示的时间戳
     val AD_APIPOP_LAST_STAMP = preferencesKey<Long>("ad_apipop_last_stamp")
     val AD_POP_LAST_STAMP = preferencesKey<Long>("ad_pop_last_stamp")

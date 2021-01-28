@@ -7,20 +7,6 @@ plugins {
 }
 
 android {
-    signingConfigs {
-        debug {
-            storeFile file('C:\\Users\\shang\\StudioProjects\\DanaFlash\\dfkeystore.jks')
-            storePassword '123456'
-            keyAlias 'key0'
-            keyPassword '123456'
-        }
-        release {
-            storeFile file('C:\\Users\\shang\\StudioProjects\\DanaFlash\\dfkeystore.jks')
-            storePassword '123456'
-            keyAlias 'key0'
-            keyPassword '123456'
-        }
-    }
     compileSdkVersion 30
 
     defaultConfig {
@@ -37,7 +23,6 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
     }
     compileOptions {

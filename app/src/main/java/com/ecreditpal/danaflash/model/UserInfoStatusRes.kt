@@ -10,7 +10,11 @@ data class UserInfoStatusRes(
     val ocrComplete: Int?, // 1
     val otherInfo: Int? // 1
 ) {
-    fun isBaseInfoVerified() = basicInfo == 1 && faceRecognition == 1
+    fun isBaseInfoCompleted() = basicInfo == 1 && faceRecognition == 1 && ocrComplete == 1
 
-    fun isOtherInfoVerified() = emergencyInfo == 1 && bankInfo == 1 && otherInfo == 1
+    fun isBaseToFix() = faceRecognition == 2
+
+    fun isOtherInfoComplete() = emergencyInfo == 1 && bankInfo == 1 && otherInfo == 1
+
+    fun isOtherToFix() = emergencyInfo == 2 || bankInfo == 2 || otherInfo == 2
 }

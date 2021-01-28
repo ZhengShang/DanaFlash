@@ -3,11 +3,18 @@ package com.ecreditpal.danaflash.helper
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.lifecycle.LifecycleCoroutineScope
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.UriUtils
 import com.ecreditpal.danaflash.R
+import com.ecreditpal.danaflash.base.LoadingTips
+import com.ecreditpal.danaflash.data.H5_ORDER_CONFIRM
+import com.ecreditpal.danaflash.net.dfApi
+import com.ecreditpal.danaflash.ui.comm.WebActivity
 import com.ecreditpal.danaflash.ui.login.LoginActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object CommUtils {
 
@@ -35,8 +42,45 @@ object CommUtils {
         }
     }
 
+    /**
+     * 从Uri中获取文件名, 然后拼接后返回oss上传所需要的object名字
+     */
     fun getOssObjectKey(uri: Uri): String {
         val fileName = UriUtils.uri2File(uri)?.name
         return "adakita/staging/MemberData/${fileName}.jpeg"
+    }
+
+    /**
+     * 活体检测结束后的操作, 需要重新从后台拉取接口判断是否活体检测成功了, 并因此显示不同的结果
+     */
+    fun stepAfterLiveness(
+        scope: LifecycleCoroutineScope,
+        context: Context?,
+        livenessResult: String?
+    ) {
+        if (livenessResult.isNullOrEmpty() || livenessResult == "0" || livenessResult == "-1") {
+            return
+        }
+
+        //check api
+        scope.launch(Dispatchers.Main) {
+            LoadingTips.showLoading()
+            val res = danaRequestWithCatch {
+                dfApi().getFaceCheckResult()
+            }
+            LoadingTips.dismissLoading()
+            when (res?.faceCheckBean?.handle) {
+                "SIMILARITY_NOT_PASS" -> {
+                    ToastUtils.showLong("Identifikasi Gagal, Mohon Pastikan KTP sesuai dengan data Pribadi")
+                }
+                "LIVE_SECORE_NOT_PASS" -> {
+                    ToastUtils.showLong("Tes Gagal, Mohon Pastikan Foto Terang dan tidak Buram")
+                }
+                else -> {
+                    //进入订单确认页
+                    WebActivity.loadUrl(context, H5_ORDER_CONFIRM.combineH5Url())
+                }
+            }
+        }
     }
 }

@@ -40,8 +40,6 @@
     <string name="month">Bulan</string>
     <string name="day">Hari</string>
     <string name="complete">Komplit</string>
-    <string name="verified">Sudah Lengkap</string>
-    <string name="go_verify">Lengkapi Info</string>
     <string name="prompt">Notifikasi</string>
     <string name="liveness_blink">Silakan berkedip</string>
     <string name="liveness_mouse">Mohon buka dan tutup mulut Anda</string>
@@ -71,4 +69,7 @@
     <string name="liveness_failed_reason_muchaction">Banyak gerakan terdeteksi</string>
     <string name="liveness_failed_reason_auth_failed">Otorisasi gagal, mohon cek jaringan Anda</string>
     <string name="liveness_failed_reason_bad_network">Mohon cek jaringan Anda</string>
+    <string name="to_fill_in">Isi</string>
+    <string name="to_fix">Mohon Perbaiki</string>
+    <string name="detection_failed_need_service">Tes Gagal, Mohon untuk Hubungi CS</string>
 </resources>

@@ -21,6 +21,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.base.LoadingTips
+import com.ecreditpal.danaflash.data.LivenessKeysSaver
 import com.ecreditpal.danaflash.databinding.FragmentLivenessBinding
 import com.ecreditpal.danaflash.ui.comm.ConfirmDialog
 import org.json.JSONObject
@@ -42,23 +43,25 @@ class LivenessFragment : BaseFragment() {
 
         activity?.window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
 
-        val jsonStr = activity?.intent?.getStringExtra(CameraActivity.KEY_JSON)
-        if (jsonStr.isNullOrEmpty()) {
-            activity?.finish()
-            return
-        }
-
         var key = ""
         var secret = ""
-        kotlin.runCatching {
-            JSONObject(jsonStr).let {
-                key = it.optString("key")
-                secret = it.optString("secret")
+
+        val jsonStr = activity?.intent?.getStringExtra(CameraActivity.KEY_JSON)
+        if (jsonStr.isNullOrEmpty()) {
+            //如果没有传入, 则使用后台请求回来的
+            key = LivenessKeysSaver.key
+            secret = LivenessKeysSaver.secret
+        } else {
+            kotlin.runCatching {
+                JSONObject(jsonStr).let {
+                    key = it.optString("key")
+                    secret = it.optString("secret")
+                }
+            }.onFailure {
+                LogUtils.e("parse liveness json key and secret failed.")
+                activity?.finish()
+                return
             }
-        }.onFailure {
-            LogUtils.e("parse liveness json key and secret failed.")
-            activity?.finish()
-            return
         }
 
         GuardianLivenessDetectionSDK.init(

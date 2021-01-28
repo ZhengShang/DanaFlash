@@ -88,7 +88,9 @@ interface DanaApi {
         @Query("applicationTerm") applicationTerm: Int?
     ): BaseResponse<AmountTrialRes>
 
-
+    @NoNeedToken
+    @GET("/adakita/secret_key/get")
+    suspend fun getLivenessSecretKey(): BaseResponse<LivenessSecretKeyRes>
 }
 
 
