@@ -13,7 +13,7 @@ class WebInterface {
      * "-1" 上传失败
      */
     fun isUploading(status: String): String {
-        return JS_PREFIX + "isUploading"
+        return JS_PREFIX + "isUploading($status)"
     }
 
     /**
@@ -23,8 +23,8 @@ class WebInterface {
     type 图⽚类型（前端在调⽤launchOCR后传递的值
     img 图⽚的base64编码(NO_WRAP)
      */
-    fun sendImgUrl(url: String, type: String, img: String) {
-
+    fun sendImgUrl(url: String, type: String?, img: String): String {
+        return JS_PREFIX + "sendImgUrl($url, $type, $img)"
     }
 
     /**

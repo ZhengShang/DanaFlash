@@ -6,9 +6,19 @@ import android.os.Bundle
 import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import com.blankj.utilcode.util.EncodeUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseActivity
+import com.ecreditpal.danaflash.base.ImageUploader
+import com.ecreditpal.danaflash.data.OSS_BUCKET
+import com.ecreditpal.danaflash.data.OSS_ENDPOINT
+import com.ecreditpal.danaflash.helper.CommUtils
+import com.ecreditpal.danaflash.helper.toBytes
 import com.ecreditpal.danaflash.js.AndroidAppInterface
+import com.ecreditpal.danaflash.js.WebInterface
+import com.ecreditpal.danaflash.ui.camera.StartLiveness
+import com.ecreditpal.danaflash.ui.camera.StartOcr
 
 class WebActivity : BaseActivity() {
 
@@ -23,6 +33,7 @@ class WebActivity : BaseActivity() {
     }
 
     private lateinit var webView: WebView
+    private val webInterface = WebInterface()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,4 +71,36 @@ class WebActivity : BaseActivity() {
         webView.loadUrl(url)
     }
 
+    private fun callJs(jsStr: String) {
+        webView.evaluateJavascript(jsStr) { value ->
+
+        }
+    }
+
+    fun startOcrPage(json: String?) {
+        ocrLauncher.launch(json)
+    }
+
+    fun startLiveness(json: String?) {
+        livenessLauncher.launch(json)
+    }
+
+    private val ocrLauncher = registerForActivityResult(StartOcr()) { pair ->
+        ImageUploader().uploadImage(lifecycleScope, pair.second) {
+            callJs(webInterface.isUploading(it))
+            if (it == "1") {
+                callJs(
+                    webInterface.sendImgUrl(
+                        url = "https://${OSS_BUCKET + OSS_ENDPOINT + CommUtils.getOssObjectKey(pair.second!!)}",
+                        type = pair.first,
+                        img = EncodeUtils.base64Encode2String(pair.second.toBytes(this))
+                    )
+                )
+            }
+        }
+    }
+
+    private val livenessLauncher = registerForActivityResult(StartLiveness()) {
+        CommUtils.stepAfterLiveness(lifecycleScope, this, it)
+    }
 }

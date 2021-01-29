@@ -1,6 +1,7 @@
 package com.ecreditpal.danaflash.helper
 
 import android.content.Context
+import android.net.Uri
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.datastore.core.DataStore
@@ -78,4 +79,11 @@ fun String?.combineH5Url(paramMap: Map<String, Any?>? = null): String {
         .plus("phone=${UserFace.phone}")
         .plus("&")
         .plus("token=${UserFace.token}")
+}
+
+fun Uri?.toBytes(context: Context?): ByteArray? {
+    if (this == null) {
+        return null
+    }
+    return context?.contentResolver?.openInputStream(this)?.buffered()?.use { it.readBytes() }
 }

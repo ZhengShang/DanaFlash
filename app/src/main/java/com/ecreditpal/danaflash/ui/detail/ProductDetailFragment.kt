@@ -1,5 +1,6 @@
 package com.ecreditpal.danaflash.ui.detail
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -58,10 +59,12 @@ class ProductDetailFragment : BaseFragment() {
         productViewModel.userInfoStatus.observe(viewLifecycleOwner) {
             binding.baseInfo.siEndText = when {
                 it.isBaseInfoCompleted() -> {
+                    binding.baseInfo.isEnabled = false
                     getString(R.string.complete)
                 }
                 it.isBaseToFix() -> {
                     binding.baseInfo.endTextView.setBackgroundResource(R.drawable.shape_red_solid_r20)
+                    binding.baseInfo.endTextView.setTextColor(Color.WHITE)
                     getString(R.string.to_fix)
                 }
                 else -> {
@@ -70,10 +73,12 @@ class ProductDetailFragment : BaseFragment() {
             }
             binding.otherInfo.siEndText = when {
                 it.isOtherInfoComplete() -> {
+                    binding.otherInfo.isEnabled = false
                     getString(R.string.complete)
                 }
                 it.isOtherToFix() -> {
                     binding.otherInfo.endTextView.setBackgroundResource(R.drawable.shape_red_solid_r20)
+                    binding.otherInfo.endTextView.setTextColor(Color.WHITE)
                     getString(R.string.to_fix)
                 }
                 else -> {
@@ -151,12 +156,16 @@ class ProductDetailFragment : BaseFragment() {
                 }
             }
             R.id.loan -> {
-                if (binding.baseInfo.endTextView.text != getString(R.string.complete)) {
-                    binding.baseInfo.performClick()
-                } else if (binding.otherInfo.endTextView.text != getString(R.string.complete)) {
-                    binding.otherInfo.performClick()
-                } else {
-                    clickToLoan()
+                when {
+                    binding.baseInfo.endTextView.text != getString(R.string.complete) -> {
+                        binding.baseInfo.performClick()
+                    }
+                    binding.otherInfo.endTextView.text != getString(R.string.complete) -> {
+                        binding.otherInfo.performClick()
+                    }
+                    else -> {
+                        clickToLoan()
+                    }
                 }
             }
         }

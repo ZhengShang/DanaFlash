@@ -48,6 +48,7 @@
         <activity android:name=".ui.comm.WebActivity" />
         <activity android:name=".ui.faq.FaqActivity" />
         <activity android:name=".ui.camera.CameraActivity" />
+        <activity android:name=".ui.contact.ContactActivity" />
 
         <receiver
             android:name="com.appsflyer.SingleInstallBroadcastReceiver"

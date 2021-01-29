@@ -3,8 +3,11 @@ package com.ecreditpal.danaflash.helper
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.provider.ContactsContract
 import androidx.lifecycle.LifecycleCoroutineScope
+import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.UriUtils
 import com.ecreditpal.danaflash.R
@@ -82,5 +85,63 @@ object CommUtils {
                 }
             }
         }
+    }
+
+    /**
+     * 获取所有联系人
+     */
+    fun getAllContacts(context: Context?): MutableList<Any>? {
+        val contactList = mutableListOf<Any>()
+        val cr = context?.contentResolver
+        val cur = cr?.query(
+            ContactsContract.Contacts.CONTENT_URI,
+            null, null, null, null
+        ) ?: return null
+
+        if (cur.count <= 0) {
+            return contactList
+        }
+
+        try {
+            while (cur.moveToNext()) {
+                val id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID))
+                val name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+                    val pCur = cr.query(
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        null,
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                        arrayOf(id),
+                        null
+                    ) ?: continue
+                    while (pCur.moveToNext()) {
+                        val phoneNo =
+                            pCur.getString(
+                                pCur.getColumnIndex(
+                                    ContactsContract.CommonDataKinds.Phone.NUMBER
+                                )
+                            )
+
+                        contactList.add(
+                            JSON.toJSONString(
+                                mapOf(
+                                    "name" to name,
+                                    "number" to phoneNo
+                                )
+                            )
+                        )
+                    }
+                    pCur.close()
+                }
+            }
+        } catch (e: Exception) {
+            LogUtils.e("get phone contacts failed.", e)
+            return null
+        } finally {
+            cur.close()
+        }
+
+        LogUtils.d(contactList)
+        return contactList
     }
 }

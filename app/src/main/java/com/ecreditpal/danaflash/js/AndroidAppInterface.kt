@@ -1,25 +1,20 @@
 package com.ecreditpal.danaflash.js
 
-import android.content.Context
 import android.webkit.JavascriptInterface
-import android.widget.Toast
 import com.ecreditpal.danaflash.BuildConfig
 import com.ecreditpal.danaflash.data.UserFace
+import com.ecreditpal.danaflash.ui.comm.WebActivity
 
-class AndroidAppInterface(private val context: Context) {
+class AndroidAppInterface(private val webActivity: WebActivity) {
+
     @JavascriptInterface
-    fun showToast(toast: String) {
-        Toast.makeText(context, toast, Toast.LENGTH_SHORT).show()
+    fun launchOCR(json: String?) {
+        webActivity.startOcrPage(json)
     }
 
     @JavascriptInterface
-    fun launchOCR(json: String) {
-
-    }
-
-    @JavascriptInterface
-    fun launchLiveness(json: String) {
-
+    fun launchLiveness(json: String?) {
+        webActivity.startLiveness(json)
     }
 
     @JavascriptInterface

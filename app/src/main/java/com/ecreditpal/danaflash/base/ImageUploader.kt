@@ -26,9 +26,10 @@ class ImageUploader {
     fun uploadImage(
         scope: CoroutineScope,
         uri: Uri?,
-        uploadCallback: ((state: Int) -> Unit)? = null
+        uploadCallback: ((state: String) -> Unit)? = null
     ) {
         if (uri == null) {
+            uploadCallback?.invoke("-1")
             return
         }
         scope.launch(Dispatchers.Main) {
@@ -37,12 +38,21 @@ class ImageUploader {
                 dfApi().ossSts()
             }
             LoadingTips.dismissLoading()
-            uploadByAliyun(res, uri, uploadCallback)
+
+            val credentials = res?.credentials
+            if (credentials == null) {
+                uploadCallback?.invoke("-1")
+                return@launch
+            }
+            uploadByAliyun(credentials, uri, uploadCallback)
         }
     }
 
-    private fun uploadByAliyun(res: OssStsRes?, uri: Uri, uploadCallback: ((state: Int) -> Unit)?) {
-        val credentials = res?.credentials ?: return
+    private fun uploadByAliyun(
+        credentials: OssStsRes.Credentials,
+        uri: Uri,
+        uploadCallback: ((state: String) -> Unit)?
+    ) {
         val credetialProvider: OSSCredentialProvider = object : OSSFederationCredentialProvider() {
             override fun getFederationToken(): OSSFederationToken {
                 return OSSFederationToken(
@@ -60,12 +70,12 @@ class ImageUploader {
         val put = PutObjectRequest(OSS_BUCKET, objectKey, uri)
 
         try {
-            uploadCallback?.invoke(0)
+            uploadCallback?.invoke("0")
             oss.putObject(put)
-            uploadCallback?.invoke(1)
+            uploadCallback?.invoke("1")
         } catch (e: Exception) {
             LogUtils.e("upload image oss failed.", e)
-            uploadCallback?.invoke(-1)
+            uploadCallback?.invoke("-1")
         }
     }
 }

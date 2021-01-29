@@ -67,9 +67,13 @@ class OcrFragment : BaseFragment() {
                 deleteLastPhoto()
             }
             ok.setOnClickListener {
+                val input = activity?.intent?.getStringExtra(CameraActivity.KEY_JSON)
                 activity?.setResult(
                     Activity.RESULT_OK,
-                    Intent().putExtra(EXTRA_OCR_PHOTO_URI, photoUri)
+                    Intent().apply {
+                        putExtra(EXTRA_OCR_INPUT_STRING, input)
+                        putExtra(EXTRA_OCR_PHOTO_URI, photoUri)
+                    }
                 )
                 activity?.finish()
             }
@@ -187,6 +191,7 @@ class OcrFragment : BaseFragment() {
 
     companion object {
         const val EXTRA_OCR_PHOTO_URI = "extra_ocr_photo_uri"
+        const val EXTRA_OCR_INPUT_STRING = "extra_ocr_input_string"
         const val STEP_START = 0
         const val STEP_CAPTURING = 1
         const val STEP_CAPTURED = 2

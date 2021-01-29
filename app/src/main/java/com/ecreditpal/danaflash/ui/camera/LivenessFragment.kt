@@ -59,9 +59,13 @@ class LivenessFragment : BaseFragment() {
                 }
             }.onFailure {
                 LogUtils.e("parse liveness json key and secret failed.")
-                activity?.finish()
-                return
             }
+        }
+
+        if (key.isEmpty() || secret.isEmpty()) {
+            LogUtils.e("Liveness key or secret is empty")
+            activity?.finish()
+            return
         }
 
         GuardianLivenessDetectionSDK.init(

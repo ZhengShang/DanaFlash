@@ -78,7 +78,7 @@
     <string name="order_status_manual_audit">Manual review</string>
     <string name="order_app_status_order_cancel">cancel the order</string>
     <string name="derating_success">Derating success</string>
-    <string name="failed_to_derating">Derating failed</string>
+    <string name="failed_to_derating" translatable="false">Derating failed</string>
     <string name="month">Month</string>
     <string name="day">Day</string>
     <string name="complete">Completed</string>
@@ -115,4 +115,5 @@
     <string name="to_fill_in">To fill in</string>
     <string name="to_fix">To fix</string>
     <string name="detection_failed_need_service">Detect anomalies, please contact customer service processing</string>
+    <string name="contact">Contact</string>
 </resources>
