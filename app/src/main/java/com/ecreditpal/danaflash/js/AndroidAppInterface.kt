@@ -19,7 +19,7 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
 
     @JavascriptInterface
     fun launchContact(json: String) {
-
+        webActivity.startContact()
     }
 
     @JavascriptInterface

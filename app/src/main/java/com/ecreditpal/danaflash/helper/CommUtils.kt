@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.ContactsContract
 import androidx.lifecycle.LifecycleCoroutineScope
-import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -13,6 +12,7 @@ import com.blankj.utilcode.util.UriUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.LoadingTips
 import com.ecreditpal.danaflash.data.H5_ORDER_CONFIRM
+import com.ecreditpal.danaflash.model.ContactRes
 import com.ecreditpal.danaflash.net.dfApi
 import com.ecreditpal.danaflash.ui.comm.WebActivity
 import com.ecreditpal.danaflash.ui.login.LoginActivity
@@ -90,8 +90,8 @@ object CommUtils {
     /**
      * 获取所有联系人
      */
-    fun getAllContacts(context: Context?): MutableList<Any>? {
-        val contactList = mutableListOf<Any>()
+    fun getAllContacts(context: Context?): MutableList<ContactRes>? {
+        val contactList = mutableListOf<ContactRes>()
         val cr = context?.contentResolver
         val cur = cr?.query(
             ContactsContract.Contacts.CONTENT_URI,
@@ -122,14 +122,7 @@ object CommUtils {
                                 )
                             )
 
-                        contactList.add(
-                            JSON.toJSONString(
-                                mapOf(
-                                    "name" to name,
-                                    "number" to phoneNo
-                                )
-                            )
-                        )
+                        contactList.add(ContactRes(name, phoneNo))
                     }
                     pCur.close()
                 }

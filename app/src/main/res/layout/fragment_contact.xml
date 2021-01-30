@@ -5,15 +5,27 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <!--    <com.ecreditpal.danaflash.widget.SideBarSortView-->
+    <!--        android:layout_width="30dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:layout_marginTop="10dp"-->
+    <!--        android:layout_marginEnd="10dp"-->
+    <!--        android:layout_marginBottom="100dp"-->
+    <!--        android:background="@drawable/shape_daan_gray_solid_r20"-->
+    <!--        android:paddingTop="@dimen/def_edge_margin"-->
+    <!--        android:paddingBottom="@dimen/def_edge_margin"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <com.ecreditpal.danaflash.widget.StatusView
+        android:id="@+id/status_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <com.ecreditpal.danaflash.widget.SideBarSortView
-        android:layout_width="30dp"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="100dp"
-        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

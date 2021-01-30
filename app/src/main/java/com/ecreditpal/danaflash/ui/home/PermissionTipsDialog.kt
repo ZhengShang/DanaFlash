@@ -31,7 +31,15 @@ class PermissionTipsDialog : BaseDialogFragment() {
 
         view.findViewById<TextView>(R.id.content).apply {
             movementMethod = ScrollingMovementMethod.getInstance()
-            text = "Here show the tips of permissions required"
+            text = "Dana Flash membutuhkan\n\n" +
+                    "Kami akan meminta beberapa akses data untuk proses verifikasi. Kami juga akan melindungi privasi Anda dan menjaga keamanan informasi Anda.\n" +
+                    "*Lokasi\n" +
+                    "*Foto dan Rekam Video\n" +
+                    "*Kontak\n" +
+                    "*Peralatan perangkat\n" +
+                    "*Penyimpanan perangkat\n" +
+                    "\n" +
+                    "Tidak izinkan\t\tIzinkan\n"
         }
         view.findViewById<TextView>(R.id.agree).setOnClickListener {
             writeValue()
@@ -61,7 +69,7 @@ class PermissionTipsDialog : BaseDialogFragment() {
             setBackgroundDrawableResource(R.drawable.shape_white_solid__r16)
             setLayout(
                 (ScreenUtils.getScreenWidth() * 0.8f).toInt(),
-                (ScreenUtils.getScreenHeight() * 0.7f).toInt()
+                (ScreenUtils.getScreenHeight() * 0.6f).toInt()
             )
         }
     }

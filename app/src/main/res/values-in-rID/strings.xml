@@ -110,4 +110,6 @@
     <string name="derating_success">Konfirmasi Pinjaman Berhasil</string>
     <string name="failed_to_derating">Konfirmasi Pinjaman Gagal</string>
     <string name="liveness">Verifikasi Wajah</string>
+    <string name="contact">Nomor Ponsel</string>
+    <string name="failed_to_load">Memuat Gagal</string>
 </resources>

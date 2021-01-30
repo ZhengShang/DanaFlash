@@ -116,4 +116,5 @@
     <string name="to_fix">To fix</string>
     <string name="detection_failed_need_service">Detect anomalies, please contact customer service processing</string>
     <string name="contact">Contact</string>
+    <string name="failed_to_load">Load failed</string>
 </resources>

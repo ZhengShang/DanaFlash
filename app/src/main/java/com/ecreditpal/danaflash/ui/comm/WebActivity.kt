@@ -19,6 +19,7 @@ import com.ecreditpal.danaflash.js.AndroidAppInterface
 import com.ecreditpal.danaflash.js.WebInterface
 import com.ecreditpal.danaflash.ui.camera.StartLiveness
 import com.ecreditpal.danaflash.ui.camera.StartOcr
+import com.ecreditpal.danaflash.ui.contact.StartContact
 
 class WebActivity : BaseActivity() {
 
@@ -67,7 +68,7 @@ class WebActivity : BaseActivity() {
 
 
         }
-        webView.addJavascriptInterface(AndroidAppInterface(this), "Android")
+        webView.addJavascriptInterface(AndroidAppInterface(this), "DanaFlash")
         webView.loadUrl(url)
     }
 
@@ -83,6 +84,10 @@ class WebActivity : BaseActivity() {
 
     fun startLiveness(json: String?) {
         livenessLauncher.launch(json)
+    }
+
+    fun startContact() {
+        contactLauncher.launch(null)
     }
 
     private val ocrLauncher = registerForActivityResult(StartOcr()) { pair ->
@@ -102,5 +107,19 @@ class WebActivity : BaseActivity() {
 
     private val livenessLauncher = registerForActivityResult(StartLiveness()) {
         CommUtils.stepAfterLiveness(lifecycleScope, this, it)
+    }
+
+    private val contactLauncher = registerForActivityResult(StartContact()) {
+        when (it.first) {
+            "0" -> {
+
+            }
+            "-1" -> {
+
+            }
+            "1" -> {
+
+            }
+        }
     }
 }
