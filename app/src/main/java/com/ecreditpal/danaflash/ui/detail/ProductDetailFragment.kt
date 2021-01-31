@@ -19,6 +19,7 @@ import com.ecreditpal.danaflash.helper.SurveyHelper
 import com.ecreditpal.danaflash.helper.combineH5Url
 import com.ecreditpal.danaflash.helper.danaRequestWithCatch
 import com.ecreditpal.danaflash.model.AmountTrialRes
+import com.ecreditpal.danaflash.model.OrderProcessingRes
 import com.ecreditpal.danaflash.model.ProductRes
 import com.ecreditpal.danaflash.model.UserInfoStatusRes
 import com.ecreditpal.danaflash.net.dfApi
@@ -60,6 +61,7 @@ class ProductDetailFragment : BaseFragment() {
         productViewModel.userInfoStatus.observe(viewLifecycleOwner) {
             binding.baseInfo.siEndText = when {
                 it.isBaseInfoCompleted() -> {
+                    binding.baseInfo.endTextView.setBackgroundResource(R.drawable.shape_daan_gray_solid_r20)
                     binding.baseInfo.isEnabled = false
                     getString(R.string.complete)
                 }
@@ -173,12 +175,30 @@ class ProductDetailFragment : BaseFragment() {
     }
 
     private fun clickToLoan() {
-        productViewModel.orderProcessingRes.value?.let {
-            if (it.status == 2) {
-                findNavController().navigate(R.id.action_productDetailFragment_to_ordersActivity2)
-            } else if (it.status == 0) {
-                WebActivity.loadUrl(context, H5_ORDER_CONFIRM.combineH5Url(getH5Params()))
+        val id = product?.id ?: return
+        val process = productViewModel.orderProcessingRes.value
+        if (process == null) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                LoadingTips.showLoading()
+                val res = danaRequestWithCatch {
+                    dfApi().orderProcessing(id)
+                }
+                LoadingTips.dismissLoading()
+                navLoan(res)
             }
+        } else {
+            navLoan(process)
+        }
+    }
+
+    private fun navLoan(orderProcessingRes: OrderProcessingRes?) {
+        if (orderProcessingRes == null) {
+            return
+        }
+        if (orderProcessingRes.status == 2) {
+            findNavController().navigate(R.id.action_productDetailFragment_to_ordersActivity2)
+        } else if (orderProcessingRes.status == 0) {
+            WebActivity.loadUrl(context, H5_ORDER_CONFIRM.combineH5Url(getH5Params()))
         }
     }
 
