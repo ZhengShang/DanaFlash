@@ -57,13 +57,18 @@ class FaqFragment : BaseFragment() {
                     dfApi().getFaq()
                 }
                 res?.list
+                    ?.asSequence()
                     ?.filter { true }
                     ?.filter { it.title.isNullOrEmpty().not() }
+                    ?.mapIndexed { index, faq ->
+                        FaqRes.Faq(faq.content, "${index + 1}.${faq.title}")
+                    }
                     ?.map {
                         FaqAdapter.FaqGroup(it.title!!, listOf(it.content))
                     }
                     ?.map { FaqAdapter(it) }
                     ?.onEach { it.isExpanded = false }
+                    ?.toList()
                     ?.forEach { concatAdapter.addAdapter(it) }
 
                 statusView.hideStatus()

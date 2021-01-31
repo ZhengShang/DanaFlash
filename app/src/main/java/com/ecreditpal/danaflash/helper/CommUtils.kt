@@ -38,7 +38,7 @@ object CommUtils {
     fun navGoogleDownload(context: Context?, link: String?) {
         val intent = Intent(Intent.ACTION_VIEW).apply {
             data = Uri.parse(link)
-            setPackage(context?.packageName)
+            setPackage("com.android.vending")
         }
         try {
             context?.startActivity(intent)

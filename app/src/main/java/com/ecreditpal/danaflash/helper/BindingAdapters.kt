@@ -58,7 +58,9 @@ fun setRpAmount(textView: TextView, amount: BigDecimal?) {
     if (amount == null) {
         return
     }
-    textView.text = String.format("Rp.%,d", amount.longValueExact())
+    runCatching {
+        textView.text = String.format("Rp %,d", amount.longValueExact())
+    }
 }
 
 /**

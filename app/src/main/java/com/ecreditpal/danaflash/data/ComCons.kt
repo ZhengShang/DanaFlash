@@ -31,3 +31,4 @@ const val H5_ORDER_CONFIRM = "/pushCaculate" //订单确认
 const val H5_PAY_ORDER_XINGHE = "/payDetail" //订单还款（星河）
 const val H5_PAY_ORDER = "/choosePay" //订单还款
 const val H5_EDIT_BANK = "/apiEditBankcard" //订单-修改银行卡
+const val H5_PRODUCT_DETAIL = "/apiProductDetail" //产品详情页

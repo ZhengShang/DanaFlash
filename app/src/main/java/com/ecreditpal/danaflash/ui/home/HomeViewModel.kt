@@ -60,7 +60,7 @@ class HomeViewModel : ViewModel() {
     /**
      * 检查API产品和GP产品是否都存在, 都存在就需要在顶部显示tab栏
      */
-    private fun detectProductSupported() {
+    fun detectProductSupported() {
         viewModelScope.launch {
             val apiSupported = async { singleRequest(PRODUCT_TYPE_API) }
             val gpSupported = async { singleRequest(PRODUCT_TYPE_GP) }

@@ -6,6 +6,7 @@ import android.content.Context.ACCOUNT_SERVICE
 import android.util.Log
 import androidx.ads.identifier.AdvertisingIdClient
 import androidx.ads.identifier.AdvertisingIdInfo
+import androidx.datastore.preferences.createDataStore
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
 import com.android.installreferrer.api.ReferrerDetails
@@ -137,4 +138,6 @@ object UserFace {
             App.context.writeDsData(DataStoreKeys.DEVICE_ID, "")
         }
     }
+
+    fun getDs() = App.context.createDataStore(name = "settings")
 }

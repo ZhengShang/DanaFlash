@@ -8,7 +8,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.createDataStore
 import androidx.navigation.Navigation
 import com.ecreditpal.danaflash.data.H5_PREFIX
 import com.ecreditpal.danaflash.data.UserFace
@@ -25,15 +24,12 @@ fun View?.nav(@IdRes id: Int) {
 
 suspend fun <T> Context?.writeDsData(
     key: Preferences.Key<T>,
-    value: T,
-    dsName: String = "settings"
+    value: T
 ) {
     if (this == null) {
         return
     }
-    val dataStore: DataStore<Preferences> = createDataStore(
-        name = dsName
-    )
+    val dataStore: DataStore<Preferences> = UserFace.getDs()
 
     dataStore.edit { preferences ->
         preferences[key] = value
@@ -42,15 +38,12 @@ suspend fun <T> Context?.writeDsData(
 
 suspend fun <T> Context?.readDsData(
     key: Preferences.Key<T>,
-    defaultValue: T,
-    dsName: String = "settings"
+    defaultValue: T
 ): T {
     if (this == null) {
         return defaultValue
     }
-    val dataStore: DataStore<Preferences> = createDataStore(
-        name = dsName
-    )
+    val dataStore: DataStore<Preferences> = UserFace.getDs()
     return dataStore.data
         .catch {
             emit(emptyPreferences())

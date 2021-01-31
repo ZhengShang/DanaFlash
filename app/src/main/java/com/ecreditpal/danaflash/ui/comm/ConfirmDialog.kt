@@ -52,7 +52,7 @@ class ConfirmDialog(
         dialog?.window?.apply {
             setBackgroundDrawableResource(R.drawable.shape_product_card)
             setLayout(
-                (ScreenUtils.getScreenWidth() * 0.77f).toInt(),
+                (ScreenUtils.getScreenWidth() * 0.9f).toInt(),
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
         }

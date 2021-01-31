@@ -64,7 +64,6 @@ class ProductDetailFragment : BaseFragment() {
                     getString(R.string.complete)
                 }
                 it.isBaseToFix() -> {
-                    binding.baseInfo.endTextView.setBackgroundResource(R.drawable.shape_red_solid_r20)
                     binding.baseInfo.endTextView.setTextColor(Color.WHITE)
                     getString(R.string.to_fix)
                 }

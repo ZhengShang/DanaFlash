@@ -13,15 +13,15 @@ class ProductAdapter(
 ) :
     PagingDataAdapter<ProductRes.Product, BindingViewHolder<ItemProductBinding>>(PRODUCT_COMPARATOR) {
 
-    var productClick: ((Int, product: ProductRes.Product?) -> Unit)? = null
+    var productClick: ((viewID: Int, position: Int, product: ProductRes.Product?) -> Unit)? = null
 
 
     override fun onBindViewHolder(holder: BindingViewHolder<ItemProductBinding>, position: Int) {
         holder.binding.apply {
             type = productType
             info = getItem(position)
-            loan.setOnClickListener { productClick?.invoke(it.id, getItem(position)) }
-            root.setOnClickListener { productClick?.invoke(it.id, getItem(position)) }
+            loan.setOnClickListener { productClick?.invoke(it.id, position, getItem(position)) }
+            root.setOnClickListener { productClick?.invoke(it.id, position, getItem(position)) }
         }
     }
 

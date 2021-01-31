@@ -121,6 +121,7 @@ class HomeFragment : BaseFragment() {
         super.onResume()
         if (fromCreate.not()) {
             refreshList()
+            homeViewModel.detectProductSupported()
         }
         fromCreate = false
     }
@@ -137,7 +138,14 @@ class HomeFragment : BaseFragment() {
 
         val pageAdapter = ProductAdapter(productType).apply {
             withLoadStateFooter(CommLoadStateAdapter(this::retry))
-            productClick = { viewId, product -> clickProduct(productType, viewId, product) }
+            productClick = { viewId, position, product ->
+                clickProduct(
+                    productType,
+                    viewId,
+                    position,
+                    product
+                )
+            }
         }.also {
             if (productType == PRODUCT_TYPE_API) {
                 apiAdapter = it
@@ -167,13 +175,18 @@ class HomeFragment : BaseFragment() {
         }
     }
 
-    private fun clickProduct(productType: Int, clickId: Int, product: ProductRes.Product?) {
+    private fun clickProduct(
+        productType: Int,
+        clickId: Int,
+        position: Int,
+        product: ProductRes.Product?
+    ) {
         if (product == null) {
             return
         }
         if (productType == PRODUCT_TYPE_API) {
             if (clickId == R.id.loan || clickId == R.id.root) {
-                SurveyHelper.addOneSurvey("/", "ApiClickProduct", "AD")
+                SurveyHelper.addOneSurvey("/", "ApiClickProduct", "AD$position")
                 findNavController().navigate(
                     MainFragmentDirections.actionMainFragmentToProductActivity(product)
                 )
