@@ -11,7 +11,7 @@
     <string name="to_repayment_orders">Repayment orders</string>
     <string name="paid_orders">Paid orders</string>
     <string name="feedback">Feedback</string>
-    <string name="faq">FAQ</string>
+    <string name="faq" translatable="false">FAQ</string>
     <string name="settings">Settings</string>
     <string name="privacy_policy">Privacy policy</string>
     <string name="register_protocol">Register protocol</string>
@@ -78,7 +78,7 @@
     <string name="order_status_manual_audit">Manual review</string>
     <string name="order_app_status_order_cancel">cancel the order</string>
     <string name="derating_success">Derating success</string>
-    <string name="failed_to_derating" translatable="false">Derating failed</string>
+    <string name="failed_to_derating">Derating failed</string>
     <string name="month">Month</string>
     <string name="day">Day</string>
     <string name="complete">Completed</string>

@@ -45,7 +45,7 @@ interface DanaApi {
     suspend fun getOrderList(
         @Query("pageIndex") pageIndex: Int,
         @Query("pageSize") pageSize: Int,
-        @Query("status") status: Int
+        @Query("status") status: String
     ): BaseResponse<List<OrderRes>>
 
     @NoNeedToken
@@ -91,6 +91,24 @@ interface DanaApi {
     @NoNeedToken
     @GET("/adakita/secret_key/get")
     suspend fun getLivenessSecretKey(): BaseResponse<LivenessSecretKeyRes>
+
+    @NoNeedToken
+    @Headers("x-log-apiversion: 0.6.0")
+    @POST("/adakita/survey")
+    suspend fun uploadSurvey(
+        @Header("x-log-bodyrawsize") bodyrawsize: Long,
+        @Body body: RequestBody
+    ): BaseResponse<Void>
+
+    @POST("/adakita/user/filter_product")
+    suspend fun filterProduct(): BaseResponse<Void>
+
+    @FormUrlEncoded
+    @POST("/adakita/device_detail")
+    suspend fun uploadAllDeviceInfo(
+        @Field("isEncrypt") isEncrypt: Int,
+        @Field("deviceDetail") deviceDetail: String
+    ): BaseResponse<Void>
 }
 
 

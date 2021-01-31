@@ -9,7 +9,11 @@ import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ScreenUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseDialogFragment
+import com.ecreditpal.danaflash.data.AD_TITLE_APIPOP
+import com.ecreditpal.danaflash.data.AD_TITLE_PERSONALPOP
+import com.ecreditpal.danaflash.data.AD_TITLE_POP
 import com.ecreditpal.danaflash.data.IMAGE_PREFIX
+import com.ecreditpal.danaflash.helper.SurveyHelper
 import com.ecreditpal.danaflash.helper.combineH5Url
 import com.ecreditpal.danaflash.helper.setImageUrl
 import com.ecreditpal.danaflash.model.AdRes
@@ -20,6 +24,8 @@ import com.youth.banner.indicator.CircleIndicator
 
 
 class AdDialog : BaseDialogFragment() {
+
+    private var adTitle = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,7 +38,12 @@ class AdDialog : BaseDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adRes: AdRes? = arguments?.let { AdDialogArgs.fromBundle(it).adRes }
+        var adRes: AdRes? = null
+
+        arguments?.let {
+            adTitle = AdDialogArgs.fromBundle(it).adTitle
+            adRes = AdDialogArgs.fromBundle(it).adRes
+        }
 
         val dataMap = adRes?.imgs
             ?.filterNotNull()
@@ -45,9 +56,40 @@ class AdDialog : BaseDialogFragment() {
             return
         }
 
+        val act = if (adTitle == AD_TITLE_APIPOP) {
+            "apiPop"
+        } else if (adTitle == AD_TITLE_POP) {
+            "pop"
+        } else {
+            ""
+        }
+        if (act.isNotEmpty()) {
+            SurveyHelper.addOneSurvey("/", act)
+        }
+
+
         view.findViewById<Banner<String, BannerAdapter>>(R.id.banner).apply {
             addBannerLifecycleObserver(this@AdDialog)
             adapter = BannerAdapter(dataMap) {
+                var code = ""
+                var p = "/"
+                val act = when (adTitle) {
+                    AD_TITLE_APIPOP -> {
+                        code = "AA"
+                        "clickApiPop"
+                    }
+                    AD_TITLE_POP -> {
+                        code = "AB"
+                        "clickPop"
+                    }
+                    AD_TITLE_PERSONALPOP -> {
+                        p = "/my"
+                        code = "AM"
+                        "clickPersonalPop"
+                    }
+                    else -> ""
+                }
+                SurveyHelper.addOneSurvey(p, act, code)
                 WebActivity.loadUrl(context, it)
                 findNavController().popBackStack()
             }
@@ -74,6 +116,29 @@ class AdDialog : BaseDialogFragment() {
                 (ScreenUtils.getScreenHeight() * 0.56f).toInt()
             )
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        var code = ""
+        var p = "/"
+        val act = when (adTitle) {
+            AD_TITLE_APIPOP -> {
+                code = "AA"
+                "closeApiPop"
+            }
+            AD_TITLE_POP -> {
+                code = "AB"
+                "closePop"
+            }
+            AD_TITLE_PERSONALPOP -> {
+                p = "/"
+                code = "AM"
+                "closePersonalPop"
+            }
+            else -> ""
+        }
+        SurveyHelper.addOneSurvey(p, act, code)
     }
 
     private class BannerAdapter(

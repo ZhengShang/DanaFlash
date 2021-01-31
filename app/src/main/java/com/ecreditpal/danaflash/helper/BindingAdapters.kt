@@ -4,16 +4,10 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.IdRes
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.ecreditpal.danaflash.R
 import java.math.BigDecimal
-
-@BindingAdapter("clickNav")
-fun setClickNavigate(view: View?, @IdRes id: Int) {
-    view.nav(id)
-}
 
 @BindingAdapter("android:visibleGone")
 fun setVisibleOrGone(view: View, visible: Boolean) {

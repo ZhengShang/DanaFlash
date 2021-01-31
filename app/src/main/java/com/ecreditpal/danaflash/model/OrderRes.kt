@@ -37,12 +37,14 @@ data class OrderRes(
     val loanTerm: Int?, // 8
     val loanTermUnit: Int?, // 1
     val orderId: String?, // 202012151051206319
-    val productId: Int?, // 292
+    val productId: Int, // 292
     val productName: String?, // Butik Ajaib &Punya Duit对接
     val pstatus: Int?, // 1
     val repaymentTime: String?, // 2020-12-22
     val status: Int?, // 6
-    val storeList: List<Store?>?
+    val storeList: List<Store?>?,
+    var repayLink: String?,
+    var delayLink: String?
 ) {
 
     fun loanTermString(): String {
@@ -90,7 +92,7 @@ data class OrderRes(
     fun moreInfoVisible() = status == 5 || status == 6 || status == 7
 
     fun lineBtnVisible(): Boolean {
-        return (status == 1 && fillStatus == 0)
+        return (status == 1 && fillStatus == 1)
                 || status == 8
                 || (status == 5 && allowDelay == 0)
                 || (status == 6 && allowDelay == 0)
@@ -99,7 +101,7 @@ data class OrderRes(
 
     fun lineBtnTextRes(): Int {
         return when {
-            (status == 1 && fillStatus == 0) -> R.string.rebind_card
+            (status == 1 && fillStatus == 1) -> R.string.rebind_card
             status == 8 -> R.string.derating_confirm
             (status == 5 && allowDelay == 0) ||
                     (status == 6 && allowDelay == 0) -> R.string.i_want_to_repay
@@ -111,6 +113,11 @@ data class OrderRes(
     fun twoBtnVisible(): Boolean {
         return (status == 5 && allowDelay == 1)
                 || (status == 5 && allowDelay == 1)
+    }
+
+    fun showBankName(): String {
+        val last = debitBankCard?.takeLast(4) ?: ""
+        return "$debitBankName($last)"
     }
 
     data class Bank(

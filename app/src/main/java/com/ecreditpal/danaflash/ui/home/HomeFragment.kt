@@ -19,6 +19,7 @@ import com.ecreditpal.danaflash.base.LoadingTips
 import com.ecreditpal.danaflash.data.*
 import com.ecreditpal.danaflash.databinding.FragmentHomeBinding
 import com.ecreditpal.danaflash.helper.CommUtils
+import com.ecreditpal.danaflash.helper.SurveyHelper
 import com.ecreditpal.danaflash.helper.combineH5Url
 import com.ecreditpal.danaflash.helper.danaRequestWithCatch
 import com.ecreditpal.danaflash.model.ProductRes
@@ -74,6 +75,7 @@ class HomeFragment : BaseFragment() {
         }
 
         binding.bannerLayout.root.setOnClickListener {
+            SurveyHelper.addOneSurvey("/", "clickBannerApply", "AS")
             if (UserFace.isLogin()) {
                 val mainActivity = activity as? MainActivity ?: return@setOnClickListener
                 if (mainActivity.isAllPermissionGranted()) {
@@ -87,10 +89,12 @@ class HomeFragment : BaseFragment() {
             }
         }
         binding.bannerLayout.tabApi.setOnClickListener {
+            SurveyHelper.addOneSurvey("/", "apiTabClick")
             type.set(PRODUCT_TYPE_API)
             homeViewModel.getAd(AD_TITLE_APIPOP)
         }
         binding.bannerLayout.tabGp.setOnClickListener {
+            SurveyHelper.addOneSurvey("/", "tabClick")
             type.set(PRODUCT_TYPE_GP)
             homeViewModel.getAd(AD_TITLE_POP)
         }
@@ -101,6 +105,9 @@ class HomeFragment : BaseFragment() {
                 type.set(if (it == 0) PRODUCT_TYPE_API else PRODUCT_TYPE_GP)
                 //第一次主动请求广告
                 homeViewModel.getAd(if (it == 0) AD_TITLE_APIPOP else AD_TITLE_POP)
+            }
+            if (it != 1) {
+                SurveyHelper.addOneSurvey("/", "api_show")
             }
         }
         homeViewModel.allPermissionGranted.observe(viewLifecycleOwner) { granted ->
@@ -166,12 +173,14 @@ class HomeFragment : BaseFragment() {
         }
         if (productType == PRODUCT_TYPE_API) {
             if (clickId == R.id.loan || clickId == R.id.root) {
+                SurveyHelper.addOneSurvey("/", "ApiClickProduct", "AD")
                 findNavController().navigate(
                     MainFragmentDirections.actionMainFragmentToProductActivity(product)
                 )
             }
         } else {
-            if (clickId == R.id.loan) {
+            if (clickId == R.id.loan || clickId == R.id.root) {
+                SurveyHelper.addOneSurvey("/", "clickProduct")
                 CommUtils.navGoogleDownload(context, product.link)
             }
         }

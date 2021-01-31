@@ -14,6 +14,7 @@ import com.blankj.utilcode.util.BarUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.base.BaseNavActivity
+import com.ecreditpal.danaflash.helper.SurveyHelper
 
 class PolicyFragment : BaseFragment() {
     override fun onCreateView(
@@ -30,6 +31,10 @@ class PolicyFragment : BaseFragment() {
         val args = arguments?.let { PolicyFragmentArgs.fromBundle(it) } ?: return
         if (activity is BaseNavActivity) {
             (activity as BaseNavActivity).findViewById<TextView>(R.id.title).text = args.label
+        }
+
+        if (args.label == getString(R.string.privacy_policy)) {
+            SurveyHelper.addOneSurvey("/privacyPolicy", "in")
         }
 
         val title = view.findViewById<TextView>(R.id.title)

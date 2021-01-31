@@ -21,7 +21,7 @@ class OrderViewModel : ViewModel() {
     val status = MutableLiveData<Int>()
     val amountDropResult = MutableLiveData<Boolean>()
 
-    fun getOrderByStatus(status: Int): Flow<PagingData<OrderRes>> {
+    fun getOrderByStatus(status: String): Flow<PagingData<OrderRes>> {
         return Pager(
             PagingConfig(pageSize = PAGE_SIZE)
         ) {

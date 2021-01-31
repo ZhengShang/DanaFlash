@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.data.AD_TITLE_PERSONALPOP
 import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.databinding.FragmentPersonalBinding
 import com.ecreditpal.danaflash.helper.CommUtils
+import com.ecreditpal.danaflash.helper.SurveyHelper
 import com.ecreditpal.danaflash.ui.home.HomeViewModel
 import com.ecreditpal.danaflash.ui.home.MainFragmentDirections
 
@@ -21,6 +23,8 @@ class PersonalFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        SurveyHelper.addOneSurvey("/my", "in")
 
         val homeViewModel: HomeViewModel by activityViewModels()
         homeViewModel.getAd(AD_TITLE_PERSONALPOP)
@@ -42,10 +46,23 @@ class PersonalFragment : BaseFragment() {
             }
         }
 
+        binding.faq.setOnClickListener {
+            SurveyHelper.addOneSurvey("/my", "clickTips")
+            findNavController().navigate(R.id.action_mainFragment_to_faqActivity)
+        }
+        binding.feedback.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_feedbackActivity)
+        }
+        binding.settings.setOnClickListener {
+            SurveyHelper.addOneSurvey("/my", "clickSetting")
+            findNavController().navigate(R.id.action_mainFragment_to_settingsActivity)
+        }
+
         return binding.root
     }
 
     fun nav(status: Int) {
+        SurveyHelper.addOneSurvey("/my", "myOrder")
         if (UserFace.isLogin().not()) {
             CommUtils.navLogin()
             return

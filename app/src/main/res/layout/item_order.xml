@@ -147,14 +147,20 @@
 
         <TextView
             android:id="@+id/bank_account_value"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
             android:layout_marginEnd="@dimen/def_edge_margin"
-            android:text="@{info.debitBankCard}"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@{info.showBankName()}"
             android:textColor="@color/text"
             android:textSize="16sp"
             android:visibleGone="@{info.moreInfoVisible()}"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/bank_account"
             app:layout_constraintTop_toTopOf="@id/bank_account"
             tools:text="Bank BIN (6759)" />
 

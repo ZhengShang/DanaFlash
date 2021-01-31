@@ -14,8 +14,9 @@ import com.ecreditpal.danaflash.App
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.LoadingTips
 import com.ecreditpal.danaflash.data.UserFace
-import com.ecreditpal.danaflash.helper.danaRequestResult
+import com.ecreditpal.danaflash.helper.SurveyHelper
 import com.ecreditpal.danaflash.helper.writeDsData
+import com.ecreditpal.danaflash.net.DanaException
 import com.ecreditpal.danaflash.net.dfApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,21 +50,29 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getVerifyCode(phone: Editable) {
         if (validPhone(phone.toString()).not()) {
+            SurveyHelper.addOneSurvey("/login", "loginPhoneWrong")
             return
         }
 
         viewModelScope.launch(Dispatchers.Main) {
             LoadingTips.showLoading()
-            val res = danaRequestResult {
-                dfApi().getVCode(phone.toString())
+            try {
+                dfApi().getVCode(phone.toString()).throwIfNotSuccess()
+                SurveyHelper.addOneSurvey("/login", "getVerifyCode")
+                startCountDown()
+            } catch (e: Exception) {
+                var toast = "Verifikasi Kode Gagal"
+                if (e is DanaException) {
+                    toast = when (e.code) {
+                        153 -> "Permintaan Kode OTP Terlalu Sering!"
+                        1301 -> "Verifikasi nomor telepon gagal"
+                        else -> "Verifikasi Kode Gagal"
+                    }
+                }
+                SurveyHelper.addOneSurvey("/login", "getVerifyCodeFail")
+                ToastUtils.showLong(toast)
             }
             LoadingTips.dismissLoading()
-
-            if (res) {
-                startCountDown()
-            } else {
-                ToastUtils.showLong(R.string.failed_to_get_verify_code)
-            }
         }
     }
 
@@ -73,16 +82,13 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         }
         viewModelScope.launch {
             LoadingTips.showLoading()
-            val res = kotlin.runCatching {
-                dfApi().login(
+            try {
+                val res = dfApi().login(
                     phone.toString(),
                     UserFace.getGoogleId(),
                     code.toString()
                 ).throwIfNotSuccess()
-            }.getOrNull()
-            LoadingTips.dismissLoading()
 
-            if (res?.isSuccess() == true) {
                 viewModelScope.launch(Dispatchers.IO) {
                     UserFace.token = res.data?.token ?: ""
                     UserFace.phone = res.data?.nationalNumber ?: ""
@@ -90,9 +96,16 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     App.context.writeDsData(DataStoreKeys.PHONE, res.data?.nationalNumber ?: "")
                 }
                 loginResult.value = true
-            } else {
-                ToastUtils.showLong(R.string.failed_to_login)
+            } catch (e: Exception) {
+                if (e is DanaException && e.code == 152) {
+                    SurveyHelper.addOneSurvey("/login", "CodeWrong")
+                    ToastUtils.showLong("Kode OTP Salah")
+                } else {
+                    SurveyHelper.addOneSurvey("/login", "loginFail")
+                    ToastUtils.showLong(R.string.failed_to_login)
+                }
             }
+            LoadingTips.dismissLoading()
         }
     }
 

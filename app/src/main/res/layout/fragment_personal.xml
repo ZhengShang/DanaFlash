@@ -140,7 +140,6 @@
 
             <com.ecreditpal.danaflash.widget.SettingItem
                 android:id="@+id/faq"
-                clickNav="@{@id/action_mainFragment_to_faqActivity}"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="14dp"
@@ -154,7 +153,6 @@
 
             <com.ecreditpal.danaflash.widget.SettingItem
                 android:id="@+id/feedback"
-                clickNav="@{@id/action_mainFragment_to_feedbackActivity}"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="14dp"
@@ -167,7 +165,6 @@
 
             <com.ecreditpal.danaflash.widget.SettingItem
                 android:id="@+id/settings"
-                clickNav="@{@id/action_mainFragment_to_settingsActivity}"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="14dp"

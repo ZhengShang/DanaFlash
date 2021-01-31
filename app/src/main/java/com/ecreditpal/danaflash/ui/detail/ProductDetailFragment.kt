@@ -15,6 +15,7 @@ import com.ecreditpal.danaflash.base.LoadingTips
 import com.ecreditpal.danaflash.data.*
 import com.ecreditpal.danaflash.databinding.FragmentProductDetailBinding
 import com.ecreditpal.danaflash.helper.CommUtils
+import com.ecreditpal.danaflash.helper.SurveyHelper
 import com.ecreditpal.danaflash.helper.combineH5Url
 import com.ecreditpal.danaflash.helper.danaRequestWithCatch
 import com.ecreditpal.danaflash.model.AmountTrialRes
@@ -156,6 +157,7 @@ class ProductDetailFragment : BaseFragment() {
                 }
             }
             R.id.loan -> {
+                SurveyHelper.addOneSurvey("/apiProductDetail", "ApiClickApply")
                 when {
                     binding.baseInfo.endTextView.text != getString(R.string.complete) -> {
                         binding.baseInfo.performClick()
@@ -200,6 +202,6 @@ class ProductDetailFragment : BaseFragment() {
         "id" to product?.id, // 点击产品ID
         "amount" to amountTrialRes?.getMaxAmount(), // 产品试算金额列表返回data数组里的最大值
         "productName" to product?.name, // 点击的产品名称
-        "trackCode" to 1, // 入口埋点（取埋点里code字段） todo trackcode
+        "trackCode" to "al", // 入口埋点（取埋点里code字段）
     )
 }

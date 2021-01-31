@@ -12,6 +12,7 @@ import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.databinding.FragmentSettingsBinding
 import com.ecreditpal.danaflash.helper.CommUtils
+import com.ecreditpal.danaflash.helper.SurveyHelper
 import com.ecreditpal.danaflash.ui.comm.ConfirmDialog
 
 class SettingsFragment : BaseFragment() {
@@ -54,6 +55,7 @@ class SettingsFragment : BaseFragment() {
         }
         binding.signOut.setOnClickListener {
             if (UserFace.isLogin()) {
+                SurveyHelper.addOneSurvey("/setting", "clickLogout")
                 ConfirmDialog(
                     titleStr = "Notifikasi",
                     contentStr = "Yakin Ingin Keluar？",
@@ -64,6 +66,7 @@ class SettingsFragment : BaseFragment() {
                 )
                     .show(childFragmentManager)
             } else {
+                SurveyHelper.addOneSurvey("/setting", "clickLogin")
                 CommUtils.navLogin()
             }
         }

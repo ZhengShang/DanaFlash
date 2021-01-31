@@ -36,7 +36,6 @@
         tools:layout="@layout/fragment_my_orders">
         <argument
             android:name="status"
-            android:defaultValue="0"
             app:argType="integer" />
     </activity>
     <action
@@ -47,6 +46,9 @@
         android:name="com.ecreditpal.danaflash.ui.comm.AdDialog"
         android:label="AdDialog"
         tools:layout="@layout/dialog_ad">
+        <argument
+            android:name="adTitle"
+            app:argType="string" />
         <argument
             android:name="adRes"
             app:argType="com.ecreditpal.danaflash.model.AdRes" />

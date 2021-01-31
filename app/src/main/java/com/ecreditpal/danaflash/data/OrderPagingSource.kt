@@ -8,7 +8,7 @@ import retrofit2.HttpException
 import java.io.IOException
 
 class OrderPagingSource(
-    private val orderStatus: Int
+    private val orderStatus: String
 ) : PagingSource<Int, OrderRes>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, OrderRes> {
         try {

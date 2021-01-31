@@ -15,9 +15,6 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.alibaba.fastjson.JSON
-import com.android.installreferrer.api.InstallReferrerClient
-import com.android.installreferrer.api.InstallReferrerStateListener
-import com.android.installreferrer.api.ReferrerDetails
 import com.blankj.utilcode.util.*
 import com.ecreditpal.danaflash.BuildConfig
 import com.ecreditpal.danaflash.data.UserFace
@@ -165,40 +162,15 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
 
     @JavascriptInterface
     fun getReferer() {
-        val referrerClient = InstallReferrerClient.newBuilder(webActivity).build()
-        referrerClient.startConnection(object : InstallReferrerStateListener {
-
-            override fun onInstallReferrerSetupFinished(responseCode: Int) {
-                when (responseCode) {
-                    InstallReferrerClient.InstallReferrerResponse.OK -> {
-                        // Connection established.
-                        val response: ReferrerDetails = referrerClient.installReferrer
-                        val map = mapOf(
-                            "appInstallTime" to response.installBeginTimestampSeconds,
-                            "instantExperienceLaunched" to response.googlePlayInstantParam,
-                            "referrerClickTime" to response.referrerClickTimestampSeconds,
-                            "referrerUrl" to response.installReferrer
-                        )
-                        webActivity.callbackInterface("getReferer", JSON.toJSONString(map))
-                        webActivity.sendReferBack(response.installReferrer)
-                    }
-                    InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {
-                        // API not available on the current Play Store app.
-                        webActivity.callbackInterface("getReferer", "")
-                    }
-                    InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE -> {
-                        // Connection couldn't be established.
-                        webActivity.callbackInterface("getReferer", "")
-                    }
-                }
-            }
-
-            override fun onInstallReferrerServiceDisconnected() {
-                // Try to restart the connection on the next request to
-                // Google Play by calling the startConnection() method.
-                webActivity.callbackInterface("getReferer", "")
-            }
-        })
+        UserFace.referrerDetails.let {
+            val map = mapOf(
+                "appInstallTime" to it?.installBeginTimestampSeconds,
+                "instantExperienceLaunched" to it?.googlePlayInstantParam,
+                "referrerClickTime" to it?.referrerClickTimestampSeconds,
+                "referrerUrl" to it?.installReferrer
+            )
+            webActivity.callbackInterface("getReferer", JSON.toJSONString(map))
+        }
     }
 
     @JavascriptInterface

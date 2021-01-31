@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
 import androidx.core.text.toSpannable
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.BarUtils
@@ -21,6 +22,7 @@ import com.ecreditpal.danaflash.BuildConfig
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.databinding.FragmentLoginBinding
+import com.ecreditpal.danaflash.helper.SurveyHelper
 
 
 class LoginFragment : BaseFragment() {
@@ -51,6 +53,11 @@ class LoginFragment : BaseFragment() {
             clearPhoneNumber.setOnClickListener { phoneNumber.text = null }
             clearVerifyCode.setOnClickListener { verifyCode.text = null }
             coldDown.paintFlags = coldDown.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+            phoneNumber.addTextChangedListener(afterTextChanged = {
+                if (it?.isNotEmpty() == true) {
+                    SurveyHelper.addOneSurvey("/login", "loginInput")
+                }
+            })
             phoneNumber.setOnEditorActionListener { v, actionId, _ ->
                 return@setOnEditorActionListener when (actionId) {
                     EditorInfo.IME_ACTION_DONE -> {

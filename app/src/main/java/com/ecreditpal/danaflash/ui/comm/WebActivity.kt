@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
@@ -15,16 +14,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import com.alibaba.fastjson.JSON
-import com.appsflyer.AppsFlyerConversionListener
-import com.appsflyer.AppsFlyerLib
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.EncodeUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseActivity
 import com.ecreditpal.danaflash.base.ImageUploader
-import com.ecreditpal.danaflash.data.DEV_KEY
 import com.ecreditpal.danaflash.data.OSS_BUCKET
 import com.ecreditpal.danaflash.data.OSS_ENDPOINT
+import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.helper.CommUtils
 import com.ecreditpal.danaflash.helper.toBytes
 import com.ecreditpal.danaflash.js.AndroidAppInterface
@@ -50,7 +47,6 @@ class WebActivity : BaseActivity(), LifecycleObserver {
 
     private lateinit var webView: WebView
     private val webInterface = WebInterface()
-    private var afData: MutableMap<String, Any>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,7 +91,7 @@ class WebActivity : BaseActivity(), LifecycleObserver {
                 view: WebView?,
                 request: WebResourceRequest?
             ): Boolean {
-                val path = request?.url?.path ?: ""
+                val path = request?.url?.toString() ?: ""
                 if (path.contains("play.google.com") || path.contains("market")) {
                     AppUtils.launchApp(" com.android.vending")
                     return true
@@ -109,32 +105,7 @@ class WebActivity : BaseActivity(), LifecycleObserver {
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
-        initAf()
-    }
-
-    private fun initAf() {
-        val conversionDataListener = object : AppsFlyerConversionListener {
-            override fun onConversionDataSuccess(data: MutableMap<String, Any>?) {
-                afData = data
-            }
-
-            override fun onConversionDataFail(error: String?) {
-                Log.e("LOG_TAG", "error onConversionDataFail :  $error")
-            }
-
-            override fun onAppOpenAttribution(data: MutableMap<String, String>?) {
-                data?.map {
-                    Log.d("LOG_TAG", "onAppOpen_attribute: ${it.key} = ${it.value}")
-                }
-            }
-
-            override fun onAttributionFailure(error: String?) {
-                Log.e("LOG_TAG", "error onAttributionFailure :  $error")
-            }
-        }
-
-        AppsFlyerLib.getInstance().init(DEV_KEY, conversionDataListener, this)
-        AppsFlyerLib.getInstance().start(this)
+        sendReferIfPossible()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
@@ -144,8 +115,7 @@ class WebActivity : BaseActivity(), LifecycleObserver {
 
     override fun onBackPressed() {
         callJs(webInterface.backPress())
-        if (afData != null) {
-            afData?.get("media_source") ?: return
+        if (UserFace.mediaSource.isNotEmpty()) {
             callJs(webInterface.sendMediaSource())
         }
         super.onBackPressed()
@@ -163,13 +133,8 @@ class WebActivity : BaseActivity(), LifecycleObserver {
         callJs(webInterface.sendCallback(methodName, json))
     }
 
-    fun sendReferBack(json: String) {
-        callJs(webInterface.sendRefer(json))
-    }
-
     fun callAfBack() {
-        val value = afData?.get("media_source") ?: ""
-        callbackInterface("getAfInstallConversionData", value.toString())
+        callbackInterface("getAfInstallConversionData", UserFace.mediaSource)
     }
 
     fun startOcrPage(json: String?) {
@@ -190,6 +155,12 @@ class WebActivity : BaseActivity(), LifecycleObserver {
 
     fun startRequestPermissions(permissions: Array<String>) {
         requestPLauncher.launch(permissions)
+    }
+
+    private fun sendReferIfPossible() {
+        UserFace.referrerDetails?.let {
+            callJs(webInterface.sendRefer(it.installReferrer))
+        }
     }
 
     private val ocrLauncher = registerForActivityResult(StartOcr()) { pair ->

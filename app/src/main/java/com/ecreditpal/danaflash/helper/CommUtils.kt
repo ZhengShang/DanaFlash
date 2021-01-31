@@ -42,6 +42,7 @@ object CommUtils {
         }
         try {
             context?.startActivity(intent)
+            SurveyHelper.addOneSurvey("任意p", "gogg")
         } catch (e: Exception) {
             ToastUtils.showLong(R.string.failed_to_donwload_in_google_store)
         }

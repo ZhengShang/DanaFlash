@@ -178,10 +178,9 @@ class DeviceInfoUtil {
             .getSystemService(Context.STORAGE_SERVICE) as StorageManager
         try {
             val getPathsMethod = sm.javaClass.getMethod(
-                "getVolumePaths",
-                null
+                "getVolumePaths"
             )
-            val path = getPathsMethod.invoke(sm, null) as Array<String>
+            val path = getPathsMethod.invoke(sm) as Array<String>
             when (type) {
                 INTERNAL_STORAGE -> return path[type]
                 EXTERNAL_STORAGE -> return if (path.size > 1) {

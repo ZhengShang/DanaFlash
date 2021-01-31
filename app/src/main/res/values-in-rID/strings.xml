@@ -13,7 +13,7 @@
     <string name="disagree">Tidak</string>
     <string name="cancel">Batalkan</string>
     <string name="loan_amount_colon">Jumlah Pinjaman:</string>
-    <string name="bank_account_no_colon">No Rekening:</string>
+    <string name="bank_account_no_colon">No Rekening Bank:</string>
     <string name="paid_in_full_colon">Jumlah Yang harus dilunasi:</string>
     <string name="order_status_all">Semua</string>
     <string name="order_status_loan_success">Pencairan Berhasil</string>
@@ -112,4 +112,6 @@
     <string name="liveness">Verifikasi Wajah</string>
     <string name="contact">Nomor Ponsel</string>
     <string name="failed_to_load">Memuat Gagal</string>
+    <string name="loan_now">Pinjam Segera</string>
+    <string name="download">Pinjaman</string>
 </resources>

@@ -11,10 +11,8 @@ import androidx.navigation.fragment.findNavController
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.helper.readDsData
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SplashFragment : BaseFragment() {
     override fun onCreateView(
@@ -29,10 +27,8 @@ class SplashFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                //Delay 1s avoid to enter Main page quickly
-                delay(1000)
-            }
+            //Delay 1s avoid to enter Main page quickly
+            delay(1000)
             val accept = context.readDsData(DataStoreKeys.IS_ACCEPT_PRIVACY, false)
             if (accept) {
                 findNavController().navigate(R.id.action_splashFragment_to_mainActivity)

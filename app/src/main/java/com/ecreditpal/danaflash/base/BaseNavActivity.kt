@@ -10,6 +10,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.DialogFragmentNavigator
 import com.ecreditpal.danaflash.R
+import com.ecreditpal.danaflash.helper.SurveyHelper
 
 abstract class BaseNavActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,12 +19,19 @@ abstract class BaseNavActivity : BaseActivity() {
         setDefToolbarNav()
     }
 
+    //点击返回按钮的回调, 一般做埋点用
+    var backClickListener: (() -> Unit)? = null
+
     private fun setDefToolbarNav() {
         if (navGraphId() == 0) {
             throw RuntimeException("必须传入NavHost依赖的res/navigation/里面的导航文件.")
         }
 
-        findViewById<ImageView>(R.id.back).setOnClickListener { onBackPressed() }
+        findViewById<ImageView>(R.id.back).setOnClickListener {
+            SurveyHelper.addOneSurvey("任意p", "back")
+            backClickListener?.invoke()
+            onBackPressed()
+        }
         try {
             val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
             navController.setGraph(navGraphId())
