@@ -7,9 +7,15 @@
 
         <import type="com.ecreditpal.danaflash.ui.camera.OcrFragment" />
 
+        <import type="com.blankj.utilcode.util.ConvertUtils" />
+
         <variable
             name="step"
             type="androidx.databinding.ObservableInt" />
+
+        <variable
+            name="ocrMode"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,6 +30,7 @@
             android:layout_marginTop="60dp"
             android:layout_marginBottom="100dp"
             android:background="#4E4E4E"
+            android:visibleInvisible="@{ocrMode}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,6 +42,7 @@
             android:text="Sentuh bagian layar untuk fokus"
             android:textColor="@color/white"
             android:textSize="14sp"
+            android:visibleGone="@{ocrMode}"
             app:layout_constraintBottom_toBottomOf="@id/viewFinder"
             app:layout_constraintEnd_toStartOf="@id/viewFinder"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +69,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="fitXY"
-            android:src="@drawable/pic_ocr_border"
+            android:visibleGone="@{ocrMode || step == OcrFragment.STEP_CAPTURED}"
+            android:src="@{ocrMode ? @drawable/pic_ocr_border : null}"
             app:layout_constraintBottom_toBottomOf="@id/viewFinder"
             app:layout_constraintEnd_toEndOf="@id/viewFinder"
             app:layout_constraintStart_toStartOf="@id/viewFinder"

@@ -1,5 +1,7 @@
 package com.ecreditpal.danaflash.js
 
+import com.blankj.utilcode.util.LogUtils
+
 class WebInterface {
 
     companion object {
@@ -53,11 +55,21 @@ class WebInterface {
      * 参考 getReferer
      *   在收到回调后将response.installReferrer部分值，通过此接⼝通知前端
      */
-    fun sendRefer() {
-
+    fun sendRefer(json: String): String {
+        return JS_PREFIX + "sendRefer($json)"
     }
 
-    fun sendMediaSource() {
+    fun sendMediaSource(): String {
+        return JS_PREFIX + "sendMediaSource"
+    }
 
+    /**
+     * 回调前端的接口
+     * @param methodName 对应的方法名
+     * @param jsonResult 结果
+     */
+    fun sendCallback(methodName: String, jsonResult: String): String {
+        LogUtils.d("Send callback: $methodName -> $jsonResult ")
+        return JS_PREFIX + "webview_back[$methodName]($jsonResult)"
     }
 }

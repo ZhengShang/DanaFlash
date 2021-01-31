@@ -1,6 +1,5 @@
 package com.ecreditpal.danaflash.worker
 
-import DataStoreKeys
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -10,10 +9,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.LogUtils
-import com.ecreditpal.danaflash.helper.writeDsData
 import com.ecreditpal.danaflash.net.dfApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -81,25 +77,25 @@ class UploadContactsWorker(
             cur.close()
         }
 
-        if (contactList.isEmpty()) {
-            return Result.failure()
-        }
-        LogUtils.d(contactList)
+        val jsonString = """
+            {
+                "contactList" : [
+                    ${contactList.joinToString()}
+                ]
+            }
+        """.trimIndent()
 
         val body = RequestBody.create(
-            MediaType.parse("Content-Type, application/json"), contactList.joinToString()
+            MediaType.parse("application/json; charset=utf-8"), jsonString
         )
 
         val res = runBlocking {
             kotlin.runCatching {
-                dfApi().uploadContacts(body)
+                dfApi().uploadContacts(body).throwIfNotSuccess()
             }.getOrNull()
         } ?: return Result.retry()
 
         return if (res.isSuccess()) {
-            GlobalScope.launch {
-                applicationContext.writeDsData(DataStoreKeys.IS_UPLOAD_CONTACTS, true)
-            }
             Result.success()
         } else {
             Result.retry()

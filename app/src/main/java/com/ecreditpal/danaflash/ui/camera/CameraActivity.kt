@@ -20,6 +20,7 @@ class CameraActivity : BaseNavActivity() {
     companion object {
         const val KEY_JSON = "json"
         const val KEY_MODE = "mode"
+        const val KEY_PHOTO = "photo"
         const val MODE_OCR = 0
         const val MODE_FACE_RECOGNITION = 1
         private const val PERMISSION_DENIED = "-1"

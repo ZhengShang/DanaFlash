@@ -112,6 +112,30 @@ function sendRefer(a)
     DanaFlash.toast(a);
 }
 
+function sendMediaSource(a)
+{
+    DanaFlash.toast(a);
+}
+
+function closeWebView()
+{
+    DanaFlash.closeWebView()
+}
+
+function updateLoginInfo()
+{
+    DanaFlash.updateLoginInfo("")
+}
+
+function browser()
+{
+    DanaFlash.browser("play.google.com")
+}
+
+function browserWithTitle()
+{
+    DanaFlash.browserWithTitle("play.google.com")
+}
 
 </script>
 
@@ -182,6 +206,21 @@ function sendRefer(a)
 <input type="button"
        value="getPhoto"
        onclick="getPhoto()"/>
-
+<br/>
+<input type="button"
+       value="closeWebView"
+       onclick="closeWebView()"/>
+<br/>
+<input type="button"
+       value="updateLoginInfo"
+       onclick="updateLoginInfo()"/>
+<br/>
+<input type="button"
+       value="browser"
+       onclick="browser()"/>
+<br/>
+<input type="button"
+       value="browserWithTitle"
+       onclick="browserWithTitle()"/>
 </body>
 </html>

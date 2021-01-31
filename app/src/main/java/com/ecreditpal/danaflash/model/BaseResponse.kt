@@ -1,5 +1,6 @@
 package com.ecreditpal.danaflash.model
 
+import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.net.DanaException
 
 data class BaseResponse<T>(
@@ -13,6 +14,9 @@ data class BaseResponse<T>(
 
     fun throwIfNotSuccess(): BaseResponse<T> {
         if (code != 200) {
+            if (code == 502 || desc == "Invalid Token") {
+                UserFace.clearData()
+            }
             throw DanaException(code, desc)
         }
         return this

@@ -25,13 +25,9 @@ class ImageUploader {
 
     fun uploadImage(
         scope: CoroutineScope,
-        uri: Uri?,
+        uri: Uri,
         uploadCallback: ((state: String) -> Unit)? = null
     ) {
-        if (uri == null) {
-            uploadCallback?.invoke("-1")
-            return
-        }
         scope.launch(Dispatchers.Main) {
             LoadingTips.showLoading()
             val res = danaRequestWithCatch {

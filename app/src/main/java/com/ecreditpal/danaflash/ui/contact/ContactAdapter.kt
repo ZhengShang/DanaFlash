@@ -1,5 +1,6 @@
 package com.ecreditpal.danaflash.ui.contact
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -16,7 +17,10 @@ class ContactAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == HEADER) {
-            HeaderHolder(View.inflate(parent.context, R.layout.view_contact_header, parent))
+            HeaderHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.view_contact_header, parent, false)
+            )
         } else {
             BindingViewHolder.create<ItemContactBinding>(parent, R.layout.item_contact)
         }

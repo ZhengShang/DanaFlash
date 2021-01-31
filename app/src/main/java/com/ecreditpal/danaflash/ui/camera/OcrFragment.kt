@@ -15,6 +15,7 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.lifecycleScope
@@ -53,17 +54,27 @@ class OcrFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val isPhoto = activity?.intent?.getBooleanExtra(CameraActivity.KEY_PHOTO, false) ?: false
+
         binding.apply {
             step = captureStep
+            ocrMode = isPhoto.not()
 
-            viewFinder.clipToOutline = true
+            if (isPhoto) {
+                val lp = viewFinder.layoutParams as ConstraintLayout.LayoutParams
+                lp.marginStart = 0
+                lp.marginEnd = 0
+                lp.dimensionRatio = null
+            }
             back.setOnClickListener { activity?.finish() }
             capture.setOnClickListener {
                 takePhoto()
             }
             cancel.setOnClickListener {
                 captureStep.set(STEP_START)
-                binding.image.setImageResource(R.drawable.pic_ocr_border)
+                if (isPhoto.not()) {
+                    binding.image.setImageResource(R.drawable.pic_ocr_border)
+                }
                 deleteLastPhoto()
             }
             ok.setOnClickListener {
@@ -78,9 +89,17 @@ class OcrFragment : BaseFragment() {
                 activity?.finish()
             }
 
-            //rotate to horizontal ui
-            back.rotation = 90f
-            ok.rotation = 90f
+            if (isPhoto) {
+                //normal photo
+                val lp = back.layoutParams as ConstraintLayout.LayoutParams
+                lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                lp.endToEnd = -1
+            } else {
+                //ocr
+                //rotate to horizontal ui
+                back.rotation = 90f
+                ok.rotation = 90f
+            }
         }
 
         // Initialize our background executor
@@ -128,6 +147,7 @@ class OcrFragment : BaseFragment() {
 
             } catch (exc: Exception) {
                 Log.e("TakePictureFragment", "Use case binding failed", exc)
+                activity?.finish()
             }
 
         }, ContextCompat.getMainExecutor(context))

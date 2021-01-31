@@ -50,6 +50,7 @@ class ContactFragment : BaseFragment() {
             ) == PackageManager.PERMISSION_DENIED
         ) {
             resultBack("-1", null)
+            return
         }
 
         loadContactsData()

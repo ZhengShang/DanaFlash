@@ -19,9 +19,11 @@ import com.ecreditpal.danaflash.ui.login.LoginActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+
 object CommUtils {
 
     fun navLogin() {
+        LoadingTips.dismissLoading()
         ActivityUtils.startActivity(
             Intent(
                 ActivityUtils.getTopActivity(),
