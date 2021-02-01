@@ -77,8 +77,11 @@ interface DanaApi {
     @GET("/adakita/oss/sts")
     suspend fun ossSts(): BaseResponse<OssStsRes>
 
+    @FormUrlEncoded
     @POST("/adakita/face_recognition")
-    suspend fun getFaceCheckResult(): BaseResponse<FaceCheckRes>
+    suspend fun getFaceCheckResult(
+        @Field("livenessId") livenessId: String
+    ): BaseResponse<FaceCheckRes>
 
     @GET("/adakita/product/api/trial")
     suspend fun amountTrial(

@@ -58,8 +58,6 @@ class MainActivity : BaseActivity() {
             //First enter main page need to show permission tips
             if (showTips) {
                 navController.navigate(R.id.action_global_permissionTipsDialog)
-            } else {
-                requestAllPermissions()
             }
         }
 
@@ -118,6 +116,14 @@ class MainActivity : BaseActivity() {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_DENIED
         }.count() == 0
 
+    fun requestLocationPermission(request: Boolean) {
+        if (request) {
+            requestLocationLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        } else {
+            homeViewModel.allPermissionGranted.value = false
+        }
+    }
+
     fun requestAllPermissions() {
         val requestArray = PERMISSIONS
             .filter {
@@ -130,9 +136,6 @@ class MainActivity : BaseActivity() {
     @SuppressLint("MissingPermission")
     private val requestPermissionsLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { map ->
-            if (map.isEmpty()) {
-                return@registerForActivityResult
-            }
             //Invoke liveData
             val allGranted = map.values.all { true }
             homeViewModel.allPermissionGranted.value = allGranted
@@ -153,6 +156,11 @@ class MainActivity : BaseActivity() {
                     }
                 }
             }
+        }
+
+    private val requestLocationLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            homeViewModel.allPermissionGranted.value = false
         }
 
     @SuppressLint("MissingPermission")

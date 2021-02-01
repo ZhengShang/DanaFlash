@@ -50,8 +50,7 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
     }
 
     @JavascriptInterface
-    @JvmOverloads
-    fun launchContact(json: String? = null) {
+    fun launchContact() {
         webActivity.startContact()
     }
 
@@ -91,30 +90,35 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
 
     @JavascriptInterface
     fun getAppList(): String {
-        val pm = Utils.getApp().packageManager ?: return ""
-        val list = pm.getInstalledPackages(0).map {
-            AppInfoModel(
-                appName = it.applicationInfo.loadLabel(pm).toString(),
-                packageName = it.packageName,
-                versionName = it.versionName,
-                versionCode = it.versionCode,
-                firstInstall = it.firstInstallTime,
-                lastInstall = it.lastUpdateTime,
-                flag = it.applicationInfo.flags
-            )
-        }
-        val json = """
-            {
-                "packageInfo" : [${JSON.toJSONString(list)}]
+        try {
+            val pm = Utils.getApp().packageManager ?: return ""
+            val list = pm.getInstalledPackages(0).map {
+                AppInfoModel(
+                    appName = it.applicationInfo.loadLabel(pm).toString(),
+                    packageName = it.packageName,
+                    versionName = it.versionName,
+                    versionCode = it.versionCode,
+                    firstInstall = it.firstInstallTime,
+                    lastInstall = it.lastUpdateTime,
+                    flag = it.applicationInfo.flags
+                )
             }
-        """.trimIndent()
-        return EncodeUtils.base64Encode2String(json.toByteArray())
+            val json = """
+                {
+                    "packageInfo" : [${JSON.toJSONString(list)}]
+                }
+            """.trimIndent()
+            return EncodeUtils.base64Encode2String(json.toByteArray())
+        } catch (e: Exception) {
+            LogUtils.e(e)
+            return ""
+        }
     }
 
     @SuppressLint("MissingPermission")
     @JavascriptInterface
     fun getLocation() {
-        kotlin.runCatching {
+        try {
             val locationManager =
                 webActivity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -152,6 +156,8 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
                 )
                 webActivity.callbackInterface("getLocation", JSON.toJSONString(map))
             }
+        } catch (e: Exception) {
+            webActivity.callbackInterface("getLocation", "")
         }
     }
 

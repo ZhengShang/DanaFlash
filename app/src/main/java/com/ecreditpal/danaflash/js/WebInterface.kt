@@ -1,7 +1,5 @@
 package com.ecreditpal.danaflash.js
 
-import com.blankj.utilcode.util.LogUtils
-
 class WebInterface {
 
     companion object {
@@ -33,14 +31,14 @@ class WebInterface {
      * 通知前端，⽤户从OCR相机界⾯返回
      */
     fun ocrBack(): String {
-        return JS_PREFIX + "ocrBack"
+        return JS_PREFIX + "ocrBack()"
     }
 
     /**
      *通知前端，⽤户从后台返回前台
      */
     fun ReturnForeground(): String {
-        return JS_PREFIX + "ReturnForeground"
+        return JS_PREFIX + "ReturnForeground()"
     }
 
     /**
@@ -48,7 +46,7 @@ class WebInterface {
      * 发⽣于onBackPressed事件
      */
     fun backPress(): String {
-        return JS_PREFIX + "backPress"
+        return JS_PREFIX + "backPress()"
     }
 
     /**
@@ -60,7 +58,7 @@ class WebInterface {
     }
 
     fun sendMediaSource(): String {
-        return JS_PREFIX + "sendMediaSource"
+        return JS_PREFIX + "sendMediaSource()"
     }
 
     /**
@@ -69,7 +67,6 @@ class WebInterface {
      * @param jsonResult 结果
      */
     fun sendCallback(methodName: String, jsonResult: String): String {
-        LogUtils.d("Send callback: $methodName -> $jsonResult ")
-        return JS_PREFIX + "webview_back[$methodName]($jsonResult)"
+        return JS_PREFIX + "webview_back['$methodName']($jsonResult)"
     }
 }

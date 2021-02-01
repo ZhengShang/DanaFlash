@@ -8,6 +8,6 @@ data class OrderProcessingRes(
         0 -> "Pinjaman online"
         1 -> "Cap Limit"
         2 -> "Lihat pinjaman"
-        else -> ""
+        else -> "Pinjaman online"
     }
 }

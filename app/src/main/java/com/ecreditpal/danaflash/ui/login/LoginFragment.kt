@@ -81,14 +81,14 @@ class LoginFragment : BaseFragment() {
             }
 
             val declare = getString(R.string.login_protocol_declare)
-            val protocol = getString(R.string.register_protocol)
-            val index = declare.indexOf(protocol)
+            val protocol = getString(R.string.privacy_policy)
+            val index = declare.indexOf(protocol, ignoreCase = true)
             val clickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
                     findNavController().navigate(
                         LoginFragmentDirections.actionLoginFragmentToPolicyFragment2(
-                            policyFileName = "register_policies.html",
-                            label = getString(R.string.register_protocol),
+                            policyFileName = "privacy_policies.html",
+                            label = getString(R.string.privacy_policy),
                             hideTitle = false
                         )
                     )

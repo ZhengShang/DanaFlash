@@ -7,13 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ScreenUtils
 import com.ecreditpal.danaflash.MainActivity
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseDialogFragment
 import com.ecreditpal.danaflash.helper.writeDsData
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class PermissionTipsDialog : BaseDialogFragment() {
@@ -37,28 +37,26 @@ class PermissionTipsDialog : BaseDialogFragment() {
                     "*Foto dan Rekam Video\n" +
                     "*Kontak\n" +
                     "*Peralatan perangkat\n" +
-                    "*Penyimpanan perangkat\n" +
-                    "\n" +
-                    "Tidak izinkan\t\tIzinkan\n"
+                    "*Penyimpanan perangkat\n"
         }
         view.findViewById<TextView>(R.id.agree).setOnClickListener {
             writeValue()
-            backAndRequestPermissionInMain()
+            backAndRequestPermissionInMain(true)
         }
         view.findViewById<TextView>(R.id.disagree).setOnClickListener {
             writeValue()
-            backAndRequestPermissionInMain()
+            backAndRequestPermissionInMain(false)
         }
     }
 
-    private fun backAndRequestPermissionInMain() {
+    private fun backAndRequestPermissionInMain(request: Boolean) {
         findNavController().popBackStack()
         val a = activity as? MainActivity
-        a?.let { a.requestAllPermissions() }
+        a?.let { a.requestLocationPermission(request) }
     }
 
     private fun writeValue() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        GlobalScope.launch {
             context.writeDsData(DataStoreKeys.IS_SHOW_PERMISSION_TIPS, false)
         }
     }

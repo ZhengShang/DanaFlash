@@ -176,7 +176,7 @@
             android:enabled="@{vm.orderProcessingRes.status != 1}"
             android:gravity="center"
             android:stateListAnimator="@animator/press_alpha2down"
-            android:text="@{vm.orderProcessingRes.statusString()}"
+            android:text='@{vm.orderProcessingRes.statusString() ?? "Pinjaman online"}'
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"

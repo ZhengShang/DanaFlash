@@ -65,6 +65,7 @@ object CommUtils {
         livenessResult: String?
     ) {
         if (livenessResult.isNullOrEmpty() || livenessResult == "0" || livenessResult == "-1") {
+
             return
         }
 
@@ -72,7 +73,7 @@ object CommUtils {
         scope.launch(Dispatchers.Main) {
             LoadingTips.showLoading()
             val res = danaRequestWithCatch {
-                dfApi().getFaceCheckResult()
+                dfApi().getFaceCheckResult(livenessResult)
             }
             LoadingTips.dismissLoading()
             when (res?.faceCheckBean?.handle) {

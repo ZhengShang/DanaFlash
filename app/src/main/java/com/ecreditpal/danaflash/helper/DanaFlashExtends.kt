@@ -67,8 +67,8 @@ fun String?.combineH5Url(paramMap: Map<String, Any?>? = null): String {
         paramStr = "?".plus(paramStr)
     }
     return H5_PREFIX.plus(this)
-        .plus(paramStr)
-        .plus("&")
+        .plus(paramStr ?: "")
+        .plus("?")
         .plus("phone=${UserFace.phone}")
         .plus("&")
         .plus("token=${UserFace.token}")

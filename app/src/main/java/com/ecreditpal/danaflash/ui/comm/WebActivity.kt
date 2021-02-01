@@ -5,17 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
 import android.view.View
-import android.webkit.WebResourceRequest
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import com.alibaba.fastjson.JSON
-import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.EncodeUtils
+import com.blankj.utilcode.util.LogUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseActivity
 import com.ecreditpal.danaflash.base.ImageUploader
@@ -30,6 +27,7 @@ import com.ecreditpal.danaflash.ui.camera.StartLiveness
 import com.ecreditpal.danaflash.ui.camera.StartOcr
 import com.ecreditpal.danaflash.ui.contact.StartContact
 import kotlinx.android.synthetic.main.activity_web.*
+
 
 class WebActivity : BaseActivity(), LifecycleObserver {
 
@@ -78,6 +76,7 @@ class WebActivity : BaseActivity(), LifecycleObserver {
             blockNetworkLoads = false
             blockNetworkImage = false
             useWideViewPort = true
+            allowFileAccess = true
             loadWithOverviewMode = true
             setAppCacheEnabled(true)
             cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK //关闭webview中缓存
@@ -93,7 +92,7 @@ class WebActivity : BaseActivity(), LifecycleObserver {
             ): Boolean {
                 val path = request?.url?.toString() ?: ""
                 if (path.contains("play.google.com") || path.contains("market")) {
-                    AppUtils.launchApp(" com.android.vending")
+                    CommUtils.navGoogleDownload(this@WebActivity, path)
                     return true
                 }
                 return false
@@ -125,6 +124,7 @@ class WebActivity : BaseActivity(), LifecycleObserver {
         if (Looper.myLooper() != Looper.getMainLooper()) {
             webView.post { callJs(jsStr) }
         } else {
+            LogUtils.d("ready call js: \n$jsStr")
             webView.evaluateJavascript(jsStr) {}
         }
     }

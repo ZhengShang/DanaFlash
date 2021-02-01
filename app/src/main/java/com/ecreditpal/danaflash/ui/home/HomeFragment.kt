@@ -103,14 +103,16 @@ class HomeFragment : BaseFragment() {
             tabVisible.set(it == 2)
             if (it != 2) {
                 type.set(if (it == 0) PRODUCT_TYPE_API else PRODUCT_TYPE_GP)
-                //第一次主动请求广告
-                homeViewModel.getAd(if (it == 0) AD_TITLE_APIPOP else AD_TITLE_POP)
             }
             if (it != 1) {
                 SurveyHelper.addOneSurvey("/", "api_show")
             }
         }
         homeViewModel.allPermissionGranted.observe(viewLifecycleOwner) { granted ->
+            //这里意味着从主页处理完权限了.
+            //为了不让广告弹窗显示在主页权限Tips之上, 就做了这个处理
+            homeViewModel.getAd(if (type.get() == PRODUCT_TYPE_API) AD_TITLE_APIPOP else AD_TITLE_POP)
+
             if (requestedPm and granted) {
                 navByUserInfoStatus()
             }
@@ -194,7 +196,7 @@ class HomeFragment : BaseFragment() {
         } else {
             if (clickId == R.id.loan || clickId == R.id.root) {
                 SurveyHelper.addOneSurvey("/", "clickProduct")
-                CommUtils.navGoogleDownload(context, product.link)
+                WebActivity.loadUrl(context, product.link)
             }
         }
     }
