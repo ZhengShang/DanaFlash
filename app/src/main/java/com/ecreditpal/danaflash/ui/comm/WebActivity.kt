@@ -177,7 +177,7 @@ class WebActivity : BaseActivity(), LifecycleObserver {
             if (status == "1") {
                 callJs(
                     webInterface.sendImgUrl(
-                        url = "https://${OSS_BUCKET + OSS_ENDPOINT + objectKey}",
+                        url = "https://${OSS_BUCKET}.${OSS_ENDPOINT}/$objectKey}",
                         type = pair.first,
                         img = EncodeUtils.base64Encode2String(imageBytes)
                     )

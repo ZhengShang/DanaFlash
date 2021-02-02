@@ -276,9 +276,9 @@ class MyOrdersFragment : BaseFragment() {
         amountTrialRes = danaRequestWithCatch {
             dfApi().amountTrial(
                 orderRes.productId,
-                orderRes.loanTermUnit,
-                orderRes.loanAmount?.intValueExact(),
-                orderRes.loanTerm
+                orderRes.loanTermUnit ?: 0,
+                orderRes.loanAmount?.intValueExact() ?: 0,
+                orderRes.loanTerm ?: 0
             )
         }
     }

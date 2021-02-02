@@ -19,10 +19,7 @@ import com.ecreditpal.danaflash.helper.CommUtils
 import com.ecreditpal.danaflash.helper.SurveyHelper
 import com.ecreditpal.danaflash.helper.combineH5Url
 import com.ecreditpal.danaflash.helper.danaRequestWithCatch
-import com.ecreditpal.danaflash.model.AmountTrialRes
-import com.ecreditpal.danaflash.model.OrderProcessingRes
-import com.ecreditpal.danaflash.model.ProductRes
-import com.ecreditpal.danaflash.model.UserInfoStatusRes
+import com.ecreditpal.danaflash.model.*
 import com.ecreditpal.danaflash.net.dfApi
 import com.ecreditpal.danaflash.ui.camera.StartLiveness
 import com.ecreditpal.danaflash.ui.comm.WebActivity
@@ -34,8 +31,9 @@ class ProductDetailFragment : BaseFragment() {
     private lateinit var binding: FragmentProductDetailBinding
     private val productViewModel: ProductViewModel by viewModels()
 
-    private var product: ProductRes.Product? = null
+    private var productDetailRes: ProductDetailRes? = null
     private var amountTrialRes: AmountTrialRes? = null
+    private var productId = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,14 +48,20 @@ class ProductDetailFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        product = activity?.intent?.extras?.let { ProductActivityArgs.fromBundle(it).product }
+        val product: ProductRes.Product? = activity?.intent?.extras?.let { ProductActivityArgs.fromBundle(it).product }
         if (product == null) {
             activity?.finish()
             return
         }
+        productId = product.id ?: 0
 
         binding.product = product
         binding.vm = productViewModel
+
+
+        productViewModel.detailRes.observe(viewLifecycleOwner) {
+            productDetailRes = it
+        }
 
         productViewModel.userInfoStatus.observe(viewLifecycleOwner) {
             binding.baseInfo.siEndText = when {
@@ -108,7 +112,8 @@ class ProductDetailFragment : BaseFragment() {
     private fun updateInfoEndViews() {
         if (UserFace.isLogin()) {
             productViewModel.fetchUserInfoStatus()
-            productViewModel.fetchOrderProcessing(product?.id!!)
+            productViewModel.fetchOrderProcessing(productId)
+            productViewModel.getProductDetail(productId)
         } else {
             binding.baseInfo.siEndText = "Lengkapi Info"
             binding.otherInfo.siEndText = "Lengkapi Info"
@@ -120,15 +125,17 @@ class ProductDetailFragment : BaseFragment() {
             CommUtils.navLogin()
             return
         }
-        productViewModel.userInfoStatus.value?.let {
-            lifecycleScope.launch(Dispatchers.Main) {
-                if (amountTrialRes == null) {
-                    LoadingTips.showLoading()
-                    calAmountTrial()
-                    LoadingTips.dismissLoading()
-                }
-                clickAction(id, it)
+
+        val res = productViewModel.userInfoStatus.value
+            ?: productDetailRes?.infoStatus
+            ?: return
+        lifecycleScope.launch(Dispatchers.Main) {
+            if (amountTrialRes == null) {
+                LoadingTips.showLoading()
+                calAmountTrial()
+                LoadingTips.dismissLoading()
             }
+            clickAction(id, res)
         }
     }
 
@@ -181,7 +188,6 @@ class ProductDetailFragment : BaseFragment() {
     }
 
     private fun clickToLoan() {
-        val id = product?.id ?: return
         val process = productViewModel.orderProcessingRes.value
         if (process == null) {
             lifecycleScope.launch(Dispatchers.Main) {
@@ -211,10 +217,10 @@ class ProductDetailFragment : BaseFragment() {
     private suspend fun calAmountTrial() {
         amountTrialRes = danaRequestWithCatch {
             dfApi().amountTrial(
-                id,
-                product?.periodUnit,
-                product?.amountMax?.intValueExact(),
-                product?.periodMax
+                productId,
+                productDetailRes?.termUnit ?: 0,
+                productDetailRes?.amountMax?.intValueExact() ?: 0,
+                productDetailRes?.termUnit ?: 0
             )
         }
     }
@@ -224,9 +230,9 @@ class ProductDetailFragment : BaseFragment() {
     }
 
     private fun getH5Params() = mutableMapOf(
-        "id" to product?.id, // 点击产品ID
+        "id" to productId, // 点击产品ID
         "amount" to amountTrialRes?.getMaxAmount(), // 产品试算金额列表返回data数组里的最大值
-        "productName" to product?.name, // 点击的产品名称
+        "productName" to productDetailRes?.name, // 点击的产品名称
         "trackCode" to "al", // 入口埋点（取埋点里code字段）
     )
 }

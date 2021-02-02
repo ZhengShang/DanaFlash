@@ -83,12 +83,17 @@ interface DanaApi {
         @Field("livenessId") livenessId: String
     ): BaseResponse<FaceCheckRes>
 
-    @GET(" /danaflash/product/api/trial")
+    @GET(" /danaflash/product/api/{id}")
+    suspend fun getProductDetail(
+        @Path("id") id: Int
+    ): BaseResponse<ProductDetailRes>
+
+    @GET(" /danaflash/product/api/trial/{id}")
     suspend fun amountTrial(
-        @Query("id") id: Int,
-        @Query("termUnit") termUnit: Int?,
-        @Query("applicationAmount") applicationAmount: Int?,
-        @Query("applicationTerm") applicationTerm: Int?
+        @Path("id") id: Int,
+        @Query("termUnit") termUnit: Int,
+        @Query("applicationAmount") applicationAmount: Int,
+        @Query("applicationTerm") applicationTerm: Int
     ): BaseResponse<AmountTrialRes>
 
     @NoNeedToken
