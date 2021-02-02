@@ -139,5 +139,7 @@ object UserFace {
         }
     }
 
-    fun getDs() = App.context.createDataStore(name = "settings")
+    val dsInstance by lazy {
+        App.context.createDataStore(name = "settings")
+    }
 }

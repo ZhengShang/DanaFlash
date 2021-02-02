@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -62,11 +63,16 @@ class ProductDetailFragment : BaseFragment() {
             binding.baseInfo.siEndText = when {
                 it.isBaseInfoCompleted() -> {
                     binding.baseInfo.endTextView.setBackgroundResource(R.drawable.shape_daan_gray_solid_r20)
+                    binding.baseInfo.endTextView.setTextColor(
+                        ContextCompat.getColor(
+                            binding.baseInfo.context,
+                            R.color.sub_text
+                        )
+                    )
                     binding.baseInfo.isEnabled = false
                     getString(R.string.complete)
                 }
                 it.isBaseToFix() -> {
-                    binding.baseInfo.endTextView.setTextColor(Color.WHITE)
                     getString(R.string.to_fix)
                 }
                 else -> {

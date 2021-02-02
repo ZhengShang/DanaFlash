@@ -137,7 +137,7 @@ class MainActivity : BaseActivity() {
     private val requestPermissionsLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { map ->
             //Invoke liveData
-            val allGranted = map.values.all { true }
+            val allGranted = map.values.all { it == true }
             homeViewModel.allPermissionGranted.value = allGranted
 
             map.entries.forEach { entry ->

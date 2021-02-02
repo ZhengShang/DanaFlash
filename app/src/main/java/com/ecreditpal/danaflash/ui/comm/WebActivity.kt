@@ -2,8 +2,10 @@ package com.ecreditpal.danaflash.ui.comm
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
+import android.provider.MediaStore
 import android.view.View
 import android.webkit.*
 import android.widget.ImageView
@@ -20,7 +22,6 @@ import com.ecreditpal.danaflash.data.OSS_BUCKET
 import com.ecreditpal.danaflash.data.OSS_ENDPOINT
 import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.helper.CommUtils
-import com.ecreditpal.danaflash.helper.toBytes
 import com.ecreditpal.danaflash.js.AndroidAppInterface
 import com.ecreditpal.danaflash.js.WebInterface
 import com.ecreditpal.danaflash.ui.camera.StartLiveness
@@ -168,17 +169,21 @@ class WebActivity : BaseActivity(), LifecycleObserver {
             callJs(webInterface.ocrBack())
             return@registerForActivityResult
         }
-        ImageUploader().uploadImage(lifecycleScope, pair.second!!) {
-            callJs(webInterface.isUploading(it))
-            if (it == "1") {
+
+        val imageUri: Uri = pair.second!!
+        val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+        val objectKey = CommUtils.getOssObjectKey(imageUri)
+        ImageUploader().uploadImage(lifecycleScope, bitmap, objectKey) { status, imageBytes ->
+            if (status == "1") {
                 callJs(
                     webInterface.sendImgUrl(
-                        url = "https://${OSS_BUCKET + OSS_ENDPOINT + CommUtils.getOssObjectKey(pair.second!!)}",
+                        url = "https://${OSS_BUCKET + OSS_ENDPOINT + objectKey}",
                         type = pair.first,
-                        img = EncodeUtils.base64Encode2String(pair.second.toBytes(this))
+                        img = EncodeUtils.base64Encode2String(imageBytes)
                     )
                 )
             }
+            callJs(webInterface.isUploading(status))
         }
     }
 

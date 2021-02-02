@@ -9,7 +9,7 @@ interface DanaApi {
 
     @NoNeedToken
     @FormUrlEncoded
-    @POST("/adakita/sms_login/vcode")
+    @POST(" /danaflash/sms_login/vcode")
     suspend fun getVCode(
         @Field("phone") phone: String,
         @Field("code") code: String = "62"
@@ -17,7 +17,7 @@ interface DanaApi {
 
     @NoNeedToken
     @FormUrlEncoded
-    @POST("/adakita//sms_login")
+    @POST(" /danaflash/sms_login")
     suspend fun login(
         @Field("phone") phone: String,
         @Field("deviceId") deviceId: String,
@@ -26,7 +26,7 @@ interface DanaApi {
     ): BaseResponse<LoginRes>
 
     @NoNeedToken
-    @GET("/adakita/version/manage")
+    @GET(" /danaflash/version/manage")
     suspend fun versionMange(
         @Query("channel") channel: String,
         @Query("version") version: String = BuildConfig.VERSION_NAME,
@@ -34,14 +34,14 @@ interface DanaApi {
     ): BaseResponse<VersionRes>
 
     @NoNeedToken
-    @GET("/adakita/product")
+    @GET(" /danaflash/product")
     suspend fun product(@QueryMap map: Map<String, @JvmSuppressWildcards Any>): BaseResponse<ProductRes>
 
-    @POST("/adakita/contact_list")
+    @POST(" /danaflash/contact_list")
     suspend fun uploadContacts(@Body body: RequestBody): BaseResponse<Void>
 
     @NoNeedToken
-    @GET("/adakita/loan_order/list")
+    @GET(" /danaflash/loan_order/list")
     suspend fun getOrderList(
         @Query("pageIndex") pageIndex: Int,
         @Query("pageSize") pageSize: Int,
@@ -49,41 +49,41 @@ interface DanaApi {
     ): BaseResponse<List<OrderRes>>
 
     @NoNeedToken
-    @GET("/adakita/ad/imgs")
+    @GET(" /danaflash/ad/imgs")
     suspend fun getAds(
         @Query("title") title: String
     ): BaseResponse<AdRes>
 
     @FormUrlEncoded
-    @POST("/adakita/feedback/add")
+    @POST(" /danaflash/feedback/add")
     suspend fun feedback(@Field("content") content: String): BaseResponse<Void>
 
     @FormUrlEncoded
-    @POST("/adakita/loan_order/amount/drop")
+    @POST(" /danaflash/loan_order/amount/drop")
     suspend fun amountDrop(@Field("orderId") orderId: String): BaseResponse<Void>
 
     @NoNeedToken
-    @GET("/adakita/faq")
+    @GET(" /danaflash/faq")
     suspend fun getFaq(): BaseResponse<FaqRes>
 
-    @GET("/adakita/user/info/status")
+    @GET(" /danaflash/user/info/status")
     suspend fun getUserInfoStatus(): BaseResponse<UserInfoStatusRes>
 
-    @GET("/adakita/loan_order/order_processing")
+    @GET(" /danaflash/loan_order/order_processing")
     suspend fun orderProcessing(
         @Query("productId") productId: Int
     ): BaseResponse<OrderProcessingRes>
 
-    @GET("/adakita/oss/sts")
+    @GET(" /danaflash/oss/sts")
     suspend fun ossSts(): BaseResponse<OssStsRes>
 
     @FormUrlEncoded
-    @POST("/adakita/face_recognition")
+    @POST(" /danaflash/face_recognition")
     suspend fun getFaceCheckResult(
         @Field("livenessId") livenessId: String
     ): BaseResponse<FaceCheckRes>
 
-    @GET("/adakita/product/api/trial")
+    @GET(" /danaflash/product/api/trial")
     suspend fun amountTrial(
         @Query("id") id: Int,
         @Query("termUnit") termUnit: Int?,
@@ -92,22 +92,22 @@ interface DanaApi {
     ): BaseResponse<AmountTrialRes>
 
     @NoNeedToken
-    @GET("/adakita/secret_key/get")
+    @GET(" /danaflash/secret_key/get")
     suspend fun getLivenessSecretKey(): BaseResponse<LivenessSecretKeyRes>
 
     @NoNeedToken
     @Headers("x-log-apiversion: 0.6.0")
-    @POST("/adakita/survey")
+    @POST(" /danaflash/survey")
     suspend fun uploadSurvey(
         @Header("x-log-bodyrawsize") bodyrawsize: Long,
         @Body body: RequestBody
     ): BaseResponse<Void>
 
-    @POST("/adakita/user/filter_product")
+    @POST(" /danaflash/user/filter_product")
     suspend fun filterProduct(): BaseResponse<Void>
 
     @FormUrlEncoded
-    @POST("/adakita/device_detail")
+    @POST(" /danaflash/device_detail")
     suspend fun uploadAllDeviceInfo(
         @Field("isEncrypt") isEncrypt: Int,
         @Field("deviceDetail") deviceDetail: String

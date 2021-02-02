@@ -29,7 +29,7 @@ suspend fun <T> Context?.writeDsData(
     if (this == null) {
         return
     }
-    val dataStore: DataStore<Preferences> = UserFace.getDs()
+    val dataStore: DataStore<Preferences> = UserFace.dsInstance
 
     dataStore.edit { preferences ->
         preferences[key] = value
@@ -43,7 +43,7 @@ suspend fun <T> Context?.readDsData(
     if (this == null) {
         return defaultValue
     }
-    val dataStore: DataStore<Preferences> = UserFace.getDs()
+    val dataStore: DataStore<Preferences> = UserFace.dsInstance
     return dataStore.data
         .catch {
             emit(emptyPreferences())
