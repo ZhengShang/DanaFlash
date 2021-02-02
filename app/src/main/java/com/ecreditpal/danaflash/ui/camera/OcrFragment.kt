@@ -3,28 +3,30 @@ package com.ecreditpal.danaflash.ui.camera
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.*
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.Preview
+import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.lifecycleScope
+import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.UriUtils
 import com.bumptech.glide.Glide
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.databinding.FragmentOcrBinding
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.File
@@ -79,7 +81,11 @@ class OcrFragment : BaseFragment() {
             }
             ok.setOnClickListener {
                 val input = activity?.intent?.getStringExtra(CameraActivity.KEY_JSON)?.let {
-                    JSONObject(it).optString("type")
+                    if (it.isEmpty()) {
+                        ""
+                    } else {
+                        JSONObject(it).optString("type")
+                    }
                 } ?: ""
                 activity?.setResult(
                     Activity.RESULT_OK,
@@ -89,6 +95,7 @@ class OcrFragment : BaseFragment() {
                     }
                 )
                 activity?.finish()
+                reSaveImage()
             }
 
             if (isPhoto) {
@@ -202,6 +209,16 @@ class OcrFragment : BaseFragment() {
                     File(path).delete()
                 }
             }
+        }
+    }
+
+    /**
+     * 重新保存一次,可以修复照片方向不正确的问题
+     */
+    private fun reSaveImage() {
+        GlobalScope.launch {
+            val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, photoUri)
+            ImageUtils.save(bitmap, UriUtils.uri2File(photoUri), Bitmap.CompressFormat.JPEG, true)
         }
     }
 
