@@ -53,7 +53,7 @@ object CommUtils {
      */
     fun getOssObjectKey(uri: Uri): String {
         val fileName = UriUtils.uri2File(uri)?.name
-        return " danaflash/staging/MemberData/$fileName"
+        return "danaflash/staging/MemberData/$fileName"
     }
 
     /**

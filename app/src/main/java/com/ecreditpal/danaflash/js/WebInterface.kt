@@ -24,7 +24,14 @@ class WebInterface {
     img 图⽚的base64编码(NO_WRAP)
      */
     fun sendImgUrl(url: String, type: String?, img: String): String {
-        return JS_PREFIX + "sendImgUrl($url, $type, $img)"
+        val json = """
+            {
+              "url":"$url",
+              "type":"$type",
+              "img":"$img"
+            }
+        """.trimIndent()
+        return JS_PREFIX + "sendImgUrl($json)"
     }
 
     /**

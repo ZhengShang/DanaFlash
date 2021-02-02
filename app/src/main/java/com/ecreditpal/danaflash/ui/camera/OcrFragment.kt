@@ -26,6 +26,7 @@ import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.databinding.FragmentOcrBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -77,7 +78,9 @@ class OcrFragment : BaseFragment() {
                 deleteLastPhoto()
             }
             ok.setOnClickListener {
-                val input = activity?.intent?.getStringExtra(CameraActivity.KEY_JSON)
+                val input = activity?.intent?.getStringExtra(CameraActivity.KEY_JSON)?.let {
+                    JSONObject(it).optString("type")
+                } ?: ""
                 activity?.setResult(
                     Activity.RESULT_OK,
                     Intent().apply {
