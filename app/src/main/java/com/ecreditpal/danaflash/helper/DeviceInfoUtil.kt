@@ -25,142 +25,152 @@ import android.text.format.Formatter
 import androidx.core.app.ActivityCompat
 import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.*
+import com.ecreditpal.danaflash.App
+import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.model.DeviceInfoBean
-import java.io.BufferedReader
 import java.io.File
-import java.io.IOException
-import java.io.InputStreamReader
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.pow
+import kotlin.math.sqrt
 
 
 class DeviceInfoUtil {
 
     @SuppressLint("MissingPermission")
-    fun getAllDeviceInfo(context: Context, gaid: String?): String? {
+    fun getAllDeviceInfo(context: Context): String? {
         //获取hardware
         val deviceInfoBean = DeviceInfoBean()
-        val hardware = DeviceInfoBean.Hardware()
-        hardware.device_name = Build.DEVICE
-        hardware.sdk_version = Build.VERSION.SDK
-        hardware.model = Build.MODEL
-        hardware.release = Build.VERSION.RELEASE
-        hardware.brand = Build.BRAND
-        hardware.serial_number = Build.SERIAL
-        val dm = context.resources.displayMetrics
-        val width = dm.widthPixels
-        val height = dm.heightPixels
-        val x = width.toDouble().pow(2.0)
-        val y = height.toDouble().pow(2.0)
-        val diagonal = Math.sqrt(x + y)
-        val dens = dm.densityDpi
-        val screenInches = diagonal / dens.toDouble()
-        hardware.physical_size = screenInches.toString() + ""
+        val hardware = DeviceInfoBean.Hardware().apply {
+            device_name = Build.DEVICE
+            sdk_version = Build.VERSION.SDK
+            model = Build.MODEL
+            release = Build.VERSION.RELEASE
+            brand = Build.BRAND
+            serial_number = Build.SERIAL
+
+            val dm = context.resources.displayMetrics
+            val width = dm.widthPixels
+            val height = dm.heightPixels
+            val x = width.toDouble().pow(2.0)
+            val y = height.toDouble().pow(2.0)
+            val diagonal = sqrt(x + y)
+            val dens = dm.densityDpi
+            val screenInches = diagonal / dens.toDouble()
+            physical_size = screenInches.toString()
+        }
         deviceInfoBean.hardware = hardware
 
         //获取storage
-        val storage = DeviceInfoBean.Storage()
-        var size: Long = 0
-        val activityManager = context
-            .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val outInfo = ActivityManager.MemoryInfo()
-        activityManager.getMemoryInfo(outInfo)
-        size = outInfo.totalMem
-        storage.ram_total_size = Formatter.formatFileSize(context, size)
-        size = outInfo.availMem
-        storage.ram_usable_size = Formatter.formatFileSize(context, size)
-        var memorys = getStorageInfo(context, EXTERNAL_STORAGE)
-        storage.memory_card_size_use = if (memorys.isNotEmpty()) memorys[0] else ""
-        storage.memory_card_size = if (memorys.size > 1) memorys[1] else ""
-        memorys = getStorageInfo(context, INTERNAL_STORAGE)
-        storage.internal_storage_usable = if (memorys.isNotEmpty()) memorys[0] else ""
-        storage.internal_storage_total = if (memorys.size > 1) memorys[1] else ""
+        val storage = DeviceInfoBean.Storage().apply {
+            var size: Long
+            val activityManager = context
+                .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val outInfo = ActivityManager.MemoryInfo()
+            activityManager.getMemoryInfo(outInfo)
+            size = outInfo.totalMem
+            ram_total_size = Formatter.formatFileSize(context, size)
+            size = outInfo.availMem
+            ram_usable_size = Formatter.formatFileSize(context, size)
+            var memorys = getStorageInfo(context, EXTERNAL_STORAGE)
+            memory_card_size_use = if (memorys.isNotEmpty()) memorys[0] else ""
+            memory_card_size = if (memorys.size > 1) memorys[1] else ""
+            memorys = getStorageInfo(context, INTERNAL_STORAGE)
+            internal_storage_usable = if (memorys.isNotEmpty()) memorys[0] else ""
+            internal_storage_total = if (memorys.size > 1) memorys[1] else ""
+        }
         deviceInfoBean.storage = storage
 
         //general_data
-        val generalData = DeviceInfoBean.General()
-        generalData.gaid = (gaid)
-        generalData.and_id = (Build.SERIAL)
-        generalData.phone_type = (getPhoneType(context))
-        generalData.mac = (DeviceUtils.getMacAddress())
-        generalData.language = (Locale.getDefault().language)
-        generalData.locale_display_language = (Locale.getDefault().displayLanguage)
-        generalData.locale_iso3_language = (Locale.getDefault().isO3Language)
-        generalData.locale_iso3_country = (Locale.getDefault().isO3Country)
-        generalData.imei = (PhoneUtils.getIMEI())
-        generalData.phone_number = (getNativePhoneNumber(context))
-        generalData.network_operator_name = (NetworkUtils.getNetworkOperatorName())
-        generalData.network_type = (NetworkUtils.getNetworkType().name)
-        generalData.time_zone_id = (TimeZone.getDefault().id)
+        val generalData = DeviceInfoBean.General().apply {
+            gaid = UserFace.gaid
+            and_id = Build.SERIAL
+            phone_type = getPhoneType(context)
+            mac = DeviceUtils.getMacAddress()
+            language = Locale.getDefault().language
+            locale_display_language = Locale.getDefault().displayLanguage
+            locale_iso3_language = Locale.getDefault().isO3Language
+            locale_iso3_country = Locale.getDefault().isO3Country
+            imei = PhoneUtils.getIMEI()
+            phone_number = getNativePhoneNumber(context)
+            network_operator_name = NetworkUtils.getNetworkOperatorName()
+            network_type = NetworkUtils.getNetworkType().name
+            time_zone_id = TimeZone.getDefault().id
+        }
         deviceInfoBean.general = (generalData)
 
         //OtherData
-        val otherData = DeviceInfoBean.Other()
-        otherData.root_jailbreak = (if (DeviceUtils.isDeviceRooted()) "1" else "0")
-        otherData.last_boot_time = (SystemClock.elapsedRealtime().toString() + "")
-        val inputManager = context.getSystemService(Context.INPUT_SERVICE) as InputManager
-        val devices = inputManager.inputDeviceIds
-        otherData.keyboard = (if (devices.isNotEmpty()) devices[0].toString() + "" else "0")
-        otherData.simulator = (if (checkIsNotRealPhone()) "0" else "1")
-        otherData.dbm = (getMobileNetworkSignal(context).toString() + "")
+        val otherData = DeviceInfoBean.Other().apply {
+            root_jailbreak = if (DeviceUtils.isDeviceRooted()) "1" else "0"
+            last_boot_time = SystemClock.elapsedRealtime().toString()
+            val inputManager = context.getSystemService(Context.INPUT_SERVICE) as InputManager
+            val devices = inputManager.inputDeviceIds
+            keyboard = if (devices.isNotEmpty()) devices[0].toString() else "0"
+            simulator = if (DeviceUtils.isEmulator()) "0" else "1"
+            dbm = getMobileNetworkSignal(context).toString()
+        }
         deviceInfoBean.other = (otherData)
 
         //appInfo
         deviceInfoBean.application = getAllAppsInfo(context)
 
         //network
-        val networkBean = DeviceInfoBean.NetworkBean()
-        networkBean.iP = (NetworkUtils.getIPAddress(true))
-        val wifiManger = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        val wifiInf = wifiManger.connectionInfo
-        val currentWifi = DeviceInfoBean.CurrentWifi()
-        currentWifi.name = wifiInf?.ssid ?: ""
-        currentWifi.bssid = wifiInf?.bssid ?: ""
-        currentWifi.mac = wifiInf?.macAddress ?: ""
-        currentWifi.ssid = wifiInf?.ssid ?: ""
-        networkBean.current_wifi = currentWifi
-        networkBean.configured_wifi = (getScanWifiInfo(context))
+        val networkBean = DeviceInfoBean.NetworkBean().apply {
+            iP = (NetworkUtils.getIPAddress(true))
+            val wifiManger = App.context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val wifiInf = wifiManger.connectionInfo
+            val currentWifi = DeviceInfoBean.CurrentWifi().apply {
+                name = wifiInf?.ssid ?: ""
+                bssid = wifiInf?.bssid ?: ""
+                mac = wifiInf?.macAddress ?: ""
+                ssid = wifiInf?.ssid ?: ""
+            }
+            current_wifi = currentWifi
+            configured_wifi = getScanWifiInfo(context)
+        }
         deviceInfoBean.network = networkBean
 
         //location
-        val locationBean = DeviceInfoBean.LocationBean()
-        locationBean.gps = (getLocationInfo(context))
-        deviceInfoBean.location = (locationBean)
+        val locationBean = DeviceInfoBean.LocationBean().apply {
+            gps = getLocationInfo(context)
+        }
+        deviceInfoBean.location = locationBean
 
         //充电信息
-        val batteryStatus = DeviceInfoBean.BatteryStatus()
-        val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-        val receiver = context.registerReceiver(null, filter)
-        val level = receiver!!.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-        val scale = receiver.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-        val batteryPct = level * 100 / scale.toFloat()
-        batteryStatus.battery_pct = (batteryPct.toString() + "")
-        // Are we charging / charged?
-        val status = receiver.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
-        val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                status == BatteryManager.BATTERY_STATUS_FULL
-        batteryStatus.is_charging = (if (isCharging) "1" else "")
-        // How are we charging?
-        val chargePlug = receiver.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
-        val usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB
-        val acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC
-        batteryStatus.is_ac_charge = (if (acCharge) "0" else "")
-        batteryStatus.is_usb_charge = (if (usbCharge) "1" else "")
-        deviceInfoBean.battery_status = (batteryStatus)
+        val batteryStatus = DeviceInfoBean.BatteryStatus().apply {
+            val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+            val receiver = context.registerReceiver(null, filter)
+            val level = receiver?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+            val scale = receiver?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+            val batteryPct = level * 100 / scale.toFloat()
+            battery_pct = batteryPct.toString()
+            // Are we charging / charged?
+            val status = receiver?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+            val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    status == BatteryManager.BATTERY_STATUS_FULL
+            is_charging = if (isCharging) "1" else "0"
+            // How are we charging?
+            val chargePlug = receiver?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
+            val usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB
+            val acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC
+            is_ac_charge = if (acCharge) "0" else "1"
+            is_usb_charge = if (usbCharge) "1" else "0"
+        }
+
+        deviceInfoBean.battery_status = batteryStatus
 
         //Contact
-        deviceInfoBean.contact = (getAllContacts(context))
+        deviceInfoBean.contact = getAllContacts(context)
 
         //其它
-        deviceInfoBean.audio_internal = (FileUtil.getMusics(context, false).toString() + "")
-        deviceInfoBean.audio_external = (FileUtil.getMusics(context, true).toString() + "")
-        deviceInfoBean.images_internal = (FileUtil.getImages(context, false).toString() + "")
-        deviceInfoBean.images_external = (FileUtil.getImages(context, true).toString() + "")
-        deviceInfoBean.video_internal = (FileUtil.getVideos(context, false).toString() + "")
-        deviceInfoBean.video_external = (FileUtil.getVideos(context, true).toString() + "")
-        deviceInfoBean.download_files = (FileUtil.getDownload(context).toString() + "")
-        deviceInfoBean.contact_group = (FileUtil.getContacts(context).toString() + "")
+        deviceInfoBean.audio_internal = FileUtil.getMusics(context, false).toString()
+        deviceInfoBean.audio_external = FileUtil.getMusics(context, true).toString()
+        deviceInfoBean.images_internal = FileUtil.getImages(context, false).toString()
+        deviceInfoBean.images_external = FileUtil.getImages(context, true).toString()
+        deviceInfoBean.video_internal = FileUtil.getVideos(context, false).toString()
+        deviceInfoBean.video_external = FileUtil.getVideos(context, true).toString()
+        deviceInfoBean.download_files = FileUtil.getDownload(context).toString()
+        deviceInfoBean.contact_group = FileUtil.getContacts(context).toString()
         LogUtils.d(
             """
             设备信息：
@@ -264,38 +274,6 @@ class DeviceInfoUtil {
         return nativePhoneNumber
     }
 
-    /*
-     *根据CPU是否为电脑来判断是否为模拟器
-     *返回:true 为模拟器
-     */
-    private fun checkIsNotRealPhone(): Boolean {
-        val cpuInfo = readCpuInfo()
-        return cpuInfo.contains("intel") || cpuInfo.contains("amd")
-    }
-
-    /*
-     *根据CPU是否为电脑来判断是否为模拟器(子方法)
-     *返回:String
-     */
-    private fun readCpuInfo(): String {
-        var result = ""
-        try {
-            val args = arrayOf("/system/bin/cat", "/proc/cpuinfo")
-            val cmd = ProcessBuilder(*args)
-            val process = cmd.start()
-            val sb = StringBuffer()
-            var readLine: String? = ""
-            val responseReader = BufferedReader(InputStreamReader(process.inputStream, "utf-8"))
-            while (responseReader.readLine().also { readLine = it } != null) {
-                sb.append(readLine)
-            }
-            responseReader.close()
-            result = sb.toString().toLowerCase(Locale.ROOT)
-        } catch (ex: IOException) {
-        }
-        return result
-    }
-
     private fun getMobileNetworkSignal(context: Context): Int {
         val re = intArrayOf(0)
         if (!hasSimCard(context)) {
@@ -371,12 +349,12 @@ class DeviceInfoUtil {
             mLocationManager.requestLocationUpdates(
                 provider, 10000, 0f
             ) {
-                locationBean.latitude = (it.latitude.toString() + "")
-                locationBean.longitude = (it.longitude.toString() + "")
+                locationBean.latitude = it.latitude.toString()
+                locationBean.longitude = it.longitude.toString()
             }
         } else {
-            locationBean.latitude = (location.latitude.toString() + "")
-            locationBean.longitude = (location.longitude.toString() + "")
+            locationBean.latitude = location.latitude.toString()
+            locationBean.longitude = location.longitude.toString()
         }
         return locationBean
     }
@@ -434,7 +412,7 @@ class DeviceInfoUtil {
 
     private fun getScanWifiInfo(context: Context): List<DeviceInfoBean.CurrentWifi> {
         val list: MutableList<DeviceInfoBean.CurrentWifi> = ArrayList()
-        val mWifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val mWifiManager = App.context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         // 如果WiFi未打开，先打开WiFi
         if (!mWifiManager.isWifiEnabled) mWifiManager.isWifiEnabled = true
 
@@ -462,17 +440,20 @@ class DeviceInfoUtil {
         for (i in paklist.indices) {
             val pak = paklist[i] as PackageInfo
             //判断是否为非系统预装的应用程序
-            val appInfoBean: DeviceInfoBean.AppInfo = DeviceInfoBean.AppInfo()
-            appInfoBean.app_name = (pManager.getApplicationLabel(pak.applicationInfo).toString())
-            appInfoBean.package_name = (pak.packageName)
-            appInfoBean.in_time = (pak.firstInstallTime.toString() + "")
-            if (pak.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM <= 0) {
-                appInfoBean.app_type = ("0")
-            } else appInfoBean.app_type = ("1")
-            appInfoBean.version_name = (pak.versionName)
-            appInfoBean.version_code = (pak.versionCode.toString() + "")
-            appInfoBean.flags = (pak.applicationInfo.flags.toString() + "")
-            appInfoBean.up_time = (pak.lastUpdateTime.toString() + "")
+            val appInfoBean: DeviceInfoBean.AppInfo = DeviceInfoBean.AppInfo().apply {
+
+                app_name = pManager.getApplicationLabel(pak.applicationInfo).toString()
+                package_name = pak.packageName
+                in_time = pak.firstInstallTime.toString()
+                app_type = if (pak.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM <= 0) {
+                    ("0")
+                } else ("1")
+                version_name = pak.versionName
+                version_code = pak.versionCode.toString()
+                flags = pak.applicationInfo.flags.toString()
+                up_time = pak.lastUpdateTime.toString()
+            }
+
             appInfoBeans.add(appInfoBean)
         }
         return appInfoBeans

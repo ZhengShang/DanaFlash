@@ -48,7 +48,7 @@ class UploadAllDeviceInfoWorker(
         val res = runBlocking {
             kotlin.runCatching {
                 Looper.prepare()
-                val info = DeviceInfoUtil().getAllDeviceInfo(context, UserFace.gaid) ?: ""
+                val info = DeviceInfoUtil().getAllDeviceInfo(context) ?: ""
                 dfApi().uploadAllDeviceInfo(1, info).throwIfNotSuccess()
             }.getOrNull()
         }
