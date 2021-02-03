@@ -1,5 +1,6 @@
 package com.ecreditpal.danaflash.ui.faq
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +34,7 @@ class FaqFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        view.setBackgroundColor(Color.WHITE)
         statusView = view.findViewById(R.id.status_view)
 
         val concatAdapterConfig = ConcatAdapter.Config.Builder()

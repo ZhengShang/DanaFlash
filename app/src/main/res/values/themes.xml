@@ -14,7 +14,6 @@
         <!-- Customize your theme here. -->
         <item name="android:screenOrientation">portrait</item>
         <item name="android:listDivider">@color/divider</item>
-        <item name="android:dividerHeight">1dp</item>
         <item name="textAllCaps">false</item>
     </style>
 
