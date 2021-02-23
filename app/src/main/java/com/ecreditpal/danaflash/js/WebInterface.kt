@@ -1,7 +1,5 @@
 package com.ecreditpal.danaflash.js
 
-import com.alibaba.fastjson.JSON
-
 class WebInterface {
 
     companion object {
@@ -27,7 +25,7 @@ class WebInterface {
      */
     fun sendImgUrl(url: String, type: String?, img: String): String {
         val json = """
-            "{\"url\":\"$url\", \"type\":\"$type\", \"img\":\"$img\"}"
+            "{\"url\":\"$url\", \"type\":\"$type\", \"img\":\"data:image/jpeg;base64,$img\"}"
         """.trimIndent()
         return JS_PREFIX + "sendImgUrl($json)"
     }
