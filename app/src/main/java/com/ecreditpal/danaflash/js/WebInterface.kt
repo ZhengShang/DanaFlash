@@ -70,6 +70,6 @@ class WebInterface {
      * @param jsonResult 结果
      */
     fun sendCallback(methodName: String, jsonResult: String): String {
-        return JS_PREFIX + "webview_back['$methodName']($jsonResult)"
+        return JS_PREFIX + "webview_back['$methodName']('$jsonResult')"
     }
 }
