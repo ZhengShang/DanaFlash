@@ -195,8 +195,8 @@ class WebActivity : BaseActivity(), LifecycleObserver {
         val jsonString = JSON.toJSONString(
             mapOf(
                 "success" to it.first,
-                "name" to it.second?.name,
-                "phone" to it.second?.phone
+                "name" to (it.second?.name ?: ""),
+                "phone" to (it.second?.phone ?: "")
             )
         )
         callbackInterface("launchContact", jsonString)
