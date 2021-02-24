@@ -13,10 +13,10 @@ class StartContact : ActivityResultContract<Void, Pair<String, ContactRes?>>() {
 
     override fun parseResult(resultCode: Int, result: Intent?): Pair<String, ContactRes?> {
         if (resultCode != Activity.RESULT_OK) {
-            return Pair("0", null)
+            return Pair("-1", null)
         }
         return Pair(
-            result?.getStringExtra(ContactActivity.EXTRA_CHOSEN_RESULT) ?: "0",
+            result?.getStringExtra(ContactActivity.EXTRA_CHOSEN_RESULT) ?: "-1",
             result?.getParcelableExtra(ContactActivity.EXTRA_CHOSEN_CONTACT)
         )
     }

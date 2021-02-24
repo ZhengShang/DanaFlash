@@ -9,9 +9,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.util.Size
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -38,7 +36,6 @@ class OcrFragment : BaseFragment() {
     private val captureStep = ObservableInt(STEP_START)
 
     private var imageCapture: ImageCapture? = null
-    private lateinit var outputDirectory: File
     private var photoUri: Uri? = null
 
     /** Blocking camera operations are performed using this executor */
@@ -77,7 +74,8 @@ class OcrFragment : BaseFragment() {
                 if (isPhoto.not()) {
                     binding.image.setImageResource(R.drawable.pic_ocr_border)
                 }
-                deleteLastPhoto()
+                val uri = photoUri
+                deleteLastPhoto(uri)
             }
             ok.setOnClickListener {
                 val input = activity?.intent?.getStringExtra(CameraActivity.KEY_JSON)?.let {
@@ -95,7 +93,6 @@ class OcrFragment : BaseFragment() {
                     }
                 )
                 activity?.finish()
-                reSaveImage()
             }
 
             if (isPhoto) {
@@ -113,11 +110,6 @@ class OcrFragment : BaseFragment() {
 
         // Initialize our background executor
         cameraExecutor = Executors.newSingleThreadExecutor()
-        outputDirectory = File(context?.filesDir, "picture").also {
-            if (it.exists().not()) {
-                it.mkdir()
-            }
-        }
 
         startCamera(view.context)
     }
@@ -168,7 +160,7 @@ class OcrFragment : BaseFragment() {
         val imageCapture = imageCapture ?: return
 
         // Create time-stamped output file to hold the image
-        val photoFile = File(outputDirectory, "pic_" + System.currentTimeMillis() + ".jpg")
+        val photoFile = File(CameraActivity.outputDirectory, "pic_" + System.currentTimeMillis() + ".jpg")
 
         // Create output options object which contains file + metadata
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
@@ -201,9 +193,9 @@ class OcrFragment : BaseFragment() {
         }
     }
 
-    private fun deleteLastPhoto() {
+    private fun deleteLastPhoto(uri: Uri?) {
         lifecycleScope.launch(Dispatchers.IO) {
-            photoUri?.let {
+            uri?.let {
                 kotlin.runCatching {
                     val path = it.path ?: return@launch
                     File(path).delete()
@@ -217,8 +209,10 @@ class OcrFragment : BaseFragment() {
      */
     private fun reSaveImage() {
         GlobalScope.launch {
-            val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, photoUri)
-            ImageUtils.save(bitmap, UriUtils.uri2File(photoUri), Bitmap.CompressFormat.JPEG, true)
+            kotlin.runCatching {
+                val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, photoUri)
+                ImageUtils.save(bitmap, UriUtils.uri2File(photoUri), Bitmap.CompressFormat.JPEG, true)
+            }
         }
     }
 

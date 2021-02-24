@@ -4,8 +4,6 @@ import DataStoreKeys
 import android.accounts.AccountManager
 import android.content.Context.ACCOUNT_SERVICE
 import android.util.Log
-import androidx.ads.identifier.AdvertisingIdClient
-import androidx.ads.identifier.AdvertisingIdInfo
 import androidx.datastore.preferences.createDataStore
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
@@ -16,12 +14,10 @@ import com.blankj.utilcode.util.LogUtils
 import com.ecreditpal.danaflash.App
 import com.ecreditpal.danaflash.helper.readDsData
 import com.ecreditpal.danaflash.helper.writeDsData
-import com.google.common.util.concurrent.FutureCallback
-import com.google.common.util.concurrent.Futures
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.concurrent.Executors
 
 
 object UserFace {
@@ -56,24 +52,13 @@ object UserFace {
     }
 
     private fun initGaid() {
-        if (AdvertisingIdClient.isAdvertisingIdProviderAvailable(App.context)) {
-            val advertisingIdInfoListenableFuture =
-                AdvertisingIdClient.getAdvertisingIdInfo(App.context)
-
-            Futures.addCallback(
-                advertisingIdInfoListenableFuture,
-                object : FutureCallback<AdvertisingIdInfo> {
-                    override fun onSuccess(adInfo: AdvertisingIdInfo?) {
-                        gaid = adInfo?.id ?: ""
-                    }
-
-                    override fun onFailure(t: Throwable) {
-
-                    }
-                }, Executors.newSingleThreadExecutor()
-            )
-        } else {
-            LogUtils.e("NOT available gaid")
+        GlobalScope.launch {
+            gaid = try {
+                AdvertisingIdClient.getAdvertisingIdInfo(App.context).id
+            } catch (e: Exception) {
+                LogUtils.e("Get gaid failed", e)
+                ""
+            }
         }
     }
 

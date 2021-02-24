@@ -80,3 +80,7 @@ fun Uri?.toBytes(context: Context?): ByteArray? {
     }
     return context?.contentResolver?.openInputStream(this)?.buffered()?.use { it.readBytes() }
 }
+
+fun Char?.isAlphabet(): Boolean {
+    return this in 'a'..'z' || this in 'A'..'Z'
+}

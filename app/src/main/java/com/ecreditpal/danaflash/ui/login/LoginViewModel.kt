@@ -97,7 +97,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 }
                 loginResult.value = true
             } catch (e: Exception) {
-                if (e is DanaException && e.code == 152) {
+                if (e is DanaException && e.code == 151) {
                     SurveyHelper.addOneSurvey("/login", "CodeWrong")
                     ToastUtils.showLong("Kode OTP Salah")
                 } else {

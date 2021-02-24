@@ -1,7 +1,5 @@
 package com.ecreditpal.danaflash.js
 
-import com.alibaba.fastjson.JSON
-
 class WebInterface {
 
     companion object {
@@ -26,13 +24,9 @@ class WebInterface {
     img 图⽚的base64编码(NO_WRAP)
      */
     fun sendImgUrl(url: String, type: String?, img: String): String {
-        val json = JSON.toJSONString(
-            mapOf(
-                "url" to url,
-                "type" to type,
-                "img" to img
-            )
-        )
+        val json = """
+            "{\"url\":\"$url\", \"type\":\"$type\", \"img\":\"data:image/jpeg;base64,$img\"}"
+        """.trimIndent()
         return JS_PREFIX + "sendImgUrl($json)"
     }
 
@@ -76,6 +70,6 @@ class WebInterface {
      * @param jsonResult 结果
      */
     fun sendCallback(methodName: String, jsonResult: String): String {
-        return JS_PREFIX + "webview_back['$methodName']($jsonResult)"
+        return JS_PREFIX + "webview_back['$methodName']('$jsonResult')"
     }
 }

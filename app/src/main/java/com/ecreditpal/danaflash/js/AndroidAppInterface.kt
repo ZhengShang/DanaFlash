@@ -162,8 +162,10 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
     }
 
     @JavascriptInterface
-    fun getAllDeviceInfo() {
-        LogUtils.d(DeviceInfoUtil().getAllDeviceInfo(webActivity, UserFace.gaid))
+    fun getAllDeviceInfo(): String {
+        return kotlin.runCatching {
+            DeviceInfoUtil().getAllDeviceInfo(webActivity)
+        }.getOrNull() ?: ""
     }
 
     @JavascriptInterface

@@ -11,6 +11,7 @@ import android.webkit.*
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.*
 import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.EncodeUtils
@@ -24,10 +25,12 @@ import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.helper.CommUtils
 import com.ecreditpal.danaflash.js.AndroidAppInterface
 import com.ecreditpal.danaflash.js.WebInterface
+import com.ecreditpal.danaflash.ui.camera.CameraActivity
 import com.ecreditpal.danaflash.ui.camera.StartLiveness
 import com.ecreditpal.danaflash.ui.camera.StartOcr
 import com.ecreditpal.danaflash.ui.contact.StartContact
 import kotlinx.android.synthetic.main.activity_web.*
+import java.io.File
 
 
 class WebActivity : BaseActivity(), LifecycleObserver {
@@ -46,6 +49,7 @@ class WebActivity : BaseActivity(), LifecycleObserver {
 
     private lateinit var webView: WebView
     private val webInterface = WebInterface()
+    private var getPhotoPair: Pair<String?, Uri?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -143,7 +147,11 @@ class WebActivity : BaseActivity(), LifecycleObserver {
     }
 
     fun startPhoto(json: String?) {
-        ocrLauncher.launch(Pair(json, true))
+        val photoFile = File(CameraActivity.outputDirectory, "pic_" + System.currentTimeMillis() + ".jpg")
+        val uri = FileProvider.getUriForFile(this, applicationContext.packageName + ".provider", photoFile)
+
+        getPhotoPair = Pair(json, uri)
+        photoLauncher.launch(uri)
     }
 
     fun startLiveness(json: String?) {
@@ -164,26 +172,36 @@ class WebActivity : BaseActivity(), LifecycleObserver {
         }
     }
 
+    private fun uploadUriImage(pair: Pair<String?, Uri?>, ocr: Boolean) {
+        val imageUri = pair.second ?: return
+        val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+        val objectKey = CommUtils.getOssObjectKey(imageUri)
+        ImageUploader().uploadImage(lifecycleScope, bitmap, objectKey, ocr) { status, imageBytes ->
+            if (status == "1") {
+                callJs(
+                    webInterface.sendImgUrl(
+                        url = "https://${OSS_BUCKET}.${OSS_ENDPOINT}/$objectKey",
+                        type = pair.first ?: "",
+                        img = EncodeUtils.base64Encode2String(imageBytes)
+                    )
+                )
+            }
+            callJs(webInterface.isUploading(status))
+        }
+    }
+
     private val ocrLauncher = registerForActivityResult(StartOcr()) { pair ->
         if (pair.second == null) {
             callJs(webInterface.ocrBack())
             return@registerForActivityResult
         }
 
-        val imageUri: Uri = pair.second!!
-        val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
-        val objectKey = CommUtils.getOssObjectKey(imageUri)
-        ImageUploader().uploadImage(lifecycleScope, bitmap, objectKey) { status, imageBytes ->
-            if (status == "1") {
-                callJs(
-                    webInterface.sendImgUrl(
-                        url = "https://${OSS_BUCKET}.${OSS_ENDPOINT}/$objectKey}",
-                        type = pair.first,
-                        img = EncodeUtils.base64Encode2String(imageBytes)
-                    )
-                )
-            }
-            callJs(webInterface.isUploading(status))
+        uploadUriImage(pair, true)
+    }
+
+    private val photoLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) {
+        if (it && getPhotoPair != null) {
+            uploadUriImage(getPhotoPair!!, false)
         }
     }
 
@@ -195,8 +213,8 @@ class WebActivity : BaseActivity(), LifecycleObserver {
         val jsonString = JSON.toJSONString(
             mapOf(
                 "success" to it.first,
-                "name" to it.second?.name,
-                "phone" to it.second?.phone
+                "name" to (it.second?.name ?: ""),
+                "phone" to (it.second?.phone ?: "")
             )
         )
         callbackInterface("launchContact", jsonString)

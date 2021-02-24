@@ -11,9 +11,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import com.blankj.utilcode.util.ToastUtils
+import com.ecreditpal.danaflash.App
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseNavActivity
 import com.ecreditpal.danaflash.ui.comm.ConfirmDialog
+import java.io.File
 
 class CameraActivity : BaseNavActivity() {
 
@@ -24,6 +26,12 @@ class CameraActivity : BaseNavActivity() {
         const val MODE_OCR = 0
         const val MODE_FACE_RECOGNITION = 1
         private const val PERMISSION_DENIED = "-1"
+
+        val outputDirectory = File(App.context.filesDir, "picture").also {
+            if (it.exists().not()) {
+                it.mkdir()
+            }
+        }
     }
 
     override fun navGraphId() = R.navigation.camera_navigation
