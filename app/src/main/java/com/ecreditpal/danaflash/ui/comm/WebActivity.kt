@@ -30,6 +30,7 @@ import com.ecreditpal.danaflash.ui.camera.StartLiveness
 import com.ecreditpal.danaflash.ui.camera.StartOcr
 import com.ecreditpal.danaflash.ui.contact.StartContact
 import kotlinx.android.synthetic.main.activity_web.*
+import org.json.JSONObject
 import java.io.File
 
 
@@ -150,7 +151,15 @@ class WebActivity : BaseActivity(), LifecycleObserver {
         val photoFile = File(CameraActivity.outputDirectory, "pic_" + System.currentTimeMillis() + ".jpg")
         val uri = FileProvider.getUriForFile(this, applicationContext.packageName + ".provider", photoFile)
 
-        getPhotoPair = Pair(json, uri)
+        val input = kotlin.runCatching {
+            if (json.isNullOrEmpty()) {
+                ""
+            } else {
+                JSONObject(json).optString("type")
+            }
+        }.getOrNull() ?: ""
+
+        getPhotoPair = Pair(input, uri)
         photoLauncher.launch(uri)
     }
 
