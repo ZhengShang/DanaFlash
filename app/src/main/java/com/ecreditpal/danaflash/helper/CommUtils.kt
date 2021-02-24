@@ -8,7 +8,6 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.blankj.utilcode.util.UriUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.LoadingTips
 import com.ecreditpal.danaflash.data.H5_ORDER_CONFIRM
@@ -52,7 +51,7 @@ object CommUtils {
      * 从Uri中获取文件名, 然后拼接后返回oss上传所需要的object名字
      */
     fun getOssObjectKey(uri: Uri): String {
-        val fileName = UriUtils.uri2File(uri)?.name
+        val fileName = uri.toString().substringAfter("picture/")
         return "danaflash/staging/MemberData/$fileName"
     }
 
