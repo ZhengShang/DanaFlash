@@ -197,8 +197,11 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
         if (permissions.isNullOrEmpty()) {
             return
         }
-        val p = permissions.split(",")
-            .toTypedArray()
+        val p = kotlin.runCatching {
+            val re = permissions.replace("\"", "")
+            val sub = re.subSequence(1, re.length - 1)
+            sub.split(",").toTypedArray()
+        }.getOrNull() ?: return
         webActivity.startRequestPermissions(p)
     }
 

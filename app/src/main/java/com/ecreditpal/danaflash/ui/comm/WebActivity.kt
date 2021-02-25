@@ -228,9 +228,14 @@ class WebActivity : BaseActivity(), LifecycleObserver {
 
     private val requestPLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            it.forEach { entry ->
-                val result = if (entry.value) "1" else "-1"
-                callbackInterface("generalRequestPermission", result)
+            val granted = it.all { entry ->
+                entry.value == true
             }
+
+            val result = if (granted) "1" else "-1"
+            callbackInterface("generalRequestPermission", result)
+
+            //默认启动获取定位任务, 如果没有定位权限, worker里面会做拦截的
+            CommUtils.startGetLocationWorker(this)
         }
 }
