@@ -73,7 +73,7 @@ class WebActivity : BaseActivity(), LifecycleObserver {
 
         webView.settings.apply {
             javaScriptEnabled = true
-            cacheMode = WebSettings.LOAD_NO_CACHE // 不用cache
+            cacheMode = WebSettings.LOAD_DEFAULT // 不用cache
             javaScriptCanOpenWindowsAutomatically = true
             setSupportZoom(false)
             builtInZoomControls = false
@@ -85,9 +85,6 @@ class WebActivity : BaseActivity(), LifecycleObserver {
             allowFileAccess = true
             loadWithOverviewMode = true
             setAppCacheEnabled(true)
-            cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK //关闭webview中缓存
-            allowFileAccess = true //设置可以访问文件
-            javaScriptCanOpenWindowsAutomatically = true //支持通过JS打开新窗口
             loadsImagesAutomatically = true //支持自动加载图片
             defaultTextEncodingName = "utf-8"//设置编码格式
         }
@@ -189,7 +186,7 @@ class WebActivity : BaseActivity(), LifecycleObserver {
             if (status == "1") {
                 callJs(
                     webInterface.sendImgUrl(
-                        url = "https://${OSS_BUCKET}.${OSS_ENDPOINT}/$objectKey",
+                        url = "http://${OSS_BUCKET}.${OSS_ENDPOINT}/$objectKey",
                         type = pair.first ?: "",
                         img = EncodeUtils.base64Encode2String(imageBytes)
                     )
