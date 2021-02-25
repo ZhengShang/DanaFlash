@@ -5,6 +5,9 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.ContactsContract
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -15,6 +18,7 @@ import com.ecreditpal.danaflash.model.ContactRes
 import com.ecreditpal.danaflash.net.dfApi
 import com.ecreditpal.danaflash.ui.comm.WebActivity
 import com.ecreditpal.danaflash.ui.login.LoginActivity
+import com.ecreditpal.danaflash.worker.GetLocationWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -139,5 +143,16 @@ object CommUtils {
 
         LogUtils.d(contactList)
         return contactList
+    }
+
+    fun startGetLocationWorker(context: Context?) {
+        context?.let {
+            WorkManager.getInstance(it)
+                .enqueueUniqueWork(
+                    "Get location",
+                    ExistingWorkPolicy.KEEP,
+                    OneTimeWorkRequest.Builder(GetLocationWorker::class.java).build()
+                )
+        }
     }
 }

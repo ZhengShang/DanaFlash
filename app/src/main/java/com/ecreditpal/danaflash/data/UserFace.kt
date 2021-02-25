@@ -3,6 +3,7 @@ package com.ecreditpal.danaflash.data
 import DataStoreKeys
 import android.accounts.AccountManager
 import android.content.Context.ACCOUNT_SERVICE
+import android.location.Location
 import android.util.Log
 import androidx.datastore.preferences.createDataStore
 import com.android.installreferrer.api.InstallReferrerClient
@@ -28,6 +29,7 @@ object UserFace {
     var gaid: String = ""
     var mediaSource = ""
     var referrerDetails: ReferrerDetails? = null
+    var location: Location? = null
 
     fun isLogin(): Boolean {
         return token.isNotEmpty()

@@ -19,6 +19,7 @@ import com.ecreditpal.danaflash.data.AD_TITLE_APIPOP
 import com.ecreditpal.danaflash.data.AD_TITLE_PERSONALPOP
 import com.ecreditpal.danaflash.data.AD_TITLE_POP
 import com.ecreditpal.danaflash.data.UserFace
+import com.ecreditpal.danaflash.helper.CommUtils
 import com.ecreditpal.danaflash.helper.SurveyHelper
 import com.ecreditpal.danaflash.helper.readDsData
 import com.ecreditpal.danaflash.helper.writeDsData
@@ -109,6 +110,7 @@ class MainActivity : BaseActivity() {
         workManager.enqueue(
             OneTimeWorkRequest.Builder(UploadAllDeviceInfoWorker::class.java).build()
         )
+        CommUtils.startGetLocationWorker(this)
     }
 
     fun isAllPermissionGranted() = PERMISSIONS
@@ -146,6 +148,7 @@ class MainActivity : BaseActivity() {
                         saveDeviceId()
                     }
                     Manifest.permission.ACCESS_FINE_LOCATION -> {
+                        CommUtils.startGetLocationWorker(this)
                     }
                     Manifest.permission.READ_EXTERNAL_STORAGE -> {
                     }

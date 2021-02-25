@@ -117,48 +117,35 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
 
     @SuppressLint("MissingPermission")
     @JavascriptInterface
-    fun getLocation() {
-        try {
-            val locationManager =
-                webActivity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    fun getLocation(): String {
 
-            locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                0,
-                10f
-            ) {
-
-                val success = if (arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.READ_PHONE_STATE
-                    ).all { permission ->
-                        ContextCompat.checkSelfPermission(
-                            webActivity,
-                            permission
-                        ) == PackageManager.PERMISSION_GRANTED
-                    }
-                ) {
-                    "1"
-                } else {
-                    "0"
-                }
-
-                val map = mapOf(
-                    "deviceId" to UserFace.deviceId,
-                    "imei" to PhoneUtils.getIMEI(),
-                    "latitude" to it.latitude,
-                    "longitude" to it.longitude,
-                    "mac" to DeviceUtils.getMacAddress(),
-                    "root" to if (AppUtils.isAppRoot()) 1 else 0,
-                    "debug" to if (AppUtils.isAppDebug()) 1 else 0,
-                    "gpsFake" to if (it.isFromMockProvider) 1 else 0,
-                    "success" to success
-                )
-                webActivity.callbackInterface("getLocation", JSON.toJSONString(map))
+        val success = if (arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.READ_PHONE_STATE
+            ).all { permission ->
+                ContextCompat.checkSelfPermission(
+                    webActivity,
+                    permission
+                ) == PackageManager.PERMISSION_GRANTED
             }
-        } catch (e: Exception) {
-            webActivity.callbackInterface("getLocation", "")
+        ) {
+            "1"
+        } else {
+            "0"
         }
+
+        val map = mapOf(
+            "deviceId" to UserFace.deviceId,
+            "imei" to PhoneUtils.getIMEI(),
+            "latitude" to (UserFace.location?.latitude ?: 0.0),
+            "longitude" to (UserFace.location?.longitude ?: 0.0),
+            "mac" to DeviceUtils.getMacAddress(),
+            "root" to if (AppUtils.isAppRoot()) 1 else 0,
+            "debug" to if (AppUtils.isAppDebug()) 1 else 0,
+            "gpsFake" to if (UserFace.location?.isFromMockProvider == true) 1 else 0,
+            "success" to success
+        )
+        return JSON.toJSONString(map)
     }
 
     @JavascriptInterface
