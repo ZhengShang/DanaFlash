@@ -59,6 +59,9 @@ class MainActivity : BaseActivity() {
             //First enter main page need to show permission tips
             if (showTips) {
                 navController.navigate(R.id.action_global_permissionTipsDialog)
+            } else {
+                //发送一个请求权限通知HomeFragment里面进行广告的拉取
+                homeViewModel.allPermissionGranted.value = false
             }
         }
 

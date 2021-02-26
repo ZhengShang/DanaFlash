@@ -74,24 +74,24 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
     }
 
     @JavascriptInterface
-    fun getDeviceId(): String {
-        return UserFace.gaid
+    fun getDeviceId() {
+        webActivity.callbackInterface("getDeviceId", UserFace.gaid)
     }
 
     @JavascriptInterface
-    fun getVersionName(): String {
-        return BuildConfig.VERSION_NAME
+    fun getVersionName() {
+        webActivity.callbackInterface("getVersionName", BuildConfig.VERSION_NAME)
     }
 
     @JavascriptInterface
-    fun getVersionCode(): String {
-        return BuildConfig.VERSION_CODE.toString()
+    fun getVersionCode() {
+        webActivity.callbackInterface("getVersionCode", BuildConfig.VERSION_CODE.toString())
     }
 
     @JavascriptInterface
-    fun getAppList(): String {
-        try {
-            val pm = Utils.getApp().packageManager ?: return ""
+    fun getAppList() {
+        val result = try {
+            val pm = Utils.getApp().packageManager
             val list = pm.getInstalledPackages(0).map {
                 AppInfoModel(
                     appName = it.applicationInfo.loadLabel(pm).toString(),
@@ -108,16 +108,17 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
                     "packageInfo" : [${JSON.toJSONString(list)}]
                 }
             """.trimIndent()
-            return EncodeUtils.base64Encode2String(json.toByteArray())
+            EncodeUtils.base64Encode2String(json.toByteArray())
         } catch (e: Exception) {
             LogUtils.e(e)
-            return ""
+            ""
         }
+        webActivity.callbackInterface("getAppList", result)
     }
 
     @SuppressLint("MissingPermission")
     @JavascriptInterface
-    fun getLocation(): String {
+    fun getLocation() {
 
         val success = if (arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -145,14 +146,15 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
             "gpsFake" to if (UserFace.location?.isFromMockProvider == true) 1 else 0,
             "success" to success
         )
-        return JSON.toJSONString(map)
+        webActivity.callbackInterface("getLocation", JSON.toJSONString(map))
     }
 
     @JavascriptInterface
-    fun getAllDeviceInfo(): String {
-        return kotlin.runCatching {
+    fun getAllDeviceInfo() {
+        val info = kotlin.runCatching {
             DeviceInfoUtil().getAllDeviceInfo(webActivity)
         }.getOrNull() ?: ""
+        webActivity.callbackInterface("getAllDeviceInfo", info)
     }
 
     @JavascriptInterface
@@ -174,11 +176,12 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
     }
 
     @JavascriptInterface
-    fun generalCheckPermission(permissions: String? = null): String {
+    fun generalCheckPermission(permissions: String? = null) {
         if (permissions.isNullOrEmpty()) {
-            return "-1"
+            webActivity.callbackInterface("generalCheckPermission", "-1")
+            return
         }
-        return if (permissions.split(",")
+        val result = if (permissions.split(",")
                 .any {
                     ContextCompat.checkSelfPermission(
                         webActivity,
@@ -190,6 +193,7 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
         } else {
             "1"
         }
+        webActivity.callbackInterface("generalCheckPermission", result)
     }
 
     @JavascriptInterface
@@ -206,17 +210,19 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
     }
 
     @JavascriptInterface
-    fun checkLocationService(): String {
+    fun checkLocationService() {
         val locationManager =
             webActivity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(
-                LocationManager.NETWORK_PROVIDER
-            )
+        val result = if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager
+                .isProviderEnabled(
+                    LocationManager.NETWORK_PROVIDER
+                )
         ) {
             "1"
         } else {
             "0"
         }
+        webActivity.callbackInterface("checkLocationService", result)
     }
 
     @JavascriptInterface

@@ -1,10 +1,12 @@
 package com.ecreditpal.danaflash.model
 
+import com.alibaba.fastjson.annotation.JSONField
+
 class DeviceInfoBean {
     var hardware: Hardware? = null
     var storage: Storage? = null
-    var general: General? = null
-    var other: Other? = null
+    var general_data: General? = null
+    var other_data: Other? = null
     var application: List<AppInfo?>? = null
     var network: NetworkBean? = null
     var location: LocationBean? = null
@@ -65,17 +67,17 @@ class DeviceInfoBean {
 
     class AppInfo {
         var app_name: String? = null
-        var package_name: String? = null
+        var `package`: String? = null
         var in_time: String? = null
-        var app_type: String? = null
+        var app_type: Int = 0
         var version_name: String? = null
         var version_code: String? = null
-        var flags: String? = null
+        var flags: Int = 0
         var up_time: String? = null
     }
 
     class NetworkBean {
-        var iP: String? = null
+        var IP: String? = null
         var current_wifi: CurrentWifi? = null
         var configured_wifi: List<CurrentWifi>? = null
     }
@@ -100,8 +102,14 @@ class DeviceInfoBean {
 
     class BatteryStatus {
         var battery_pct: String? = null
+
+        @JSONField(name = "is_charging")
         var is_charging: String? = null
+
+        @JSONField(name = "is_ac_charge")
         var is_ac_charge: String? = null
+
+        @JSONField(name = "is_usb_charge")
         var is_usb_charge: String? = null
     }
 

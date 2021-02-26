@@ -21,7 +21,6 @@ import android.telephony.PhoneStateListener
 import android.telephony.SignalStrength
 import android.telephony.TelephonyManager
 import android.text.TextUtils
-import android.text.format.Formatter
 import androidx.core.app.ActivityCompat
 import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.*
@@ -69,9 +68,9 @@ class DeviceInfoUtil {
             val outInfo = ActivityManager.MemoryInfo()
             activityManager.getMemoryInfo(outInfo)
             size = outInfo.totalMem
-            ram_total_size = Formatter.formatFileSize(context, size)
+            ram_total_size = size.toString()
             size = outInfo.availMem
-            ram_usable_size = Formatter.formatFileSize(context, size)
+            ram_usable_size = size.toString()
             var memorys = getStorageInfo(context, EXTERNAL_STORAGE)
             memory_card_size_use = if (memorys.isNotEmpty()) memorys[0] else ""
             memory_card_size = if (memorys.size > 1) memorys[1] else ""
@@ -97,7 +96,7 @@ class DeviceInfoUtil {
             network_type = NetworkUtils.getNetworkType().name
             time_zone_id = TimeZone.getDefault().id
         }
-        deviceInfoBean.general = (generalData)
+        deviceInfoBean.general_data = (generalData)
 
         //OtherData
         val otherData = DeviceInfoBean.Other().apply {
@@ -109,14 +108,14 @@ class DeviceInfoUtil {
             simulator = if (DeviceUtils.isEmulator()) "0" else "1"
             dbm = getMobileNetworkSignal(context).toString()
         }
-        deviceInfoBean.other = (otherData)
+        deviceInfoBean.other_data = (otherData)
 
         //appInfo
         deviceInfoBean.application = getAllAppsInfo(context)
 
         //network
         val networkBean = DeviceInfoBean.NetworkBean().apply {
-            iP = (NetworkUtils.getIPAddress(true))
+            IP = (NetworkUtils.getIPAddress(true))
             val wifiManger = App.context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             val wifiInf = wifiManger.connectionInfo
             val currentWifi = DeviceInfoBean.CurrentWifi().apply {
@@ -226,8 +225,8 @@ class DeviceInfoUtil {
         val totalSpace = bloackSize * blockCount
         val availableBlocks = statFs.availableBlocksLong
         val availableSpace = availableBlocks * bloackSize
-        lists.add(Formatter.formatFileSize(context, availableSpace))
-        lists.add(Formatter.formatFileSize(context, totalSpace))
+        lists.add(availableSpace.toString())
+        lists.add(totalSpace.toString())
         return lists
     }
 
@@ -394,7 +393,7 @@ class DeviceInfoUtil {
                 temp.number = phone
                 val time =
                     phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LAST_TIME_CONTACTED))
-                temp.last_time_contacted = (time)
+                temp.last_time_contacted = (time) ?: ""
                 val timeC =
                     phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TIMES_CONTACTED))
                 temp.times_contacted = (timeC)
@@ -443,14 +442,14 @@ class DeviceInfoUtil {
             val appInfoBean: DeviceInfoBean.AppInfo = DeviceInfoBean.AppInfo().apply {
 
                 app_name = pManager.getApplicationLabel(pak.applicationInfo).toString()
-                package_name = pak.packageName
+                `package` = pak.packageName
                 in_time = pak.firstInstallTime.toString()
                 app_type = if (pak.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM <= 0) {
-                    ("0")
-                } else ("1")
+                    0
+                } else 1
                 version_name = pak.versionName
                 version_code = pak.versionCode.toString()
-                flags = pak.applicationInfo.flags.toString()
+                flags = pak.applicationInfo.flags
                 up_time = pak.lastUpdateTime.toString()
             }
 
