@@ -11,8 +11,6 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.hardware.input.InputManager
-import android.location.Criteria
-import android.location.LocationManager
 import android.net.wifi.WifiManager
 import android.os.*
 import android.os.storage.StorageManager
@@ -131,7 +129,10 @@ class DeviceInfoUtil {
 
         //location
         val locationBean = DeviceInfoBean.LocationBean().apply {
-            gps = getLocationInfo(context)
+            gps = DeviceInfoBean.GPS().apply {
+                longitude = UserFace.location?.longitude?.toString() ?: ""
+                latitude = UserFace.location?.latitude?.toString() ?: ""
+            }
         }
         deviceInfoBean.location = locationBean
 
@@ -307,55 +308,6 @@ class DeviceInfoUtil {
                 false // 没有SIM卡
         }
         return result
-    }
-
-    private fun getLocationInfo(context: Context): DeviceInfoBean.GPS? {
-        val locationBean: DeviceInfoBean.GPS = DeviceInfoBean.GPS()
-        val mLocationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val criteria = Criteria()
-        criteria.accuracy = Criteria.ACCURACY_FINE
-        //设置不需要获取海拔方向数据
-        criteria.isAltitudeRequired = false
-        criteria.isBearingRequired = false
-        //设置允许产生资费
-        criteria.isCostAllowed = true
-        //要求低耗电
-        criteria.powerRequirement = Criteria.POWER_LOW
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return locationBean
-        }
-        val provider: String?
-        val providers = mLocationManager.getProviders(true)
-        provider = when {
-            providers.contains(LocationManager.NETWORK_PROVIDER) -> {
-                LocationManager.NETWORK_PROVIDER
-            }
-            providers.contains(LocationManager.PASSIVE_PROVIDER) -> {
-                LocationManager.GPS_PROVIDER
-            }
-            else -> mLocationManager.getBestProvider(criteria, true)
-        }
-        val location = mLocationManager.getLastKnownLocation(provider!!)
-        if (location == null) {
-            mLocationManager.requestLocationUpdates(
-                provider, 10000, 0f
-            ) {
-                locationBean.latitude = it.latitude.toString()
-                locationBean.longitude = it.longitude.toString()
-            }
-        } else {
-            locationBean.latitude = location.latitude.toString()
-            locationBean.longitude = location.longitude.toString()
-        }
-        return locationBean
     }
 
     private fun getAllContacts(context: Context): List<DeviceInfoBean.Contact>? {
