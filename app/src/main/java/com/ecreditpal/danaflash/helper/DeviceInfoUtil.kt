@@ -15,6 +15,7 @@ import android.net.wifi.WifiManager
 import android.os.*
 import android.os.storage.StorageManager
 import android.provider.ContactsContract
+import android.provider.Settings
 import android.telephony.PhoneStateListener
 import android.telephony.SignalStrength
 import android.telephony.TelephonyManager
@@ -81,7 +82,7 @@ class DeviceInfoUtil {
         //general_data
         val generalData = DeviceInfoBean.General().apply {
             gaid = UserFace.gaid
-            and_id = Build.SERIAL
+            and_id = Settings.Secure.getString(App.context.contentResolver, Settings.Secure.ANDROID_ID)
             phone_type = getPhoneType(context)
             mac = DeviceUtils.getMacAddress()
             language = Locale.getDefault().language
