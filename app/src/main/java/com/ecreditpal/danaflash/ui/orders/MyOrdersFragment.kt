@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.ToastUtils
@@ -22,7 +23,6 @@ import com.ecreditpal.danaflash.model.AmountTrialRes
 import com.ecreditpal.danaflash.model.OrderRes
 import com.ecreditpal.danaflash.net.dfApi
 import com.ecreditpal.danaflash.ui.camera.StartLiveness
-import com.ecreditpal.danaflash.ui.comm.ConfirmDialog
 import com.ecreditpal.danaflash.ui.comm.WebActivity
 import com.ecreditpal.danaflash.widget.StatusView
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 class MyOrdersFragment : BaseFragment() {
 
     private lateinit var binding: FragmentMyOrdersBinding
-    private val orderViewModel: OrderViewModel by viewModels()
+    private val orderViewModel: OrderViewModel by activityViewModels()
 
     //保存三个adapter刷新用
     private val adapterList = mutableListOf<OrderAdapter>()
@@ -158,17 +158,7 @@ class MyOrdersFragment : BaseFragment() {
             }
             OrderStatus.STATUS_CHECKED -> {
                 //点击后弹出降额确认弹窗
-                ConfirmDialog(titleStr = getString(R.string.derating_confirm),
-                    negativeClickListener = {
-                        SurveyHelper.addOneSurvey("/orderPage", "derateCancel", "AR")
-                    },
-                    positiveClickListener = {
-                        orderViewModel.requestDrop(orderRes.orderId!!)
-                    })
-                    .apply {
-                        isCancelable = false
-                    }
-                    .show(childFragmentManager)
+                navAmountDrop(orderRes)
                 SurveyHelper.addOneSurvey("/orderPage", "derate", "AR")
             }
             OrderStatus.STATUS_REPAYMENTING,
@@ -182,6 +172,26 @@ class MyOrdersFragment : BaseFragment() {
                 SurveyHelper.addOneSurvey("/orderPage", "onMoreOrder", "aj")
                 navByUserInfoStatus(orderRes)
             }
+        }
+    }
+
+    private fun navAmountDrop(orderRes: OrderRes) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            LoadingTips.showLoading()
+            val trialRes = danaRequestWithCatch {
+                dfApi().amountTrial(
+                    orderRes.productId,
+                    orderRes.loanTermUnit ?: 0,
+                    orderRes.loanAmount?.intValueExact() ?: 0,
+                    orderRes.loanTerm ?: 0
+                )
+            }
+            LoadingTips.dismissLoading()
+            trialRes ?: return@launch
+
+            findNavController().navigate(
+                MyOrdersFragmentDirections.actionMyOrdersFragmentToAmountDropDialog(orderRes, trialRes)
+            )
         }
     }
 
@@ -223,13 +233,12 @@ class MyOrdersFragment : BaseFragment() {
             val res = danaRequestWithCatch {
                 dfApi().getUserInfoStatus()
             }
-            LoadingTips.dismissLoading()
 
             if (res == null) {
+                LoadingTips.dismissLoading()
                 return@launch
             }
 
-            LoadingTips.showLoading()
             calAmountTrial(orderRes)
             LoadingTips.dismissLoading()
 

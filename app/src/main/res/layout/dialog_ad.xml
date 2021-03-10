@@ -11,14 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="28dp"
-        android:background="@drawable/shape_product_card"
         app:layout_constraintBottom_toTopOf="@id/close"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.youth.banner.Banner
         android:id="@+id/banner"
         android:layout_width="0dp"
-        android:layout_height="300dp"
+        android:layout_height="0dp"
         android:layout_margin="@dimen/def_edge_margin"
         app:layout_constraintBottom_toTopOf="@id/content"
         app:layout_constraintEnd_toEndOf="parent"

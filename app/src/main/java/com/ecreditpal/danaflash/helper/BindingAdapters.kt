@@ -60,6 +60,7 @@ fun setRpAmount(textView: TextView, amount: BigDecimal?) {
     }
     runCatching {
         textView.text = String.format("Rp %,d", amount.longValueExact())
+            .replace(",", ".")
     }
 }
 

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.ecreditpal.danaflash.data.ComConsKt" />
+
+        <variable
+            name="orderInfo"
+            type="com.ecreditpal.danaflash.model.OrderRes" />
+
+        <variable
+            name="trialInfo"
+            type="com.ecreditpal.danaflash.model.AmountTrialRes" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/icon"
+            imageUrl="@{ComConsKt.IMAGE_PREFIX + orderInfo.img}"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="@dimen/def_edge_margin"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@id/name"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@{orderInfo.productName}"
+            android:textColor="@color/text"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/icon"
+            app:layout_constraintTop_toTopOf="@id/icon"
+            app:layout_goneMarginStart="8dp"
+            tools:text="Maucush Kredit" />
+
+        <TextView
+            android:id="@+id/explain"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="17dp"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:text="Berdasarkan Penilaian Skor Anda, Kami Melakukan Perubahan terhadap Limit Pengajuan, Bila Setuju Mohon Konfirmasi Informasi Berikut :"
+            android:textColor="@color/text"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/icon" />
+
+        <TextView
+            android:id="@+id/loan_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="8dp"
+            android:text="@string/loan_amount_colon"
+            android:textColor="@color/summary"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/explain" />
+
+        <TextView
+            android:id="@+id/loan_amount_value"
+            rpAmount="@{trialInfo.applicationAmount}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:textColor="@color/text"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/loan_amount"
+            tools:text="Rp.560.000" />
+
+        <TextView
+            android:id="@+id/loan_term"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="8dp"
+            android:text="@string/loan_term_colon"
+            android:textColor="@color/summary"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/loan_amount" />
+
+        <TextView
+            android:id="@+id/loan_term_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:text="@{orderInfo.loanTermString()}"
+            android:textColor="@color/text"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/loan_term"
+            tools:text="7 Hari" />
+
+        <TextView
+            android:id="@+id/actual_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="8dp"
+            android:text="Jumlah Aktual Penerimaan:"
+            android:textColor="@color/summary"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/loan_term" />
+
+        <TextView
+            android:id="@+id/actual_account_value"
+            rpAmount="@{trialInfo.actualAmount}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/text"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/actual_account"
+            app:layout_constraintTop_toTopOf="@id/actual_account"
+            tools:text="Rp.890.00" />
+
+        <TextView
+            android:id="@+id/interest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="8dp"
+            android:text="Bunga:"
+            android:textColor="@color/summary"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/actual_account" />
+
+        <TextView
+            android:id="@+id/interest_value"
+            rpAmount="@{trialInfo.interestAmount}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:textColor="@color/text"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/interest"
+            tools:text="Rp.500" />
+
+        <TextView
+            android:id="@+id/service_fee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="8dp"
+            android:text="Biaya Admin:"
+            android:textColor="@color/summary"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/interest" />
+
+        <TextView
+            android:id="@+id/service_fee_value"
+            rpAmount="@{trialInfo.adminAmount}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:textColor="@color/text"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/service_fee"
+            tools:text="Rp.500" />
+
+        <TextView
+            android:id="@+id/repay_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/def_edge_margin"
+            android:layout_marginTop="8dp"
+            android:text="Jumlah Pelunasan:"
+            android:textColor="@color/summary"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/service_fee_value" />
+
+        <TextView
+            android:id="@+id/repay_amount_value"
+            rpAmount="@{trialInfo.repayTotalAmount}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/def_edge_margin"
+            android:textColor="@color/text"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/repay_amount"
+            tools:text="Rp.900.000" />
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="25dp"
+            android:background="@drawable/shape_daan_gray_solid_r20"
+            android:gravity="center"
+            android:stateListAnimator="@animator/press_alpha2down"
+            android:text="Batal"
+            android:textColor="@color/summary"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/confirm"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/repay_amount"
+            app:layout_goneMarginBottom="28dp" />
+
+        <TextView
+            android:id="@+id/confirm"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="18dp"
+            android:background="@drawable/shape_red_solid_r20"
+            android:gravity="center"
+            android:stateListAnimator="@animator/press_alpha2down"
+            android:text="Yakin"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cancel"
+            app:layout_constraintTop_toBottomOf="@+id/repay_amount" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

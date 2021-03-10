@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.data.UserFace
@@ -59,6 +60,8 @@ class SettingsFragment : BaseFragment() {
                 ConfirmDialog(
                     titleStr = "Notifikasi",
                     contentStr = "Yakin Ingin Keluar？",
+                    positiveStr = "Botal",
+                    negativeStr = "Keluar",
                     positiveClickListener = {
                         activity?.onBackPressed()
                         UserFace.clearData()
@@ -72,6 +75,8 @@ class SettingsFragment : BaseFragment() {
         }
         binding.version.setOnClickListener { v ->
             if (binding.version.siEndText.isNullOrEmpty()) {
+                ToastUtils.showShort(R.string.your_app_is_newest)
+                versionViewModel.checkVersion()
                 return@setOnClickListener
             }
             v.isEnabled = false

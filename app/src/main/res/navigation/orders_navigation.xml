@@ -9,5 +9,21 @@
         android:id="@+id/myOrdersFragment"
         android:name="com.ecreditpal.danaflash.ui.orders.MyOrdersFragment"
         android:label="@string/my_orders"
-        tools:layout="@layout/fragment_my_orders" />
+        tools:layout="@layout/fragment_my_orders">
+        <action
+            android:id="@+id/action_myOrdersFragment_to_amountDropDialog"
+            app:destination="@id/amountDropDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/amountDropDialog"
+        android:name="com.ecreditpal.danaflash.ui.orders.AmountDropDialog"
+        android:label="AmountDropDialog"
+        tools:layout="@layout/dialog_amount_drop">
+        <argument
+            android:name="orderRes"
+            app:argType="com.ecreditpal.danaflash.model.OrderRes" />
+        <argument
+            android:name="trialRes"
+            app:argType="com.ecreditpal.danaflash.model.AmountTrialRes" />
+    </dialog>
 </navigation>

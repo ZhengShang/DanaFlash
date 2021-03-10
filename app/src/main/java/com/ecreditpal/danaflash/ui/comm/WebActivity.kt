@@ -66,7 +66,7 @@ class WebActivity : BaseActivity(), LifecycleObserver {
         webView = findViewById(R.id.web)
         val showToolbar = intent?.getBooleanExtra(EXTRA_SHOW_TOOLBAR, false) ?: false
         if (showToolbar) {
-            findViewById<ImageView>(R.id.back).setOnClickListener { finish() }
+            findViewById<ImageView>(R.id.back).setOnClickListener { onBackPressed() }
         } else {
             findViewById<View>(R.id.toolbar).visibility = View.GONE
         }
@@ -117,10 +117,14 @@ class WebActivity : BaseActivity(), LifecycleObserver {
 
     override fun onBackPressed() {
         callJs(webInterface.backPress())
-        if (UserFace.mediaSource.isNotEmpty()) {
-            callJs(webInterface.sendMediaSource())
+        if (webView.canGoBack()) {
+            webView.goBack()
+        } else {
+            if (UserFace.mediaSource.isNotEmpty()) {
+                callJs(webInterface.sendMediaSource())
+            }
+            super.onBackPressed()
         }
-        super.onBackPressed()
     }
 
     private fun callJs(jsStr: String) {

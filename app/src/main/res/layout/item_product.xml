@@ -138,9 +138,10 @@
             android:background="@drawable/selector_dash_btn"
             android:gravity="center"
             android:paddingTop="5dp"
+            android:enabled="@{type == ComConsKt.PRODUCT_TYPE_GP || (type == ComConsKt.PRODUCT_TYPE_API &amp;&amp; info.canApply)}"
             android:paddingBottom="5dp"
             android:stateListAnimator="@animator/press_alpha2down"
-            android:text="@{type == ComConsKt.PRODUCT_TYPE_API ? @string/loan_now : @string/download}"
+            android:text='@{type == ComConsKt.PRODUCT_TYPE_API ? info.canApply ? @string/loan_now : "Cap Limit" : @string/download}'
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"

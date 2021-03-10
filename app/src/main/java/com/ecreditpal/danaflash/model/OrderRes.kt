@@ -1,6 +1,7 @@
 package com.ecreditpal.danaflash.model
 
 import android.graphics.Color
+import android.os.Parcelable
 import com.ecreditpal.danaflash.App
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.data.OrderStatus.ALL
@@ -18,8 +19,10 @@ import com.ecreditpal.danaflash.data.OrderStatus.STATUS_PUSHING
 import com.ecreditpal.danaflash.data.OrderStatus.STATUS_REPAYMENTED
 import com.ecreditpal.danaflash.data.OrderStatus.STATUS_REPAYMENTING
 import com.ecreditpal.danaflash.data.OrderStatus.STATUS_VERIFICATION_FAILED
+import kotlinx.android.parcel.Parcelize
 import java.math.BigDecimal
 
+@Parcelize
 data class OrderRes(
     val allowDelay: Int?, // 1
     val api: Boolean?, // true
@@ -45,7 +48,7 @@ data class OrderRes(
     val storeList: List<Store?>?,
     var repayLink: String?,
     var delayLink: String?
-) {
+) : Parcelable {
 
     fun loanTermString(): String {
         return loanTerm.toString().plus(
@@ -78,7 +81,7 @@ data class OrderRes(
 
     fun statusColor() = when (status) {
         STATUS_MANUAL_AUDIT,
-        STATUS_AUDIT_SUCCESS -> Color.parseColor("##7ED321")
+        STATUS_AUDIT_SUCCESS -> Color.parseColor("#7ED321")
         STATUS_CHECKED,
         STATUS_OVERDUE -> Color.parseColor("#E59A37")
         STATUS_REPAYMENTING -> Color.parseColor("#E84F4F")
@@ -112,21 +115,33 @@ data class OrderRes(
 
     fun twoBtnVisible(): Boolean {
         return (status == 5 && allowDelay == 1)
-                || (status == 5 && allowDelay == 1)
+                || (status == 6 && allowDelay == 1)
     }
 
-    fun showBankName(): String {
-        val last = debitBankCard?.takeLast(4) ?: ""
-        return "$debitBankName($last)"
-    }
+    fun showBankName() = kotlin.runCatching {
+        val last = debitBankCard?.takeLast(4)
+        "$debitBankName($last)"
+    }.getOrNull() ?: ""
 
+    /**
+     * 如果文本过长, 将银行卡名字智取前2位数, 后面的省略
+     */
+    fun showOmitBankName() = kotlin.runCatching {
+        val name = debitBankName?.take(2)
+        val last = debitBankCard?.takeLast(4)
+        "$name...($last)"
+    }.getOrNull() ?: ""
+
+
+    @Parcelize
     data class Bank(
         val bankId: Int?, // 13
         val name: String? // Bank Permata
-    )
+    ) : Parcelable
 
+    @Parcelize
     data class Store(
         val name: String?, // Alfamart
         val storeId: Int? // 2001
-    )
+    ) : Parcelable
 }

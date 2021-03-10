@@ -1,7 +1,10 @@
 package com.ecreditpal.danaflash.ui.camera
 
-import ai.advance.liveness.lib.*
 import ai.advance.liveness.lib.Detector.*
+import ai.advance.liveness.lib.GuardianLivenessDetectionSDK
+import ai.advance.liveness.lib.LivenessResult
+import ai.advance.liveness.lib.LivenessView
+import ai.advance.liveness.lib.Market
 import ai.advance.liveness.lib.http.entity.ResultEntity
 import ai.advance.liveness.lib.impl.LivenessCallback
 import ai.advance.liveness.lib.impl.LivenessGetFaceDataCallback
@@ -206,7 +209,7 @@ class LivenessFragment : BaseFragment() {
     private fun setResultData(data: String) {
         activity?.setResult(
             Activity.RESULT_OK,
-            Intent().putExtra(LivenessFragment.EXTRA_RESULT, data)
+            Intent().putExtra(EXTRA_RESULT, data)
         )
         activity?.finish()
     }
@@ -257,15 +260,15 @@ class LivenessFragment : BaseFragment() {
                     LoadingTips.showLoading()
                 }
 
-                override fun onGetFaceDataSuccess(entity: ResultEntity, livenessId: String) {
+                override fun onGetFaceDataSuccess(entity: ResultEntity?, livenessId: String?) {
                     LoadingTips.dismissLoading()
                     // liveness detection success
-                    setResultData(livenessId)
+                    setResultData(livenessId ?: LIVENESS_FAILED)
                 }
 
-                override fun onGetFaceDataFailed(entity: ResultEntity) {
+                override fun onGetFaceDataFailed(entity: ResultEntity?) {
                     LoadingTips.dismissLoading()
-                    if (!entity.success && LivenessView.NO_RESPONSE == entity.code) {
+                    if (entity?.success != true && LivenessView.NO_RESPONSE == entity?.code) {
                         LivenessResult.setErrorMsg(getString(R.string.liveness_failed_reason_bad_network))
                     }
                     setResultData(LIVENESS_FAILED)
@@ -279,7 +282,7 @@ class LivenessFragment : BaseFragment() {
          *
          * @param warnCode status of current frame 本帧的状态
          */
-        override fun onDetectionFrameStateChanged(warnCode: Detector.WarnCode?) {
+        override fun onDetectionFrameStateChanged(warnCode: WarnCode?) {
             if (isAdded) {
                 updateTipUIView(warnCode)
             }
@@ -321,6 +324,8 @@ class LivenessFragment : BaseFragment() {
                                     getString(R.string.liveness_failed_reason_facemissing_blink_mouth)
                                 DetectionType.POS_YAW -> errorMsg =
                                     getString(R.string.liveness_failed_reason_facemissing_pos_yaw)
+                                else -> {
+                                }
                             }
                             DetectionFailedType.TIMEOUT -> errorMsg =
                                 getString(R.string.liveness_failed_reason_timeout)
@@ -328,6 +333,8 @@ class LivenessFragment : BaseFragment() {
                                 getString(R.string.liveness_failed_reason_multipleface)
                             DetectionFailedType.MUCHMOTION -> errorMsg =
                                 getString(R.string.liveness_failed_reason_muchaction)
+                            else -> {
+                            }
                         }
                         LivenessResult.setErrorMsg(errorMsg)
                         setResultData(LIVENESS_FAILED)

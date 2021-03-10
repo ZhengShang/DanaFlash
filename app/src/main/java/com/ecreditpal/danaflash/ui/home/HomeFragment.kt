@@ -196,7 +196,7 @@ class HomeFragment : BaseFragment() {
         } else {
             if (clickId == R.id.loan || clickId == R.id.root) {
                 SurveyHelper.addOneSurvey("/", "clickProduct")
-                WebActivity.loadUrl(context, product.link)
+                CommUtils.navGoogleDownload(context, product.link)
             }
         }
     }

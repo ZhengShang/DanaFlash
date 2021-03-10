@@ -19,9 +19,10 @@ class ProductAdapter(
     override fun onBindViewHolder(holder: BindingViewHolder<ItemProductBinding>, position: Int) {
         holder.binding.apply {
             type = productType
-            info = getItem(position)
-            loan.setOnClickListener { productClick?.invoke(it.id, position, getItem(position)) }
-            root.setOnClickListener { productClick?.invoke(it.id, position, getItem(position)) }
+            info = getItem(holder.layoutPosition)
+            root.setOnClickListener {
+                productClick?.invoke(it.id, holder.layoutPosition, getItem(holder.layoutPosition))
+            }
         }
     }
 
@@ -46,7 +47,11 @@ class ProductAdapter(
                 oldItem: ProductRes.Product,
                 newItem: ProductRes.Product
             ): Boolean {
-                return oldItem == newItem
+                return oldItem.name == newItem.name
+                        && oldItem.amountMax == newItem.amountMax
+                        && oldItem.interestMin == newItem.interestMin
+                        && oldItem.canApply == newItem.canApply
+                        && oldItem.summary == newItem.summary
             }
         }
     }

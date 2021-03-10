@@ -2,25 +2,16 @@ package com.ecreditpal.danaflash.helper
 
 import android.content.Context
 import android.net.Uri
-import android.view.View
-import androidx.annotation.IdRes
+import android.widget.TextView
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
-import androidx.navigation.Navigation
 import com.ecreditpal.danaflash.data.H5_PREFIX
 import com.ecreditpal.danaflash.data.UserFace
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-
-fun View?.nav(@IdRes id: Int) {
-    if (this == null) return
-    setOnClickListener {
-        Navigation.findNavController(this).navigate(id)
-    }
-}
 
 suspend fun <T> Context?.writeDsData(
     key: Preferences.Key<T>,
@@ -83,4 +74,17 @@ fun Uri?.toBytes(context: Context?): ByteArray? {
 
 fun Char?.isAlphabet(): Boolean {
     return this in 'a'..'z' || this in 'A'..'Z'
+}
+
+fun TextView.isEllipsized(): Boolean {
+    val l = layout
+    if (l != null) {
+        val lines: Int = l.lineCount
+        if (lines > 0) {
+            if (l.getEllipsisCount(lines - 1) > 0) {
+                return true
+            }
+        }
+    }
+    return false
 }
