@@ -2,6 +2,7 @@ package com.ecreditpal.danaflash.ui.comm
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -18,7 +19,7 @@ class LoadStateViewHolder(
 ) {
     private val progressBar: ProgressBar = itemView.findViewById(R.id.progress_bar)
     private val errorMsg: TextView = itemView.findViewById(R.id.error_msg)
-    private val retry = itemView.findViewById<TextView>(R.id.retry_button).also {
+    private val retry = itemView.findViewById<Button>(R.id.retry_button).also {
         it.setOnClickListener { retry() }
     }
 
