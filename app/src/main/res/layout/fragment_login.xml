@@ -171,7 +171,7 @@
                 tools:text="@string/get_verification_code" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
+        <TextView
             android:id="@+id/login"
             style="@style/MainButton"
             android:layout_marginTop="50dp"

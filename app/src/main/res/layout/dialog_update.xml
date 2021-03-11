@@ -63,11 +63,13 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView"
             tools:text="here is the detail update change content" />
 
-        <Button
+        <TextView
             android:id="@+id/update"
             style="@style/MainButton"
             android:layout_width="wrap_content"
             android:layout_marginBottom="50dp"
+            android:paddingStart="@dimen/def_edge_margin"
+            android:paddingEnd="@dimen/def_edge_margin"
             android:text="@string/update_now"
             app:layout_constraintBottom_toTopOf="@id/close"
             app:layout_constraintEnd_toEndOf="parent"

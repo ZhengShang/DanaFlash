@@ -21,7 +21,7 @@ const val AD_TITLE_INDEX = "index"
 const val AD_TITLE_PERSONALPOP = "personalPop"
 
 
-const val H5_ONE_CLICK_APPLY = "/oneClickApplySelect" //一件申请
+const val H5_ONE_CLICK_APPLY = "/oneClickApply" //一件申请
 const val H5_BASE_INFO = "/apiBaseInfo" //个人资料填写
 const val H5_OTHER_INFO = "/apiOtherInfo" //其他信息
 const val H5_CONTACT_PEOPLE = "/contactPeople" //紧急联系人

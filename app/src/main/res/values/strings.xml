@@ -8,7 +8,7 @@
     <string name="privacy_policy">Kebijakan Privasi</string>
     <string name="settings">Pengaturan</string>
     <string name="plz_input_phone">Input No Handphone</string>
-    <string name="plz_input_verification_code">Input Kode Verfikasi</string>
+    <string name="plz_input_verification_code"><font size="14">Input Kode Verfikasi</font></string>
     <string name="get_verification_code">Kirim Kode Verifikasi</string>
     <string name="login">Login</string>
     <string name="confirm">Ya, Yakin</string>

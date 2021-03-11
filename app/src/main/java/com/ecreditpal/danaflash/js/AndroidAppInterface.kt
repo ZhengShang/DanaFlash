@@ -130,9 +130,9 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
                 ) == PackageManager.PERMISSION_GRANTED
             }
         ) {
-            "1"
+            1
         } else {
-            "0"
+            0
         }
 
         val map = mapOf(

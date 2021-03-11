@@ -8,11 +8,9 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableInt
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
-import com.ecreditpal.danaflash.MainActivity
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.base.LoadingTips
@@ -76,17 +74,8 @@ class HomeFragment : BaseFragment() {
 
         binding.bannerLayout.root.setOnClickListener {
             SurveyHelper.addOneSurvey("/", "clickBannerApply", "AS")
-            if (UserFace.isLogin()) {
-                val mainActivity = activity as? MainActivity ?: return@setOnClickListener
-                if (mainActivity.isAllPermissionGranted()) {
-                    navByUserInfoStatus()
-                } else {
-                    requestedPm = true
-                    mainActivity.requestAllPermissions()
-                }
-            } else {
-                CommUtils.navLogin()
-            }
+            //不检测登陆,权限和用户信息等, 直接进入H5页面
+            WebActivity.loadUrl(context, H5_ONE_CLICK_APPLY.combineH5Url())
         }
         binding.bannerLayout.tabApi.setOnClickListener {
             SurveyHelper.addOneSurvey("/", "apiTabClick")
@@ -189,8 +178,15 @@ class HomeFragment : BaseFragment() {
         if (productType == PRODUCT_TYPE_API) {
             if (clickId == R.id.loan || clickId == R.id.root) {
                 SurveyHelper.addOneSurvey("/", "ApiClickProduct", "AD$position")
-                findNavController().navigate(
-                    MainFragmentDirections.actionMainFragmentToProductActivity(product)
+                //使用H5版本的详情页
+                WebActivity.loadUrl(
+                    context, H5_PRODUCT_DETAIL.combineH5Url(
+                        mapOf(
+                            "id" to product.id, //产品id
+                            "productName" to product.name, //产品名
+                            "positionIndex" to position //点击列表时产品所在位置（如没有则传空）
+                        )
+                    )
                 )
             }
         } else {

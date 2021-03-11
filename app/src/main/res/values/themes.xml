@@ -23,6 +23,9 @@
     <style name="MainButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">40dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:layout_marginStart">@dimen/def_edge_margin</item>
         <item name="android:layout_marginEnd">@dimen/def_edge_margin</item>
         <item name="android:layout_marginBottom">@dimen/def_edge_margin</item>

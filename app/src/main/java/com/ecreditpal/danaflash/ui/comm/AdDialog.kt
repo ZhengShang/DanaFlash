@@ -56,12 +56,16 @@ class AdDialog : BaseDialogFragment() {
             return
         }
 
-        val act = if (adTitle == AD_TITLE_APIPOP) {
-            "apiPop"
-        } else if (adTitle == AD_TITLE_POP) {
-            "pop"
-        } else {
-            ""
+        val act = when (adTitle) {
+            AD_TITLE_APIPOP -> {
+                "apiPop"
+            }
+            AD_TITLE_POP -> {
+                "pop"
+            }
+            else -> {
+                ""
+            }
         }
         if (act.isNotEmpty()) {
             SurveyHelper.addOneSurvey("/", act)
@@ -73,7 +77,7 @@ class AdDialog : BaseDialogFragment() {
             adapter = BannerAdapter(dataMap) {
                 var code = ""
                 var p = "/"
-                val act = when (adTitle) {
+                val a = when (adTitle) {
                     AD_TITLE_APIPOP -> {
                         code = "AA"
                         "clickApiPop"
@@ -89,7 +93,7 @@ class AdDialog : BaseDialogFragment() {
                     }
                     else -> ""
                 }
-                SurveyHelper.addOneSurvey(p, act, code)
+                SurveyHelper.addOneSurvey(p, a, code)
                 WebActivity.loadUrl(context, it)
                 findNavController().popBackStack()
             }
@@ -153,6 +157,7 @@ class AdDialog : BaseDialogFragment() {
             size: Int
         ) {
             holder?.imageView?.let {
+                it.scaleType = ImageView.ScaleType.FIT_CENTER
                 setImageUrl(it, data)
                 it.setOnClickListener {
                     click.invoke(dataMap.getValue(data as String))

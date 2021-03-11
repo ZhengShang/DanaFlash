@@ -170,7 +170,11 @@ class MyOrdersFragment : BaseFragment() {
                 //再借一单
                 //点击后进入该产品的订单确认页（h5页面）
                 SurveyHelper.addOneSurvey("/orderPage", "onMoreOrder", "aj")
-                navByUserInfoStatus(orderRes)
+                //直接跳入订单确认页
+                WebActivity.loadUrl(
+                    context,
+                    H5_ORDER_CONFIRM.combineH5Url(getH5Params(orderRes))
+                )
             }
         }
     }

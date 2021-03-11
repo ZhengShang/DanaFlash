@@ -56,7 +56,7 @@
             app:siSubTitle='@{"v." + BuildConfig.VERSION_NAME}'
             app:siTitle="@string/version" />
 
-        <Button
+        <TextView
             android:id="@+id/sign_out"
             style="@style/MainButton"
             android:layout_marginTop="@dimen/main_button_margin_top"
