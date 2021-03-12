@@ -32,13 +32,21 @@ class UploadSurveyWorker(
             MediaType.parse("application/json; charset=utf-8"), json
         )
 
-        val res = runBlocking {
-            kotlin.runCatching {
-                dfApi().uploadSurvey(body.contentLength(), body).throwIfNotSuccess()
-            }.getOrNull()
-        } ?: return Result.retry()
+        val success = runBlocking {
+            try {
+                dfApi().uploadSurvey(
+                    "http://tropic.cn-hongkong.log.aliyuncs.com/logstores/staging/track",
+                    body.contentLength(),
+                    body
+                )
+                true
+            } catch (e: Exception) {
+                println("upload survey failed. $e")
+                false
+            }
+        }
 
-        return if (res.isSuccess()) {
+        return if (success) {
             SurveyHelper.surveyList.removeAll(uploadList)
             Result.success()
         } else {

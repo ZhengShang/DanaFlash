@@ -16,6 +16,7 @@ object DataStoreKeys {
     val AD_POP_LAST_STAMP = preferencesKey<Long>("ad_pop_last_stamp")
     val AD_INDEX_LAST_STAMP = preferencesKey<Long>("ad_index_last_stamp")
     val AD_PERSONALPOP_LAST_STAMP = preferencesKey<Long>("ad_personalpop_last_stamp")
+    val CHECK_UPDATE_LAST_STAMP = preferencesKey<Long>("check_update_last_stamp")
 
     val FILTER_PRODUCT_STAMP = preferencesKey<Long>("filter_product_stamp")
     val UPLOAD_ALL_DEVICE_INFO_STAMP = preferencesKey<Long>("upload_all_device_info_stamp")

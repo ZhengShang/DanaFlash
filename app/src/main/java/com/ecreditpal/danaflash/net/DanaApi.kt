@@ -3,6 +3,7 @@ package com.ecreditpal.danaflash.net
 import com.ecreditpal.danaflash.BuildConfig
 import com.ecreditpal.danaflash.model.*
 import okhttp3.RequestBody
+import retrofit2.Response
 import retrofit2.http.*
 
 interface DanaApi {
@@ -102,11 +103,12 @@ interface DanaApi {
 
     @NoNeedToken
     @Headers("x-log-apiversion: 0.6.0")
-    @POST(" /danaflash/survey")
+    @POST
     suspend fun uploadSurvey(
+        @Url url: String,
         @Header("x-log-bodyrawsize") bodyrawsize: Long,
         @Body body: RequestBody
-    ): BaseResponse<Void>
+    ): Response<Void>
 
     @POST(" /danaflash/user/filter_product")
     suspend fun filterProduct(): BaseResponse<Void>

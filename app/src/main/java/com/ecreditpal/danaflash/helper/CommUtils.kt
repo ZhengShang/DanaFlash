@@ -39,6 +39,7 @@ object CommUtils {
      * 跳转到google商店下载页
      */
     fun navGoogleDownload(context: Context?, link: String?) {
+        LogUtils.d("open link in play store => $link")
         val intent = Intent(Intent.ACTION_VIEW).apply {
             data = Uri.parse(link)
             setPackage("com.android.vending")

@@ -72,7 +72,7 @@ class UploadContactsWorker(
             }
         } catch (e: Exception) {
             LogUtils.e("get phone contacts failed.", e)
-            return Result.retry()
+            return Result.failure()
         } finally {
             cur.close()
         }
@@ -93,12 +93,12 @@ class UploadContactsWorker(
             kotlin.runCatching {
                 dfApi().uploadContacts(body).throwIfNotSuccess()
             }.getOrNull()
-        } ?: return Result.retry()
+        } ?: return Result.failure()
 
         return if (res.isSuccess()) {
             Result.success()
         } else {
-            Result.retry()
+            Result.failure()
         }
     }
 }

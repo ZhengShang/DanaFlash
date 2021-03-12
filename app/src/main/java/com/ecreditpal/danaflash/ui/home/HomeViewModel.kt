@@ -6,8 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.ecreditpal.danaflash.App
+import com.ecreditpal.danaflash.base.PopManager
 import com.ecreditpal.danaflash.data.*
-import com.ecreditpal.danaflash.helper.danaRequest
+import com.ecreditpal.danaflash.helper.danaRequestWithCatch
 import com.ecreditpal.danaflash.helper.readDsData
 import com.ecreditpal.danaflash.helper.writeDsData
 import com.ecreditpal.danaflash.model.AdRes
@@ -18,8 +19,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
-
-    val allPermissionGranted = MutableLiveData<Boolean>()
 
     /**
      * 首页支持的产品数量, 分为3个数:
@@ -34,7 +33,12 @@ class HomeViewModel : ViewModel() {
      * 第一部分string是指请求的title, 需要根据这个区分, 因为api和gp产品不需要弹窗, 只需要显示对应图片就行
      * 第二部分是具体的数据model
      */
-    val adLiveData = MutableLiveData<Pair<String, AdRes>>()
+    val adLiveData = MutableLiveData<Pair<String, AdRes?>>()
+
+    /**
+     * 首页通过监听这个来显示不同的弹窗. 主要是更新弹窗, API和POP这3个
+     */
+    val showPopLiveData = MutableLiveData<Pair<Int, Any>>()
 
     val apiFlow = buildFlow(PRODUCT_TYPE_API)
     val gpFlow = buildFlow(PRODUCT_TYPE_GP)
@@ -96,18 +100,24 @@ class HomeViewModel : ViewModel() {
     fun getAd(title: String) {
         viewModelScope.launch {
             if (!checkRequestAdValid(title)) {
+                if (title == AD_TITLE_APIPOP) {
+                    PopManager.addPopToMap(PopManager.TYPE_API, null)
+                } else if (title == AD_TITLE_POP) {
+                    PopManager.addPopToMap(PopManager.TYPE_POP, null)
+                }
                 return@launch
             }
 
-            kotlin.runCatching {
-                danaRequest {
-                    dfApi().getAds(title).throwIfNotSuccess()
-                }
-            }.getOrNull()?.let {
-                adLiveData.value = Pair(title, it)
-                writeLastAdShowStamp(title)
+            val res = danaRequestWithCatch {
+                dfApi().getAds(title)
             }
+            adLiveData.value = Pair(title, res)
+            writeLastAdShowStamp(title)
         }
+    }
+
+    fun tryShowPopDialog() {
+        showPopLiveData.value = PopManager.getNextShowPopValue() ?: return
     }
 
     /**

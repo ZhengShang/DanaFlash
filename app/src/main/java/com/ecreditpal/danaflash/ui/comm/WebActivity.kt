@@ -29,6 +29,7 @@ import com.ecreditpal.danaflash.ui.camera.CameraActivity
 import com.ecreditpal.danaflash.ui.camera.StartLiveness
 import com.ecreditpal.danaflash.ui.camera.StartOcr
 import com.ecreditpal.danaflash.ui.contact.StartContact
+import com.ecreditpal.danaflash.widget.StatusView
 import kotlinx.android.synthetic.main.activity_web.*
 import org.json.JSONObject
 import java.io.File
@@ -39,16 +40,24 @@ class WebActivity : BaseActivity(), LifecycleObserver {
     companion object {
         private const val EXTRA_URL = "url"
         private const val EXTRA_SHOW_TOOLBAR = "show_toolbar"
+        private const val EXTRA_ONLY_FOR_DOWNLOAD = "only_for_download"
 
-        fun loadUrl(context: Context?, url: String?, toolbar: Boolean = false) {
+        fun loadUrl(
+            context: Context?,
+            url: String?,
+            toolbar: Boolean = false,
+            forDownload: Boolean = false
+        ) {
             context?.startActivity(Intent(context, WebActivity::class.java).apply {
                 putExtra(EXTRA_URL, url)
                 putExtra(EXTRA_SHOW_TOOLBAR, toolbar)
+                putExtra(EXTRA_ONLY_FOR_DOWNLOAD, forDownload)
             })
         }
     }
 
     private lateinit var webView: WebView
+    private lateinit var statusView: StatusView
     private val webInterface = WebInterface()
     private var getPhotoPair: Pair<String?, Uri?>? = null
 
@@ -64,6 +73,8 @@ class WebActivity : BaseActivity(), LifecycleObserver {
         }
 
         webView = findViewById(R.id.web)
+        statusView = findViewById(R.id.status_view)
+        statusView.showLoading()
         val showToolbar = intent?.getBooleanExtra(EXTRA_SHOW_TOOLBAR, false) ?: false
         if (showToolbar) {
             findViewById<ImageView>(R.id.back).setOnClickListener { onBackPressed() }
@@ -88,6 +99,9 @@ class WebActivity : BaseActivity(), LifecycleObserver {
             loadsImagesAutomatically = true //支持自动加载图片
             defaultTextEncodingName = "utf-8"//设置编码格式
         }
+
+        val onlyForDownload = intent?.getBooleanExtra(EXTRA_ONLY_FOR_DOWNLOAD, false) ?: false
+
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
@@ -96,9 +110,17 @@ class WebActivity : BaseActivity(), LifecycleObserver {
                 val path = request?.url?.toString() ?: ""
                 if (path.contains("play.google.com") || path.contains("market")) {
                     CommUtils.navGoogleDownload(this@WebActivity, path)
+                    //link进入webView只是为了进行重定向以便于跳转Google Play Store
+                    if (onlyForDownload) {
+                        finish()
+                    }
                     return true
                 }
                 return false
+            }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                statusView.hideStatus()
             }
         }
 
@@ -117,14 +139,13 @@ class WebActivity : BaseActivity(), LifecycleObserver {
 
     override fun onBackPressed() {
         callJs(webInterface.backPress())
-        if (webView.canGoBack()) {
-            webView.goBack()
-        } else {
-            if (UserFace.mediaSource.isNotEmpty()) {
-                callJs(webInterface.sendMediaSource())
-            }
-            super.onBackPressed()
+    }
+
+    override fun onDestroy() {
+        if (UserFace.mediaSource.isNotEmpty()) {
+            callJs(webInterface.sendMediaSource())
         }
+        super.onDestroy()
     }
 
     private fun callJs(jsStr: String) {

@@ -60,7 +60,7 @@
             android:id="@+id/sign_out"
             style="@style/MainButton"
             android:layout_marginTop="@dimen/main_button_margin_top"
-            android:text="@{loginState ? @string/sing_out : @string/login}"
+            android:text='@{loginState ? @string/sing_out : "Daftar"}'
             app:layout_constraintTop_toBottomOf="@id/version" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -36,7 +36,7 @@ class SettingsFragment : BaseFragment() {
         val versionViewModel = ViewModelProvider(this).get(VersionViewModel::class.java)
         binding.versionVm = versionViewModel
         binding.loginState = loginStateObserve
-        versionViewModel.checkVersion()
+        versionViewModel.checkVersion(false)
 
         binding.privacy.setOnClickListener {
             findNavController().navigate(
@@ -60,8 +60,6 @@ class SettingsFragment : BaseFragment() {
                 ConfirmDialog(
                     titleStr = "Notifikasi",
                     contentStr = "Yakin Ingin Keluar？",
-                    positiveStr = "Botal",
-                    negativeStr = "Keluar",
                     positiveClickListener = {
                         activity?.onBackPressed()
                         UserFace.clearData()
@@ -76,7 +74,11 @@ class SettingsFragment : BaseFragment() {
         binding.version.setOnClickListener { v ->
             if (binding.version.siEndText.isNullOrEmpty()) {
                 ToastUtils.showShort(R.string.your_app_is_newest)
-                versionViewModel.checkVersion()
+                versionViewModel.checkVersion(false)
+                return@setOnClickListener
+            }
+            if (versionViewModel.versionRes.value?.updateStatus == 0) {
+                ToastUtils.showShort(R.string.your_app_is_newest)
                 return@setOnClickListener
             }
             v.isEnabled = false

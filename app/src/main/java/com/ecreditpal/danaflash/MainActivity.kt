@@ -15,6 +15,7 @@ import androidx.work.*
 import com.blankj.utilcode.util.PhoneUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.base.BaseActivity
+import com.ecreditpal.danaflash.base.PopManager
 import com.ecreditpal.danaflash.data.AD_TITLE_APIPOP
 import com.ecreditpal.danaflash.data.AD_TITLE_PERSONALPOP
 import com.ecreditpal.danaflash.data.AD_TITLE_POP
@@ -23,10 +24,11 @@ import com.ecreditpal.danaflash.helper.CommUtils
 import com.ecreditpal.danaflash.helper.SurveyHelper
 import com.ecreditpal.danaflash.helper.readDsData
 import com.ecreditpal.danaflash.helper.writeDsData
+import com.ecreditpal.danaflash.model.AdRes
+import com.ecreditpal.danaflash.model.VersionRes
 import com.ecreditpal.danaflash.ui.home.HomeViewModel
 import com.ecreditpal.danaflash.ui.home.MainFragmentDirections
 import com.ecreditpal.danaflash.ui.settings.VersionViewModel
-import com.ecreditpal.danaflash.worker.InvokeFilterProductWorker
 import com.ecreditpal.danaflash.worker.UploadAllDeviceInfoWorker
 import com.ecreditpal.danaflash.worker.UploadSurveyWorker
 import kotlinx.coroutines.launch
@@ -35,6 +37,9 @@ class MainActivity : BaseActivity() {
 
     private val homeViewModel: HomeViewModel by viewModels()
     private var lastClickMills = 0L
+
+    //是否需要等待权限请求结束才能显示Pop弹窗
+    private var waitForPermission = true
 
     override fun onBackPressed() {
         val now = System.currentTimeMillis()
@@ -60,41 +65,65 @@ class MainActivity : BaseActivity() {
             if (showTips) {
                 navController.navigate(R.id.action_global_permissionTipsDialog)
             } else {
-                //发送一个请求权限通知HomeFragment里面进行广告的拉取
-                homeViewModel.allPermissionGranted.value = false
+                waitForPermission = false
+                showPopDialogs()
             }
         }
 
         homeViewModel.adLiveData.observe(this) {
-            if (it.first == AD_TITLE_APIPOP
-                || it.first == AD_TITLE_POP
-                || it.first == AD_TITLE_PERSONALPOP
-            ) {
+            if (it.first == AD_TITLE_PERSONALPOP) {
+                val adRes = it.second ?: return@observe
                 navController.navigate(
-                    MainFragmentDirections.actionGlobalAdDialog(it.first, it.second)
+                    MainFragmentDirections.actionGlobalAdDialog(it.first, adRes)
+                )
+            } else if (it.first == AD_TITLE_APIPOP) {
+                //放到PopManager里面装起来, 按照一定的次序再来显示
+                PopManager.addPopToMap(PopManager.TYPE_API, it.second)
+            } else if (it.first == AD_TITLE_POP) {
+                //放到PopManager里面装起来, 按照一定的次序再来显示
+                PopManager.addPopToMap(PopManager.TYPE_POP, it.second)
+            }
+            showPopDialogs()
+        }
+
+        homeViewModel.showPopLiveData.observe(this) { pair ->
+            val key = pair.first
+            val res = pair.second
+
+            if (res is VersionRes) {
+                navController.navigate(
+                    MainFragmentDirections.actionGlobalUpdateDialog2(res)
+                )
+            } else if (res is AdRes) {
+                val adTitle = if (key == PopManager.TYPE_API) AD_TITLE_APIPOP else AD_TITLE_POP
+                navController.navigate(
+                    MainFragmentDirections.actionGlobalAdDialog(adTitle, res)
                 )
             }
         }
 
         val versionViewModel: VersionViewModel by viewModels()
         versionViewModel.versionRes.observe(this) {
-            if (BuildConfig.DEBUG) {
-                return@observe
-            }
-            if (it.updateStatus == 0) {
-                return@observe
-            }
-            navController.navigate(
-                MainFragmentDirections.actionGlobalUpdateDialog2(it)
-            )
+            showPopDialogs()
         }
-        versionViewModel.checkVersion()
+
+        versionViewModel.checkVersion(true)
+        homeViewModel.getAd(AD_TITLE_APIPOP)
+        homeViewModel.getAd(AD_TITLE_POP)
 
         startWorkers()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    //此时意味着可以显示暂存在PopManager中的Dialog了
+    private fun showPopDialogs() {
+        if (waitForPermission) {
+            return
+        }
+        homeViewModel.tryShowPopDialog()
+    }
+
+    override fun onStop() {
+        super.onStop()
 
         val uploadWorkRequest =
             OneTimeWorkRequest.Builder(UploadSurveyWorker::class.java)
@@ -107,9 +136,6 @@ class MainActivity : BaseActivity() {
 
     private fun startWorkers() {
         val workManager = WorkManager.getInstance(this)
-        workManager.enqueue(
-            OneTimeWorkRequest.Builder(InvokeFilterProductWorker::class.java).build()
-        )
         workManager.enqueue(
             OneTimeWorkRequest.Builder(UploadAllDeviceInfoWorker::class.java).build()
         )
@@ -125,7 +151,8 @@ class MainActivity : BaseActivity() {
         if (request) {
             requestLocationLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         } else {
-            homeViewModel.allPermissionGranted.value = false
+            waitForPermission = false
+            showPopDialogs()
         }
     }
 
@@ -141,9 +168,6 @@ class MainActivity : BaseActivity() {
     @SuppressLint("MissingPermission")
     private val requestPermissionsLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { map ->
-            //Invoke liveData
-            val allGranted = map.values.all { it == true }
-            homeViewModel.allPermissionGranted.value = allGranted
 
             map.entries.forEach { entry ->
                 when (entry.key) {
@@ -166,7 +190,8 @@ class MainActivity : BaseActivity() {
 
     private val requestLocationLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-            homeViewModel.allPermissionGranted.value = false
+            waitForPermission = false
+            showPopDialogs()
         }
 
     @SuppressLint("MissingPermission")

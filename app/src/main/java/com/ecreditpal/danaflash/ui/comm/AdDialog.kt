@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.blankj.utilcode.util.ScreenUtils
 import com.ecreditpal.danaflash.R
@@ -17,6 +18,7 @@ import com.ecreditpal.danaflash.helper.SurveyHelper
 import com.ecreditpal.danaflash.helper.combineH5Url
 import com.ecreditpal.danaflash.helper.setImageUrl
 import com.ecreditpal.danaflash.model.AdRes
+import com.ecreditpal.danaflash.ui.home.HomeViewModel
 import com.youth.banner.Banner
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder
@@ -143,6 +145,10 @@ class AdDialog : BaseDialogFragment() {
             else -> ""
         }
         SurveyHelper.addOneSurvey(p, act, code)
+
+        //需要显示下一个弹窗
+        val homeViewModel: HomeViewModel by activityViewModels()
+        homeViewModel.tryShowPopDialog()
     }
 
     private class BannerAdapter(

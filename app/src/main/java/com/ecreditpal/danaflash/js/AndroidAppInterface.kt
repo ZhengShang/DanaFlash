@@ -63,8 +63,16 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
         webActivity.lifecycleScope.launch(Dispatchers.Main) {
             WorkManager.getInstance(webActivity).getWorkInfoByIdLiveData(uploadWorkRequest.id)
                 .observe(webActivity) {
-                    val result = if (it.state == WorkInfo.State.SUCCEEDED) "1" else "0"
-                    webActivity.callbackInterface("uploadContactList", result)
+                    val result = if (it.state == WorkInfo.State.SUCCEEDED) {
+                        "1"
+                    } else if (it.state == WorkInfo.State.FAILED) {
+                        "0"
+                    } else {
+                        "Loading"
+                    }
+                    if (result != "Loading") {
+                        webActivity.callbackInterface("uploadContactList", result)
+                    }
                 }
         }
 
@@ -104,9 +112,7 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
                 )
             }
             val json = """
-                {
-                    "packageInfo" : [${JSON.toJSONString(list)}]
-                }
+                {"packageInfo":[${JSON.toJSONString(list)}]}
             """.trimIndent()
             EncodeUtils.base64Encode2String(json.toByteArray())
         } catch (e: Exception) {
@@ -267,6 +273,6 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
 
     @JavascriptInterface
     fun browserWithTitle(url: String) {
-        WebActivity.loadUrl(webActivity, url, true)
+        WebActivity.loadUrl(webActivity, url, toolbar = true)
     }
 }

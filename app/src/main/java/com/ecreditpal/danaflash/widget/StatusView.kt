@@ -74,7 +74,7 @@ class StatusView @JvmOverloads constructor(
                 progressBar.visibility = View.GONE
                 image.visibility = View.VISIBLE
                 button.visibility = View.VISIBLE
-                message.text = context.getText(R.string.failed_to_load)
+                message.text = loadState.error.message
                 matchError(loadState.error)
             }
             is LoadState.NotLoading -> {

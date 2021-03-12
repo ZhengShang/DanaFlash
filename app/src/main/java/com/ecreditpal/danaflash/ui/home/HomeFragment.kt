@@ -10,6 +10,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
@@ -26,6 +28,7 @@ import com.ecreditpal.danaflash.ui.camera.StartLiveness
 import com.ecreditpal.danaflash.ui.comm.CommLoadStateAdapter
 import com.ecreditpal.danaflash.ui.comm.WebActivity
 import com.ecreditpal.danaflash.widget.StatusView
+import com.ecreditpal.danaflash.worker.InvokeFilterProductWorker
 import kotlinx.android.synthetic.main.view_home_banner.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -44,9 +47,6 @@ class HomeFragment : BaseFragment() {
 
     //过滤掉第一次的刷新页面操作, 只有从其他页面返回回来才需要刷新
     private var fromCreate = true
-
-    //是否请求过权限, 只有请求过权限, 才需要监听所有的权限结果回调
-    private var requestedPm = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,12 +80,12 @@ class HomeFragment : BaseFragment() {
         binding.bannerLayout.tabApi.setOnClickListener {
             SurveyHelper.addOneSurvey("/", "apiTabClick")
             type.set(PRODUCT_TYPE_API)
-            homeViewModel.getAd(AD_TITLE_APIPOP)
+            refreshList()
         }
         binding.bannerLayout.tabGp.setOnClickListener {
             SurveyHelper.addOneSurvey("/", "tabClick")
             type.set(PRODUCT_TYPE_GP)
-            homeViewModel.getAd(AD_TITLE_POP)
+            refreshList()
         }
 
         homeViewModel.productSupportIndex.observe(viewLifecycleOwner) {
@@ -97,32 +97,37 @@ class HomeFragment : BaseFragment() {
                 SurveyHelper.addOneSurvey("/", "api_show")
             }
         }
-        homeViewModel.allPermissionGranted.observe(viewLifecycleOwner) { granted ->
-            //这里意味着从主页处理完权限了.
-            //为了不让广告弹窗显示在主页权限Tips之上, 就做了这个处理
-            homeViewModel.getAd(if (type.get() == PRODUCT_TYPE_API) AD_TITLE_APIPOP else AD_TITLE_POP)
-
-            if (requestedPm and granted) {
-                navByUserInfoStatus()
-            }
-        }
     }
 
     override fun onResume() {
         super.onResume()
         if (fromCreate.not()) {
-            refreshList()
             homeViewModel.detectProductSupported()
+
+            //默认显示api的tab
+            if (tabVisible.get()) {
+                //切换tab自然会刷新列表
+                binding.bannerLayout.tabApi.performClick()
+            } else {
+                //此时tab不显示, 需要主动调用刷新
+                refreshList()
+            }
         }
         fromCreate = false
+
+        //尝试发送product_filter
+        context?.let {
+            WorkManager
+                .getInstance(it)
+                .enqueue(
+                    OneTimeWorkRequest.Builder(InvokeFilterProductWorker::class.java).build()
+                )
+        }
     }
 
     private fun refreshList() {
-        if (type.get() == PRODUCT_TYPE_API) {
-            apiAdapter.refresh()
-        } else {
-            gpAdapter.refresh()
-        }
+        apiAdapter.refresh()
+        gpAdapter.refresh()
     }
 
     private fun initList(view: View, productType: Int) {
@@ -192,7 +197,7 @@ class HomeFragment : BaseFragment() {
         } else {
             if (clickId == R.id.loan || clickId == R.id.root) {
                 SurveyHelper.addOneSurvey("/", "clickProduct")
-                CommUtils.navGoogleDownload(context, product.link)
+                WebActivity.loadUrl(context, product.link, forDownload = true)
             }
         }
     }

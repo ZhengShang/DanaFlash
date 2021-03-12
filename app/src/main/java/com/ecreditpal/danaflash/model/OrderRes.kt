@@ -97,8 +97,8 @@ data class OrderRes(
     fun lineBtnVisible(): Boolean {
         return (status == 1 && fillStatus == 1)
                 || status == 8
-                || (status == 5 && allowDelay == 0)
-                || (status == 6 && allowDelay == 0)
+                || (status == 5 && allowDelay != 1)
+                || (status == 6 && allowDelay != 1)
                 || (status == 7 && cooperation == 1)
     }
 
@@ -106,8 +106,7 @@ data class OrderRes(
         return when {
             (status == 1 && fillStatus == 1) -> R.string.rebind_card
             status == 8 -> R.string.derating_confirm
-            (status == 5 && allowDelay == 0) ||
-                    (status == 6 && allowDelay == 0) -> R.string.i_want_to_repay
+            (status == 5 || status == 6) -> R.string.i_want_to_repay
             (status == 7 && cooperation == 1) -> R.string.borrow_another_order
             else -> R.string.empty_string
         }
@@ -119,17 +118,16 @@ data class OrderRes(
     }
 
     fun showBankName() = kotlin.runCatching {
+        /**
+         * 如果文本过长, 将银行卡名字智取前2位数, 后面的省略
+         */
+        val name = if (debitBankName?.length ?: 0 > 12) {
+            debitBankName?.take(2).plus("...")
+        } else {
+            debitBankName
+        }
         val last = debitBankCard?.takeLast(4)
-        "$debitBankName($last)"
-    }.getOrNull() ?: ""
-
-    /**
-     * 如果文本过长, 将银行卡名字智取前2位数, 后面的省略
-     */
-    fun showOmitBankName() = kotlin.runCatching {
-        val name = debitBankName?.take(2)
-        val last = debitBankCard?.takeLast(4)
-        "$name...($last)"
+        "$name($last)"
     }.getOrNull() ?: ""
 
 

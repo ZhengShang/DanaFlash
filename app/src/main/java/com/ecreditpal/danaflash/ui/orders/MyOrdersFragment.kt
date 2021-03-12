@@ -204,10 +204,10 @@ class MyOrdersFragment : BaseFragment() {
         SurveyHelper.addOneSurvey("/orderPage", act, "AR")
 
         if (payType == 1 && orderRes.repayLink.isNullOrEmpty().not()) {
-            WebActivity.loadUrl(context, orderRes.repayLink)
+            WebActivity.loadUrl(context, orderRes.repayLink, toolbar = true)
             return
         } else if (payType == 2 && orderRes.delayLink.isNullOrEmpty().not()) {
-            WebActivity.loadUrl(context, orderRes.delayLink)
+            WebActivity.loadUrl(context, orderRes.delayLink, toolbar = true)
             return
         }
 

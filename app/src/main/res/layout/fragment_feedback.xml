@@ -31,6 +31,7 @@
                 android:layout_height="200dp"
                 android:background="@drawable/shape_feedback_input"
                 android:gravity="start"
+                android:maxLength="500"
                 tools:text="sfdfidfsdifjisdfj" />
         </com.google.android.material.textfield.TextInputLayout>
 

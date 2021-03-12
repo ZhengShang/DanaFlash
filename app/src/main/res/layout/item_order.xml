@@ -155,6 +155,7 @@
             android:gravity="end"
             android:maxLines="1"
             android:singleLine="true"
+            android:text="@{info.showBankName()}"
             android:textColor="@color/text"
             android:textSize="16sp"
             android:visibleGone="@{info.moreInfoVisible()}"
@@ -178,10 +179,10 @@
 
         <TextView
             android:id="@+id/paid_in_full_value"
+            rpAmount="@{info.currentRepaymentAmount}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/def_edge_margin"
-            android:text="@{String.valueOf(info.currentRepaymentAmount)}"
             android:textColor="@color/text"
             android:textSize="16sp"
             android:visibleGone="@{info.moreInfoVisible()}"
@@ -240,7 +241,8 @@
             android:textStyle="bold"
             android:visibleGone="@{info.lineBtnVisible()}"
             app:layout_constraintTop_toBottomOf="@id/divider1"
-            tools:text="Pinjam Kembali" />
+            tools:text="Pinjam Kembali"
+            tools:textColor="@color/dana_red" />
 
         <View
             android:id="@+id/divider2"
@@ -262,13 +264,13 @@
             android:stateListAnimator="@animator/press_alpha2down"
             android:text="@string/i_want_to_extend"
             android:textColor="@color/dana_purple"
-            android:textSize="17sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:visibleGone="@{info.twoBtnVisible()}"
             app:layout_constraintEnd_toStartOf="@id/divider2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider1"
-            tools:text="left" />
+            tools:text="Saya Ingin Perpanjang" />
 
         <TextView
             android:id="@+id/right_button"
@@ -280,12 +282,12 @@
             android:stateListAnimator="@animator/press_alpha2down"
             android:text="@string/i_want_to_repay"
             android:textColor="@color/dana_purple"
-            android:textSize="17sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:visibleGone="@{info.twoBtnVisible()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/divider2"
             app:layout_constraintTop_toBottomOf="@id/divider1"
-            tools:text="right" />
+            tools:text="Saya Ingin Melunas" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

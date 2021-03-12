@@ -2,7 +2,6 @@ package com.ecreditpal.danaflash.helper
 
 import android.content.Context
 import android.net.Uri
-import android.widget.TextView
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -74,17 +73,4 @@ fun Uri?.toBytes(context: Context?): ByteArray? {
 
 fun Char?.isAlphabet(): Boolean {
     return this in 'a'..'z' || this in 'A'..'Z'
-}
-
-fun TextView.isEllipsized(): Boolean {
-    val l = layout
-    if (l != null) {
-        val lines: Int = l.lineCount
-        if (lines > 0) {
-            if (l.getEllipsisCount(lines - 1) > 0) {
-                return true
-            }
-        }
-    }
-    return false
 }
