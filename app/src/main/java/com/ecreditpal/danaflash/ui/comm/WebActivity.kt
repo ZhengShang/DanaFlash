@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import android.view.View
 import android.webkit.*
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -41,17 +42,23 @@ class WebActivity : BaseActivity(), LifecycleObserver {
         private const val EXTRA_URL = "url"
         private const val EXTRA_SHOW_TOOLBAR = "show_toolbar"
         private const val EXTRA_ONLY_FOR_DOWNLOAD = "only_for_download"
+        private const val EXTRA_BROWSER_MODE = "browser_mode"
+        private const val EXTRA_TITLE = "title"
 
         fun loadUrl(
             context: Context?,
             url: String?,
             toolbar: Boolean = false,
-            forDownload: Boolean = false
+            forDownload: Boolean = false,
+            browserMode: Boolean = false,
+            title: String? = ""
         ) {
             context?.startActivity(Intent(context, WebActivity::class.java).apply {
                 putExtra(EXTRA_URL, url)
                 putExtra(EXTRA_SHOW_TOOLBAR, toolbar)
                 putExtra(EXTRA_ONLY_FOR_DOWNLOAD, forDownload)
+                putExtra(EXTRA_BROWSER_MODE, browserMode)
+                putExtra(EXTRA_TITLE, title)
             })
         }
     }
@@ -60,6 +67,7 @@ class WebActivity : BaseActivity(), LifecycleObserver {
     private lateinit var statusView: StatusView
     private val webInterface = WebInterface()
     private var getPhotoPair: Pair<String?, Uri?>? = null
+    private var browserMode: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,9 +83,12 @@ class WebActivity : BaseActivity(), LifecycleObserver {
         webView = findViewById(R.id.web)
         statusView = findViewById(R.id.status_view)
         statusView.showLoading()
+        browserMode = intent?.getBooleanExtra(EXTRA_BROWSER_MODE, false) ?: false
+        val title = intent?.getStringExtra(EXTRA_TITLE) ?: ""
         val showToolbar = intent?.getBooleanExtra(EXTRA_SHOW_TOOLBAR, false) ?: false
         if (showToolbar) {
-            findViewById<ImageView>(R.id.back).setOnClickListener { onBackPressed() }
+            findViewById<ImageView>(R.id.back).setOnClickListener { finish() }
+            findViewById<TextView>(R.id.title).text = title
         } else {
             findViewById<View>(R.id.toolbar).visibility = View.GONE
         }
@@ -138,6 +149,10 @@ class WebActivity : BaseActivity(), LifecycleObserver {
     }
 
     override fun onBackPressed() {
+        if (browserMode) {
+            finish()
+            return
+        }
         callJs(webInterface.backPress())
     }
 

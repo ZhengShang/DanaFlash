@@ -40,6 +40,11 @@ class HomeViewModel : ViewModel() {
      */
     val showPopLiveData = MutableLiveData<Pair<Int, Any>>()
 
+    /**
+     * 首页的viewPager的index, 主要是为了避免在非HomeFragment里面显示弹窗
+     */
+    var currentPageIndex = 0
+
     val apiFlow = buildFlow(PRODUCT_TYPE_API)
     val gpFlow = buildFlow(PRODUCT_TYPE_GP)
     private fun buildFlow(api: Int): Flow<PagingData<ProductRes.Product>> {
@@ -102,8 +107,10 @@ class HomeViewModel : ViewModel() {
             if (!checkRequestAdValid(title)) {
                 if (title == AD_TITLE_APIPOP) {
                     PopManager.addPopToMap(PopManager.TYPE_API, null)
+                    adLiveData.value = Pair(title, null)
                 } else if (title == AD_TITLE_POP) {
                     PopManager.addPopToMap(PopManager.TYPE_POP, null)
+                    adLiveData.value = Pair(title, null)
                 }
                 return@launch
             }

@@ -21,7 +21,7 @@ class VersionViewModel(application: Application) : AndroidViewModel(application)
     var versionRes = MutableLiveData<VersionRes>()
     val versionEndText = Transformations.map(versionRes) {
         if (it.updateStatus == 0)
-            application.getString(R.string.your_app_is_newest)
+            "Perbarui sekarang"
         else
             application.getString(R.string.new_version_detect_and_update)
     }
@@ -49,10 +49,10 @@ class VersionViewModel(application: Application) : AndroidViewModel(application)
                     App.context.writeDsData(CHECK_UPDATE_LAST_STAMP, System.currentTimeMillis())
                 }
                 PopManager.addPopToMap(PopManager.TYPE_UPDATE, res)
-            } else {
-                res?.let {
-                    versionRes.value = it
-                }
+            }
+
+            res?.let {
+                versionRes.value = it
             }
         }
     }

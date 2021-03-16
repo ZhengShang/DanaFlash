@@ -80,11 +80,12 @@ data class OrderRes(
     }
 
     fun statusColor() = when (status) {
+        STATUS_PUSHING,
         STATUS_MANUAL_AUDIT,
-        STATUS_AUDIT_SUCCESS -> Color.parseColor("#7ED321")
+        STATUS_AUDIT_SUCCESS -> Color.parseColor("#7ED321")  //绿色
         STATUS_CHECKED,
-        STATUS_OVERDUE -> Color.parseColor("#E59A37")
-        STATUS_REPAYMENTING -> Color.parseColor("#E84F4F")
+        STATUS_OVERDUE -> Color.parseColor("#E59A37") //橙色
+        STATUS_REPAYMENTING -> Color.parseColor("#E84F4F")  //红色
         STATUS_REPAYMENTED -> Color.parseColor("#333333")
         else -> Color.parseColor("#999999")
     }
@@ -119,12 +120,18 @@ data class OrderRes(
 
     fun showBankName() = kotlin.runCatching {
         /**
-         * 如果文本过长, 将银行卡名字智取前2位数, 后面的省略
+         * 如果文本过长, 将银行卡名字智取前2个单词, 后面的省略
          */
         val name = if (debitBankName?.length ?: 0 > 12) {
-            debitBankName?.take(2).plus("...")
+            debitBankName?.split(" ")?.let {
+                if (it.size >= 2) {
+                    it.take(2).joinToString(" ")
+                } else {
+                    it.joinToString(" ")
+                }
+            }?.take(9).plus("...")
         } else {
-            debitBankName
+            debitBankName ?: ""
         }
         val last = debitBankCard?.takeLast(4)
         "$name($last)"

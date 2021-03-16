@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/drawable/selector_dash_btn.xml" value="0.19010416666666666" />
         <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/drawable/shape_login_input_bg.xml" value="0.30364583333333334" />
+        <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/activity_main.xml" value="0.11510416666666666" />
         <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/activity_web.xml" value="0.2125" />
         <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/dialog_ad.xml" value="0.28072916666666664" />
         <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/dialog_confirm.xml" value="0.28072916666666664" />
@@ -18,6 +19,7 @@
         <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/item_product.xml" value="0.33" />
         <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/view_home_banner.xml" value="0.2875" />
         <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/view_status.xml" value="0.2125" />
+        <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/view_titlebar.xml" value="0.1" />
         <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/widget_setting_item.xml" value="0.9" />
       </map>
     </option>

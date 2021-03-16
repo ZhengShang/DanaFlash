@@ -268,11 +268,22 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
 
     @JavascriptInterface
     fun browser(url: String) {
-        WebActivity.loadUrl(webActivity, url)
+        WebActivity.loadUrl(webActivity, url, browserMode = true)
     }
 
     @JavascriptInterface
-    fun browserWithTitle(url: String) {
-        WebActivity.loadUrl(webActivity, url, toolbar = true)
+    fun browserWithTitle(json: String) {
+        var url = ""
+        var title = ""
+        kotlin.runCatching {
+            JSONObject(json).let {
+                url = it.optString("url")
+                title = it.optString("title")
+            }
+        }.onFailure {
+            LogUtils.e("parse browserWithTitle json url and title failed.")
+            return
+        }
+        WebActivity.loadUrl(webActivity, url, toolbar = true, browserMode = true, title = title)
     }
 }

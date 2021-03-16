@@ -30,7 +30,6 @@ import com.ecreditpal.danaflash.ui.home.HomeViewModel
 import com.ecreditpal.danaflash.ui.home.MainFragmentDirections
 import com.ecreditpal.danaflash.ui.settings.VersionViewModel
 import com.ecreditpal.danaflash.worker.UploadAllDeviceInfoWorker
-import com.ecreditpal.danaflash.worker.UploadSurveyWorker
 import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
@@ -119,19 +118,10 @@ class MainActivity : BaseActivity() {
         if (waitForPermission) {
             return
         }
+        if (homeViewModel.currentPageIndex == 1) {
+            return
+        }
         homeViewModel.tryShowPopDialog()
-    }
-
-    override fun onStop() {
-        super.onStop()
-
-        val uploadWorkRequest =
-            OneTimeWorkRequest.Builder(UploadSurveyWorker::class.java)
-                .build()
-
-        WorkManager
-            .getInstance(this)
-            .enqueue(uploadWorkRequest)
     }
 
     private fun startWorkers() {

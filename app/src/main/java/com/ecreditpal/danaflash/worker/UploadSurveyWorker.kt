@@ -3,7 +3,6 @@ package com.ecreditpal.danaflash.worker
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.ecreditpal.danaflash.helper.SurveyHelper
 import com.ecreditpal.danaflash.net.dfApi
 import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType
@@ -13,18 +12,17 @@ class UploadSurveyWorker(
     context: Context,
     workerParameters: WorkerParameters
 ) : Worker(context, workerParameters) {
-    override fun doWork(): Result {
-        val uploadList = SurveyHelper.surveyList
-        if (uploadList.isEmpty()) {
-            return Result.failure()
-        }
+    companion object {
+        const val EXTRA_SURVEY_STRING = "EXTRA_SURVEY_STRING"
+    }
 
-        val listJson = uploadList.joinToString { it.toString() }
+    override fun doWork(): Result {
+        val surveyString = inputData.getString(EXTRA_SURVEY_STRING)
 
         val json = """
             {
                 "__topic__": "survey",
-                "__logs__": [$listJson]
+                "__logs__": {"survey":$surveyString}
             }
         """.trimIndent()
 
@@ -47,7 +45,6 @@ class UploadSurveyWorker(
         }
 
         return if (success) {
-            SurveyHelper.surveyList.removeAll(uploadList)
             Result.success()
         } else {
             Result.retry()

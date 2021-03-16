@@ -4,7 +4,6 @@ import com.ecreditpal.danaflash.BuildConfig
 import com.ecreditpal.danaflash.data.BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.fastjson.FastJsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitService {

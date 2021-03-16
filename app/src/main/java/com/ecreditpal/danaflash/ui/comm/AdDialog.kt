@@ -119,7 +119,7 @@ class AdDialog : BaseDialogFragment() {
             setBackgroundDrawable(null)
             setLayout(
                 (ScreenUtils.getScreenWidth() * 0.77f).toInt(),
-                (ScreenUtils.getScreenHeight() * 0.56f).toInt()
+                (ScreenUtils.getScreenHeight() * 0.75f).toInt()
             )
         }
     }

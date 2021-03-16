@@ -102,8 +102,6 @@ class HomeFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         if (fromCreate.not()) {
-            homeViewModel.detectProductSupported()
-
             //默认显示api的tab
             if (tabVisible.get()) {
                 //切换tab自然会刷新列表
@@ -123,11 +121,14 @@ class HomeFragment : BaseFragment() {
                     OneTimeWorkRequest.Builder(InvokeFilterProductWorker::class.java).build()
                 )
         }
+        homeViewModel.tryShowPopDialog()
     }
 
     private fun refreshList() {
         apiAdapter.refresh()
         gpAdapter.refresh()
+        //每次刷新都获取当前tab信息
+        homeViewModel.detectProductSupported()
     }
 
     private fun initList(view: View, productType: Int) {

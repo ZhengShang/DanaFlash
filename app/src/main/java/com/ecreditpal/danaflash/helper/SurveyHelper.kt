@@ -5,7 +5,7 @@ import com.ecreditpal.danaflash.model.SurveyModel
 
 object SurveyHelper {
 
-    val surveyList = mutableListOf<SurveyModel>()
+//    val surveyList = mutableListOf<SurveyModel>()
 
     var lastAct: String = "" // 上一个页面的最后一个埋点
     var lastP: String = ""// /上一个页面名称
@@ -27,7 +27,7 @@ object SurveyHelper {
     ) {
         val survey = SurveyModel.create(p, act, code)
         LogUtils.d("ADD SURVEY >>> $survey")
-        surveyList.add(survey)
+//        surveyList.add(survey)
         index++
 
         prevAct = act
@@ -36,5 +36,6 @@ object SurveyHelper {
             lastP = p
             lastAct = act
         }
+        CommUtils.startSurveyWorker(survey)
     }
 }

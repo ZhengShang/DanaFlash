@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.ecreditpal.danaflash.R
@@ -35,11 +36,20 @@ class MainFragment : BaseFragment() {
 
             override fun createFragment(position: Int) = fragments[position]
         }
+
+        val homeViewModel: HomeViewModel by activityViewModels()
+
         view.findViewById<BottomNavigationView>(R.id.nav_view).apply {
             setOnNavigationItemSelectedListener {
                 when (it.itemId) {
-                    R.id.navigation_home -> viewPager.setCurrentItem(0, false)
-                    else -> viewPager.setCurrentItem(1, false)
+                    R.id.navigation_home -> {
+                        homeViewModel.currentPageIndex = 0
+                        viewPager.setCurrentItem(0, false)
+                    }
+                    else -> {
+                        homeViewModel.currentPageIndex = 1
+                        viewPager.setCurrentItem(1, false)
+                    }
                 }
                 true
             }

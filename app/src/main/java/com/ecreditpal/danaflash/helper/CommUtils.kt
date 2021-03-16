@@ -8,17 +8,21 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.ecreditpal.danaflash.App
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.LoadingTips
 import com.ecreditpal.danaflash.data.H5_ORDER_CONFIRM
 import com.ecreditpal.danaflash.model.ContactRes
+import com.ecreditpal.danaflash.model.SurveyModel
 import com.ecreditpal.danaflash.net.dfApi
 import com.ecreditpal.danaflash.ui.comm.WebActivity
 import com.ecreditpal.danaflash.ui.login.LoginActivity
 import com.ecreditpal.danaflash.worker.GetLocationWorker
+import com.ecreditpal.danaflash.worker.UploadSurveyWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -155,5 +159,20 @@ object CommUtils {
                     OneTimeWorkRequest.Builder(GetLocationWorker::class.java).build()
                 )
         }
+    }
+
+    fun startSurveyWorker(surveyModel: SurveyModel) {
+        val uploadWorkRequest =
+            OneTimeWorkRequest.Builder(UploadSurveyWorker::class.java)
+                .setInputData(
+                    workDataOf(
+                        UploadSurveyWorker.EXTRA_SURVEY_STRING to surveyModel.toString()
+                    )
+                )
+                .build()
+
+        WorkManager
+            .getInstance(App.context)
+            .enqueue(uploadWorkRequest)
     }
 }
