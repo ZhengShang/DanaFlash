@@ -2,13 +2,10 @@ package com.ecreditpal.danaflash.ui.settings
 
 import DataStoreKeys.CHECK_UPDATE_LAST_STAMP
 import android.app.Application
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.ecreditpal.danaflash.App
-import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.PopManager
 import com.ecreditpal.danaflash.helper.danaRequestWithCatch
 import com.ecreditpal.danaflash.helper.readDsData
@@ -19,18 +16,6 @@ import kotlinx.coroutines.launch
 
 class VersionViewModel(application: Application) : AndroidViewModel(application) {
     var versionRes = MutableLiveData<VersionRes>()
-    val versionEndText = Transformations.map(versionRes) {
-        if (it.updateStatus == 0)
-            "Perbarui sekarang"
-        else
-            application.getString(R.string.new_version_detect_and_update)
-    }
-    val versionEndTextColor = Transformations.map(versionRes) {
-        if (it.updateStatus == 0)
-            ContextCompat.getColor(application, R.color.text)
-        else
-            ContextCompat.getColor(application, R.color.dana_orange)
-    }
 
     fun checkVersion(formHome: Boolean) {
         viewModelScope.launch {

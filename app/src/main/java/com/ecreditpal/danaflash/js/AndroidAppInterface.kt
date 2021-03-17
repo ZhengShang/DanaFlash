@@ -255,13 +255,15 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
         if (json.isNullOrEmpty()) {
             return
         }
-        JSONObject(json).let {
-            UserFace.phone = it.optString("phone")
-            UserFace.token = it.optString("token")
+        kotlin.runCatching {
+            JSONObject(json).let {
+                UserFace.phone = it.optString("phone")
+                UserFace.token = it.optString("token")
 
-            webActivity.lifecycleScope.launch {
-                webActivity.writeDsData(DataStoreKeys.PHONE, UserFace.phone)
-                webActivity.writeDsData(DataStoreKeys.TOKEN, UserFace.token)
+                webActivity.lifecycleScope.launch {
+                    webActivity.writeDsData(DataStoreKeys.PHONE, UserFace.phone)
+                    webActivity.writeDsData(DataStoreKeys.TOKEN, UserFace.token)
+                }
             }
         }
     }

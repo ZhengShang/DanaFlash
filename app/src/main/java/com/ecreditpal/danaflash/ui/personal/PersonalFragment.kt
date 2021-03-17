@@ -45,6 +45,8 @@ class PersonalFragment : BaseFragment() {
                 CommUtils.navLogin()
             }
         }
+        binding.text1.setOnClickListener { CommUtils.navLogin() }
+        binding.text2.setOnClickListener { CommUtils.navLogin() }
 
         binding.faq.setOnClickListener {
             SurveyHelper.addOneSurvey("/my", "clickTips")

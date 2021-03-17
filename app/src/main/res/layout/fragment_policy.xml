@@ -14,9 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingStart="@dimen/def_edge_margin"
-        android:paddingTop="@dimen/def_edge_margin"
         android:paddingEnd="@dimen/def_edge_margin"
-        android:paddingBottom="25dp"
         android:textColor="@color/text"
         tools:text="@string/privacy_policy" />
 </LinearLayout>

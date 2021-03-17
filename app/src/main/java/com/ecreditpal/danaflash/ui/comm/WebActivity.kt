@@ -8,6 +8,7 @@ import android.os.Looper
 import android.provider.MediaStore
 import android.view.View
 import android.webkit.*
+import android.webkit.WebView.setWebContentsDebuggingEnabled
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -87,6 +88,9 @@ class WebActivity : BaseActivity(), LifecycleObserver {
         val title = intent?.getStringExtra(EXTRA_TITLE) ?: ""
         val showToolbar = intent?.getBooleanExtra(EXTRA_SHOW_TOOLBAR, false) ?: false
         if (showToolbar) {
+            //显示了标题栏就让backPress可以直接返回吧
+            browserMode = true
+
             findViewById<ImageView>(R.id.back).setOnClickListener { finish() }
             findViewById<TextView>(R.id.title).text = title
         } else {
@@ -110,6 +114,7 @@ class WebActivity : BaseActivity(), LifecycleObserver {
             loadsImagesAutomatically = true //支持自动加载图片
             defaultTextEncodingName = "utf-8"//设置编码格式
         }
+        setWebContentsDebuggingEnabled(true)
 
         val onlyForDownload = intent?.getBooleanExtra(EXTRA_ONLY_FOR_DOWNLOAD, false) ?: false
 

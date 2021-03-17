@@ -28,7 +28,7 @@
             <ImageView
                 android:id="@+id/top_bg"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="220dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/pic_personal_bg"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -42,6 +42,33 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Anda Belum Login"
+                android:textColor="@color/white"
+                android:textSize="48px"
+                android:textStyle="bold"
+                android:visibleGone="@{vm.phone.length() == 0}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/avatar" />
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10px"
+                android:text="klik disini untuk login"
+                android:textColor="@color/white"
+                android:textSize="40px"
+                android:visibleGone="@{vm.phone.length() == 0}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text1" />
 
             <TextView
                 android:id="@+id/phone"

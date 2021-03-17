@@ -162,6 +162,7 @@
                 android:onClick="@{()-> viewMoel.getVerifyCode(phoneNumber.getText())}"
                 android:paddingStart="4dp"
                 android:paddingEnd="4dp"
+                android:textSize="11sp"
                 android:text="@{viewMoel.verifyCodeString}"
                 android:textColor="@color/selector_main_btn_text"
                 android:visibleGone="@{viewMoel.verifyCodeBtnVisible}"

@@ -37,7 +37,7 @@ class UploadContactsWorker(
             return Result.failure()
         }
 
-        val contactList = mutableListOf<Any>()
+        val contactList = mutableListOf<String>()
         try {
             while (cur.moveToNext()) {
                 val id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID))

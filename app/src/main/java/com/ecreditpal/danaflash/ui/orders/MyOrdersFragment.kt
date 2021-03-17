@@ -149,7 +149,7 @@ class MyOrdersFragment : BaseFragment() {
                 WebActivity.loadUrl(
                     context, H5_EDIT_BANK.combineH5Url(
                         mapOf(
-                            "card_id" to orderRes.debitOpenBankId, // 银行卡号
+                            "card_id" to orderRes.fillBankId, // 银行卡号
                             "orderId" to orderRes.orderId, // 订单ID
                             "trackCode" to "AR", // 入口埋点（取埋点里code字段）
                         )

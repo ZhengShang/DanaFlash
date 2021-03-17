@@ -81,7 +81,7 @@
     <string name="version">Versi</string>
     <string name="reacquire">Kirim Kode Ulang</string>
     <string name="failed_to_get_verify_code">Verifikasi Kode Gagal</string>
-    <string name="dismatch_phone_with_first_not_8">Mohon Input 9 - 13 Digit Angka</string>
+    <string name="dismatch_phone_with_first_not_8">Masukkan 9 sampai 13 angka ,di awali angka 8</string>
     <string name="update_now">Segera Perbarui</string>
     <string name="new_version_detect_and_update">Update Versi Terbaru</string>
     <string name="your_app_is_newest">Aplikasi Anda sudah versi paling baru</string>

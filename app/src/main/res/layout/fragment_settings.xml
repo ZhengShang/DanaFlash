@@ -50,8 +50,7 @@
             android:layout_marginTop="1dp"
             android:background="@drawable/ripple_white_mask"
             app:layout_constraintTop_toBottomOf="@id/register_protocol"
-            app:siEndText="@{versionVm.versionEndText}"
-            app:siEndTextColor="@{versionVm.versionEndTextColor}"
+            app:siEndText="Perbarui sekarang"
             app:siStartIcon="@drawable/ic_version"
             app:siSubTitle='@{"v." + BuildConfig.VERSION_NAME}'
             app:siTitle="@string/version" />

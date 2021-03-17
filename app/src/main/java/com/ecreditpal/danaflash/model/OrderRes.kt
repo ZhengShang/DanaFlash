@@ -47,7 +47,12 @@ data class OrderRes(
     val status: Int?, // 6
     val storeList: List<Store?>?,
     var repayLink: String?,
-    var delayLink: String?
+    var delayLink: String?,
+    val storeId: Int?,    //int	便利店id
+    val bankId: Int?,    //int	银行卡id
+    val name: String?,    //string	银行卡名称
+    val fillBankId: Int?,    //int	待修改银行卡ID
+
 ) : Parcelable {
 
     fun loanTermString(): String {

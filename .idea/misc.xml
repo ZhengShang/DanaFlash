@@ -12,8 +12,11 @@
         <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/dialog_derating.xml" value="0.28072916666666664" />
         <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/dialog_update.xml" value="0.2875" />
         <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/fragment_feedback.xml" value="0.28072916666666664" />
-        <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/fragment_login.xml" value="0.25" />
-        <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/fragment_settings.xml" value="0.67" />
+        <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/fragment_login.xml" value="0.75" />
+        <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/fragment_personal.xml" value="0.25" />
+        <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/fragment_policy.xml" value="0.2875" />
+        <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/fragment_privacy_first.xml" value="0.2875" />
+        <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/fragment_settings.xml" value="0.5518672199170125" />
         <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/item_load_state.xml" value="0.2875" />
         <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/item_order.xml" value="0.28072916666666664" />
         <entry key="..\:/Users/shang/StudioProjects/DanaFlash/app/src/main/res/layout/item_product.xml" value="0.33" />

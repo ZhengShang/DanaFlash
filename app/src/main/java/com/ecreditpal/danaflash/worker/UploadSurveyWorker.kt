@@ -22,7 +22,7 @@ class UploadSurveyWorker(
         val json = """
             {
                 "__topic__": "survey",
-                "__logs__": {"survey":$surveyString}
+                "__logs__": [$surveyString]
             }
         """.trimIndent()
 
