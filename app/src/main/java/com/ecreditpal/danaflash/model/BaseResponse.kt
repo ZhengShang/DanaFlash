@@ -6,10 +6,10 @@ import com.ecreditpal.danaflash.net.DanaException
 data class BaseResponse<T>(
     val code: Int = 0,
     val desc: String? = "",
-    val data: T?
+    val data: T? = null
 ) {
     fun isSuccess(): Boolean {
-        return code == 200 && desc == "Success"
+        return code == 200 && desc.equals("Success", true)
     }
 
     fun throwIfNotSuccess(): BaseResponse<T> {

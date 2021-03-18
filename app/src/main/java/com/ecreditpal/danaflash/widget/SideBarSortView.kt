@@ -51,7 +51,8 @@ class SideBarSortView @JvmOverloads constructor(
             val paintX = width / 2f - paint.measureText(list[i]) / 2
             //计算每一个字母Y轴
             val textYHeight = paint.fontMetrics.let { it.descent - it.ascent }
-            val paintY = height * i + (height + textYHeight) / 2 + paddingTop
+            //略微降低一点点Y坐标, 以增加他们的额间距
+            val paintY = height * i + (height + textYHeight - 10) / 2 + paddingTop
             //绘画出来这个TextView
             canvas.drawText(list[i], paintX, paintY, paint)
             //画完一个以后重置画笔

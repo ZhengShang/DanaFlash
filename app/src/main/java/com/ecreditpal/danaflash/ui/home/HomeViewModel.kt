@@ -1,10 +1,10 @@
 package com.ecreditpal.danaflash.ui.home
 
-import DataStoreKeys
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
+import com.blankj.utilcode.util.TimeUtils
 import com.ecreditpal.danaflash.App
 import com.ecreditpal.danaflash.base.PopManager
 import com.ecreditpal.danaflash.data.*
@@ -142,7 +142,7 @@ class HomeViewModel : ViewModel() {
         }
 
         val lastTramp = App.context.readDsData(key, 0)
-        return System.currentTimeMillis() - lastTramp > 86_400_000 //ONE DAY
+        return !TimeUtils.isToday(lastTramp)
     }
 
     private suspend fun writeLastAdShowStamp(title: String) {

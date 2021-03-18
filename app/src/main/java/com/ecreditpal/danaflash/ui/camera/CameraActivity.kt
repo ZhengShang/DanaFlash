@@ -10,6 +10,7 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.App
 import com.ecreditpal.danaflash.R
@@ -59,6 +60,10 @@ class CameraActivity : BaseNavActivity() {
 
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
+        val mode = intent?.getIntExtra(KEY_MODE, MODE_OCR)
+        if (mode == MODE_OCR) {
+            ScreenUtils.setLandscape(this)
+        }
         super.onCreate(savedInstanceState)
         //full status bar
         window?.decorView?.systemUiVisibility =
@@ -66,7 +71,6 @@ class CameraActivity : BaseNavActivity() {
 
         hideToolbar()
 
-        val mode = intent?.getIntExtra(KEY_MODE, MODE_OCR)
         if (mode == MODE_FACE_RECOGNITION) {
             Navigation.findNavController(this, R.id.nav_host_fragment)
                 .navigate(R.id.livenessFragment)

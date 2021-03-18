@@ -1,10 +1,10 @@
 package com.ecreditpal.danaflash.worker
 
-import DataStoreKeys
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Looper
 import androidx.core.content.ContextCompat
+import androidx.datastore.preferences.core.preferencesKey
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.ecreditpal.danaflash.MainActivity
@@ -37,8 +37,10 @@ class UploadAllDeviceInfoWorker(
             }
         }
 
+        val dsKey = preferencesKey<Long>("upload_all_device_info_stamp_${UserFace.phone}")
+
         val lastTramp = runBlocking {
-            context.readDsData(DataStoreKeys.UPLOAD_ALL_DEVICE_INFO_STAMP, 0)
+            context.readDsData(dsKey, 0)
         }
         if (System.currentTimeMillis() - lastTramp < 86_400_000) {
             //ONE DAY
@@ -56,7 +58,7 @@ class UploadAllDeviceInfoWorker(
         return if (res?.isSuccess() == true) {
             GlobalScope.launch {
                 context.writeDsData(
-                    DataStoreKeys.UPLOAD_ALL_DEVICE_INFO_STAMP,
+                    dsKey,
                     System.currentTimeMillis()
                 )
             }

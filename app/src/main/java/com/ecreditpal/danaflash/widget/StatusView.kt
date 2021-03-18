@@ -71,10 +71,6 @@ class StatusView @JvmOverloads constructor(
                 message.text = context.getText(R.string.loading)
             }
             is LoadState.Error -> {
-                progressBar.visibility = View.GONE
-                image.visibility = View.VISIBLE
-                button.visibility = View.VISIBLE
-                message.text = loadState.error.message
                 matchError(loadState.error)
             }
             is LoadState.NotLoading -> {
@@ -92,36 +88,54 @@ class StatusView @JvmOverloads constructor(
         }
     }
 
-    private fun matchError(throwable: Throwable?) {
-        when (throwable) {
-            is IOException -> {
-                image.setImageResource(R.drawable.pic_failed_net)
-                button.text = context.getString(R.string.retry)
-                button.setOnClickListener { adapter?.retry() }
-            }
-            is HttpException -> {
-                image.setImageResource(R.drawable.pic_net_404)
-                button.text = context.getString(R.string.back)
-                button.setOnClickListener { findNavController().popBackStack() }
-            }
-            else -> {
-                image.setImageResource(R.drawable.pic_net_buzy)
-                button.text = context.getString(R.string.refresh)
-                button.setOnClickListener { adapter?.refresh() }
-            }
-        }
-    }
-
-    fun showErrorWithRetry(errorMsg: String?, function: () -> Unit) {
+    /**
+     * 显示错误.
+     * @param function 点击按钮的行为
+     */
+    fun matchError(throwable: Throwable?, function: (() -> Unit)? = null) {
         visibility = View.VISIBLE
         progressBar.visibility = View.GONE
         image.visibility = View.VISIBLE
         button.visibility = View.VISIBLE
 
-        image.setImageResource(R.drawable.pic_failed_net)
-        message.text = errorMsg
-        button.text = context.getString(R.string.retry)
-        button.setOnClickListener { function.invoke() }
+        when (throwable) {
+            is IOException -> {
+                image.setImageResource(R.drawable.pic_failed_net)
+                button.text = context.getString(R.string.retry)
+                message.text = "Jaringan tidak berfungsi dengan baik, periksa jaringan dan coba lagi"
+                button.setOnClickListener {
+                    if (function != null) {
+                        function.invoke()
+                    } else {
+                        adapter?.retry()
+                    }
+                }
+            }
+            is HttpException -> {
+                image.setImageResource(R.drawable.pic_net_404)
+                button.text = context.getString(R.string.back)
+                message.text = "Tidak ditemukan"
+                button.setOnClickListener {
+                    if (function != null) {
+                        function.invoke()
+                    } else {
+                        findNavController().popBackStack()
+                    }
+                }
+            }
+            else -> {
+                image.setImageResource(R.drawable.pic_net_buzy)
+                button.text = context.getString(R.string.refresh)
+                message.text = "Server sedang sibuk, coba lagi nanti"
+                button.setOnClickListener {
+                    if (function != null) {
+                        function.invoke()
+                    } else {
+                        adapter?.refresh()
+                    }
+                }
+            }
+        }
     }
 
     fun showLoading() {

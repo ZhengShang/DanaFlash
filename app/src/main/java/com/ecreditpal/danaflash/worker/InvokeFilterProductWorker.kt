@@ -1,9 +1,10 @@
 package com.ecreditpal.danaflash.worker
 
-import DataStoreKeys
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.blankj.utilcode.util.TimeUtils
+import com.ecreditpal.danaflash.data.DataStoreKeys
 import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.helper.readDsData
 import com.ecreditpal.danaflash.helper.writeDsData
@@ -24,7 +25,7 @@ class InvokeFilterProductWorker(
         val lastTramp = runBlocking {
             applicationContext.readDsData(DataStoreKeys.FILTER_PRODUCT_STAMP, 0)
         }
-        if (System.currentTimeMillis() - lastTramp < 86_400_000) {
+        if (TimeUtils.isToday(lastTramp)) {
             //ONE DAY
             return Result.failure()
         }

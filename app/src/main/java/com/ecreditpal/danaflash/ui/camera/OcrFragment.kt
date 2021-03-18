@@ -4,27 +4,23 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
+import android.hardware.display.DisplayManager
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.util.Size
 import android.view.*
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.lifecycleScope
-import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.UriUtils
 import com.bumptech.glide.Glide
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.databinding.FragmentOcrBinding
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.File
@@ -35,11 +31,36 @@ class OcrFragment : BaseFragment() {
     private lateinit var binding: FragmentOcrBinding
     private val captureStep = ObservableInt(STEP_START)
 
+    private var displayId: Int = -1
     private var imageCapture: ImageCapture? = null
     private var photoUri: Uri? = null
 
     /** Blocking camera operations are performed using this executor */
     private lateinit var cameraExecutor: ExecutorService
+    private val displayManager by lazy {
+        requireContext().getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+    }
+
+    private val displayListener = object : DisplayManager.DisplayListener {
+        override fun onDisplayAdded(displayId: Int) = Unit
+        override fun onDisplayRemoved(displayId: Int) = Unit
+        override fun onDisplayChanged(displayId: Int) = view?.let { view ->
+            if (displayId == this@OcrFragment.displayId) {
+                LogUtils.d("Rotation changed: ${view.display.rotation}")
+                imageCapture?.targetRotation = view.display.rotation
+            }
+        } ?: Unit
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        // Shut down our background executor
+        cameraExecutor.shutdown()
+
+        displayManager.unregisterDisplayListener(displayListener)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,12 +80,6 @@ class OcrFragment : BaseFragment() {
             step = captureStep
             ocrMode = isPhoto.not()
 
-            if (isPhoto) {
-                val lp = viewFinder.layoutParams as ConstraintLayout.LayoutParams
-                lp.marginStart = 0
-                lp.marginEnd = 0
-                lp.dimensionRatio = null
-            }
             back.setOnClickListener { activity?.finish() }
             capture.setOnClickListener {
                 takePhoto()
@@ -82,7 +97,9 @@ class OcrFragment : BaseFragment() {
                     if (it.isEmpty()) {
                         ""
                     } else {
-                        JSONObject(it).optString("type")
+                        kotlin.runCatching {
+                            JSONObject(it).optString("type")
+                        }.getOrNull()
                     }
                 } ?: ""
                 activity?.setResult(
@@ -95,21 +112,12 @@ class OcrFragment : BaseFragment() {
                 activity?.finish()
             }
 
-            if (isPhoto) {
-                //normal photo
-                val lp = back.layoutParams as ConstraintLayout.LayoutParams
-                lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                lp.endToEnd = -1
-            } else {
-                //ocr
-                //rotate to horizontal ui
-                back.rotation = 90f
-                ok.rotation = 90f
-            }
         }
 
         // Initialize our background executor
         cameraExecutor = Executors.newSingleThreadExecutor()
+
+        displayManager.registerDisplayListener(displayListener, null)
 
         startCamera(view.context)
     }
@@ -121,8 +129,12 @@ class OcrFragment : BaseFragment() {
             // Used to bind the lifecycle of cameras to the lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
+            val rotation = binding.viewFinder.display.rotation
+
             // Preview
             val preview = Preview.Builder()
+                // Set initial target rotation
+                .setTargetRotation(rotation)
                 .build()
                 .also {
                     it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
@@ -131,7 +143,8 @@ class OcrFragment : BaseFragment() {
             // ImageCapture
             imageCapture = ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                .setTargetResolution(Size(binding.grayBg.width, binding.grayBg.height))
+                .setTargetResolution(Size(binding.grayBg.width * 2, binding.grayBg.height * 2))
+                .setTargetRotation(rotation)
                 .build()
 
 
@@ -187,9 +200,11 @@ class OcrFragment : BaseFragment() {
 
     private fun loadImage() {
         binding.image.post {
-            Glide.with(this)
-                .load(photoUri)
-                .into(binding.image)
+            kotlin.runCatching {
+                Glide.with(this)
+                    .load(photoUri)
+                    .into(binding.image)
+            }
         }
     }
 
@@ -204,16 +219,14 @@ class OcrFragment : BaseFragment() {
         }
     }
 
-    /**
-     * 重新保存一次,可以修复照片方向不正确的问题
-     */
-    private fun reSaveImage() {
-        GlobalScope.launch {
-            kotlin.runCatching {
-                val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, photoUri)
-                ImageUtils.save(bitmap, UriUtils.uri2File(photoUri), Bitmap.CompressFormat.JPEG, true)
+    override fun onStop() {
+        kotlin.runCatching {
+            val ctx = context
+            if (ctx != null) {
+                ProcessCameraProvider.getInstance(ctx).get().unbindAll()
             }
         }
+        super.onStop()
     }
 
     companion object {

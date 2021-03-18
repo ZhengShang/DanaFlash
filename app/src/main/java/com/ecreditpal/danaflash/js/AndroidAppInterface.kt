@@ -1,6 +1,5 @@
 package com.ecreditpal.danaflash.js
 
-import DataStoreKeys
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,20 +10,22 @@ import android.provider.Settings
 import android.webkit.JavascriptInterface
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.*
 import com.ecreditpal.danaflash.BuildConfig
+import com.ecreditpal.danaflash.data.DataStoreKeys
 import com.ecreditpal.danaflash.data.UserFace
+import com.ecreditpal.danaflash.helper.CommUtils
 import com.ecreditpal.danaflash.helper.DeviceInfoUtil
+import com.ecreditpal.danaflash.helper.danaRequestResult
 import com.ecreditpal.danaflash.helper.writeDsData
 import com.ecreditpal.danaflash.model.AppInfoModel
+import com.ecreditpal.danaflash.net.dfApi
 import com.ecreditpal.danaflash.ui.comm.WebActivity
-import com.ecreditpal.danaflash.worker.UploadContactsWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import org.json.JSONObject
 
 
@@ -56,29 +57,35 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
 
     @JavascriptInterface
     fun uploadContactList() {
-        val uploadWorkRequest =
-            OneTimeWorkRequest.Builder(UploadContactsWorker::class.java)
-                .build()
+        webActivity.lifecycleScope.launch {
+            val json = CommUtils.getAllContacts(webActivity)?.joinToString {
+                JSON.toJSONString(
+                    mapOf(
+                        "name" to it.name,
+                        "number" to it.phone
+                    )
+                )
+            }
 
-        webActivity.lifecycleScope.launch(Dispatchers.Main) {
-            WorkManager.getInstance(webActivity).getWorkInfoByIdLiveData(uploadWorkRequest.id)
-                .observe(webActivity) {
-                    val result = if (it.state == WorkInfo.State.SUCCEEDED) {
-                        "1"
-                    } else if (it.state == WorkInfo.State.FAILED) {
-                        "0"
-                    } else {
-                        "Loading"
-                    }
-                    if (result != "Loading") {
-                        webActivity.callbackInterface("uploadContactList", result)
-                    }
-                }
+            val jsonString = """
+            {
+                "contactList" : [$json]
+            }
+        """.trimIndent()
+
+            val body = RequestBody.create(
+                MediaType.parse("application/json; charset=utf-8"), jsonString
+            )
+
+            val success = danaRequestResult {
+                dfApi().uploadContacts(body)
+            }
+
+            webActivity.callbackInterface(
+                "uploadContactList",
+                if (success) "1" else "0"
+            )
         }
-
-        WorkManager
-            .getInstance(webActivity)
-            .enqueue(uploadWorkRequest)
     }
 
     @JavascriptInterface
@@ -112,7 +119,7 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
                 )
             }
             val json = """
-                {"packageInfo":[${JSON.toJSONString(list)}]}
+                {"packageInfo":${GsonUtils.toJson(list)}}
             """.trimIndent()
             EncodeUtils.base64Encode2String(json.toByteArray())
         } catch (e: Exception) {
@@ -157,10 +164,12 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
 
     @JavascriptInterface
     fun getAllDeviceInfo() {
-        val info = kotlin.runCatching {
-            DeviceInfoUtil().getAllDeviceInfo(webActivity)
-        }.getOrNull() ?: ""
-        webActivity.callbackInterface("getAllDeviceInfo", info)
+        webActivity.lifecycleScope.launch(Dispatchers.IO) {
+            val info = kotlin.runCatching {
+                DeviceInfoUtil().getAllDeviceInfo(webActivity)
+            }.getOrNull() ?: ""
+            webActivity.callbackInterface("getAllDeviceInfo", info)
+        }
     }
 
     @JavascriptInterface

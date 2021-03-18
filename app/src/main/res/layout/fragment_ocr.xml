@@ -27,8 +27,8 @@
             android:id="@+id/gray_bg"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginBottom="100dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginEnd="100dp"
             android:background="#4E4E4E"
             android:visibleInvisible="@{ocrMode}"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -38,15 +38,14 @@
             android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:rotation="90"
             android:text="Sentuh bagian layar untuk fokus"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:visibleGone="@{ocrMode}"
-            app:layout_constraintBottom_toBottomOf="@id/viewFinder"
-            app:layout_constraintEnd_toStartOf="@id/viewFinder"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/viewFinder" />
+            app:layout_constraintBottom_toBottomOf="@id/gray_bg"
+            app:layout_constraintEnd_toEndOf="@id/viewFinder"
+            app:layout_constraintStart_toStartOf="@id/viewFinder"
+            app:layout_constraintTop_toBottomOf="@id/viewFinder" />
 
         <androidx.camera.view.PreviewView
             android:id="@+id/viewFinder"
@@ -58,8 +57,8 @@
             android:layout_marginBottom="40dp"
             android:visibleInvisible="@{step != OcrFragment.STEP_CAPTURED}"
             app:layout_constraintBottom_toBottomOf="@id/gray_bg"
-            app:layout_constraintDimensionRatio="1:1.6"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="1.6:1"
+            app:layout_constraintEnd_toEndOf="@id/gray_bg"
             app:layout_constraintStart_toStartOf="@id/gray_bg"
             app:layout_constraintTop_toTopOf="@id/gray_bg"
             tools:background="@color/daan_gray" />
@@ -69,8 +68,9 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="fitXY"
-            android:visibleGone="@{ocrMode || step == OcrFragment.STEP_CAPTURED}"
+            tools:src="@drawable/pic_ocr_border"
             android:src="@{ocrMode ? @drawable/pic_ocr_border : null}"
+            android:visibleGone="@{ocrMode || step == OcrFragment.STEP_CAPTURED}"
             app:layout_constraintBottom_toBottomOf="@id/viewFinder"
             app:layout_constraintEnd_toEndOf="@id/viewFinder"
             app:layout_constraintStart_toStartOf="@id/viewFinder"
@@ -83,8 +83,7 @@
             android:layout_marginEnd="@dimen/def_edge_margin"
             android:scaleType="centerInside"
             android:src="@drawable/ic_back"
-            app:layout_constraintBottom_toTopOf="@id/gray_bg"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/daan_gray" />
 
@@ -97,8 +96,8 @@
             android:visibleGone="@{step == OcrFragment.STEP_START}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/gray_bg" />
+            app:layout_constraintStart_toEndOf="@id/gray_bg"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/cancel"
@@ -107,10 +106,10 @@
             android:src="@drawable/ic_capture_cancel"
             android:stateListAnimator="@animator/press_alpha2down"
             android:visibleGone="@{step == OcrFragment.STEP_CAPTURED}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/capture"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ok"
-            app:layout_constraintTop_toBottomOf="@id/gray_bg" />
+            app:layout_constraintStart_toEndOf="@id/gray_bg"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/ok"
@@ -120,8 +119,8 @@
             android:stateListAnimator="@animator/press_alpha2down"
             android:visibleGone="@{step == OcrFragment.STEP_CAPTURED}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/cancel"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/gray_bg" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/gray_bg"
+            app:layout_constraintTop_toBottomOf="@id/capture" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

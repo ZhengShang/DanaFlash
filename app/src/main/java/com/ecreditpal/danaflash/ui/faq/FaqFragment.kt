@@ -75,7 +75,7 @@ class FaqFragment : BaseFragment() {
 
                 statusView.hideStatus()
             } catch (e: Exception) {
-                statusView.showErrorWithRetry(e.message) { getFaqData() }
+                statusView.matchError(e) { getFaqData() }
             }
         }
     }

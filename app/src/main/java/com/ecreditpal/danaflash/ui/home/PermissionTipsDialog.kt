@@ -1,8 +1,6 @@
 package com.ecreditpal.danaflash.ui.home
 
-import DataStoreKeys
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +10,7 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.ecreditpal.danaflash.MainActivity
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseDialogFragment
+import com.ecreditpal.danaflash.data.DataStoreKeys
 import com.ecreditpal.danaflash.helper.writeDsData
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -30,7 +29,6 @@ class PermissionTipsDialog : BaseDialogFragment() {
         isCancelable = false
 
         view.findViewById<TextView>(R.id.content).apply {
-            movementMethod = ScrollingMovementMethod.getInstance()
             text = "Dana Flash membutuhkan\n\n" +
                     "Kami akan meminta beberapa akses data untuk proses verifikasi. Kami juga akan melindungi privasi Anda dan menjaga keamanan informasi Anda.\n" +
                     "*Lokasi\n" +

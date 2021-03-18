@@ -1,6 +1,5 @@
 package com.ecreditpal.danaflash.model
 
-import com.alibaba.fastjson.annotation.JSONField
 
 class DeviceInfoBean {
     var hardware: Hardware? = null
@@ -14,12 +13,12 @@ class DeviceInfoBean {
     var contact: List<Contact?>? = null
     var audio_internal: String? = null
     var audio_external: String? = null
-    var images_internal: String? = null
-    var images_external: String? = null
-    var video_internal: String? = null
-    var video_external: String? = null
-    var download_files: String? = null
-    var contact_group: String? = null
+    var images_internal: Int? = 0
+    var images_external: Int? = 0
+    var video_internal: Int? = 0
+    var video_external: Int? = 0
+    var download_files: Int? = 0
+    var contact_group: Int? = 0
 
 
     class Hardware {
@@ -68,12 +67,12 @@ class DeviceInfoBean {
     class AppInfo {
         var app_name: String? = null
         var `package`: String? = null
-        var in_time: String? = null
+        var in_time: Int = 0
         var app_type: Int = 0
         var version_name: String? = null
-        var version_code: String? = null
+        var version_code: Int = 0
         var flags: Int = 0
-        var up_time: String? = null
+        var up_time: Int = 0
     }
 
     class NetworkBean {
@@ -101,16 +100,10 @@ class DeviceInfoBean {
     }
 
     class BatteryStatus {
-        var battery_pct: String? = null
-
-        @JSONField(name = "is_charging")
-        var is_charging: String? = null
-
-        @JSONField(name = "is_ac_charge")
-        var is_ac_charge: String? = null
-
-        @JSONField(name = "is_usb_charge")
-        var is_usb_charge: String? = null
+        var battery_pct: Int? = null
+        var is_charging: Int? = null
+        var is_ac_charge: Int? = null
+        var is_usb_charge: Int? = null
     }
 
     class Contact {

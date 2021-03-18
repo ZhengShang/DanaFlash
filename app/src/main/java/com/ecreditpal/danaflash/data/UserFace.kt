@@ -1,6 +1,5 @@
 package com.ecreditpal.danaflash.data
 
-import DataStoreKeys
 import android.accounts.AccountManager
 import android.content.Context.ACCOUNT_SERVICE
 import android.location.Location

@@ -1,6 +1,5 @@
 package com.ecreditpal.danaflash.ui.splash
 
-import DataStoreKeys
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
+import com.ecreditpal.danaflash.data.DataStoreKeys
 import com.ecreditpal.danaflash.helper.readDsData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

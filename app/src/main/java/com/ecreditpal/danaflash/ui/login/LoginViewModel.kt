@@ -1,6 +1,5 @@
 package com.ecreditpal.danaflash.ui.login
 
-import DataStoreKeys
 import android.app.Application
 import android.os.CountDownTimer
 import android.text.Editable
@@ -13,6 +12,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.App
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.LoadingTips
+import com.ecreditpal.danaflash.data.DataStoreKeys
 import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.helper.SurveyHelper
 import com.ecreditpal.danaflash.helper.writeDsData
@@ -96,6 +96,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     App.context.writeDsData(DataStoreKeys.PHONE, res.data?.nationalNumber ?: "")
                 }
                 loginResult.value = true
+                SurveyHelper.addOneSurvey("/login", "loginSuccess")
+                if (res.data?.isReg == true) {
+                    SurveyHelper.addOneSurvey("/login", "registerSuccess")
+                }
             } catch (e: Exception) {
                 if (e is DanaException && e.code == 151) {
                     SurveyHelper.addOneSurvey("/login", "CodeWrong")

@@ -2,7 +2,6 @@ package com.ecreditpal.danaflash.helper
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
@@ -83,7 +82,7 @@ class DeviceInfoUtil {
         val generalData = DeviceInfoBean.General().apply {
             gaid = UserFace.gaid
             and_id = Settings.Secure.getString(App.context.contentResolver, Settings.Secure.ANDROID_ID)
-            phone_type = getPhoneType(context)
+            phone_type = PhoneUtils.getPhoneType().toString()
             mac = DeviceUtils.getMacAddress()
             language = Locale.getDefault().language
             locale_display_language = Locale.getDefault().displayLanguage
@@ -92,7 +91,7 @@ class DeviceInfoUtil {
             imei = PhoneUtils.getIMEI()
             phone_number = getNativePhoneNumber(context)
             network_operator_name = NetworkUtils.getNetworkOperatorName()
-            network_type = NetworkUtils.getNetworkType().name
+            network_type = getNetworkType()
             time_zone_id = TimeZone.getDefault().id
         }
         deviceInfoBean.general_data = (generalData)
@@ -104,7 +103,7 @@ class DeviceInfoUtil {
             val inputManager = context.getSystemService(Context.INPUT_SERVICE) as InputManager
             val devices = inputManager.inputDeviceIds
             keyboard = if (devices.isNotEmpty()) devices[0].toString() else "0"
-            simulator = if (DeviceUtils.isEmulator()) "0" else "1"
+            simulator = if (DeviceUtils.isEmulator()) "1" else "0"
             dbm = getMobileNetworkSignal(context).toString()
         }
         deviceInfoBean.other_data = (otherData)
@@ -124,7 +123,7 @@ class DeviceInfoUtil {
                 ssid = wifiInf?.ssid ?: ""
             }
             current_wifi = currentWifi
-            configured_wifi = getScanWifiInfo(context)
+            configured_wifi = getScanWifiInfo()
         }
         deviceInfoBean.network = networkBean
 
@@ -144,18 +143,18 @@ class DeviceInfoUtil {
             val level = receiver?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
             val scale = receiver?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
             val batteryPct = level * 100 / scale.toFloat()
-            battery_pct = batteryPct.toString()
+            battery_pct = batteryPct.toInt()
             // Are we charging / charged?
             val status = receiver?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
             val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
                     status == BatteryManager.BATTERY_STATUS_FULL
-            is_charging = if (isCharging) "1" else "0"
+            is_charging = if (isCharging) 1 else 0
             // How are we charging?
             val chargePlug = receiver?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
             val usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB
             val acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC
-            is_ac_charge = if (acCharge) "0" else "1"
-            is_usb_charge = if (usbCharge) "1" else "0"
+            is_ac_charge = if (acCharge) 1 else 0
+            is_usb_charge = if (usbCharge) 1 else 0
         }
 
         deviceInfoBean.battery_status = batteryStatus
@@ -166,12 +165,12 @@ class DeviceInfoUtil {
         //其它
         deviceInfoBean.audio_internal = FileUtil.getMusics(context, false).toString()
         deviceInfoBean.audio_external = FileUtil.getMusics(context, true).toString()
-        deviceInfoBean.images_internal = FileUtil.getImages(context, false).toString()
-        deviceInfoBean.images_external = FileUtil.getImages(context, true).toString()
-        deviceInfoBean.video_internal = FileUtil.getVideos(context, false).toString()
-        deviceInfoBean.video_external = FileUtil.getVideos(context, true).toString()
-        deviceInfoBean.download_files = FileUtil.getDownload(context).toString()
-        deviceInfoBean.contact_group = FileUtil.getContacts(context).toString()
+        deviceInfoBean.images_internal = FileUtil.getImages(context, false)
+        deviceInfoBean.images_external = FileUtil.getImages(context, true)
+        deviceInfoBean.video_internal = FileUtil.getVideos(context, false)
+        deviceInfoBean.video_external = FileUtil.getVideos(context, true)
+        deviceInfoBean.download_files = FileUtil.getDownload(context)
+        deviceInfoBean.contact_group = FileUtil.getContacts(context)
         LogUtils.d(
             """
             设备信息：
@@ -232,24 +231,15 @@ class DeviceInfoUtil {
         return lists
     }
 
-    /**
-     * 获取手机类型，NONE、GSM、CDMA、SIP
-     * PHONE_TYPE_NONE.NONE、
-     * PHONE_TYPE_NONE.GSM、
-     * PHONE_TYPE_NONE.CDMA、
-     * PHONE_TYPE_NONE.SIP
-     *
-     * @param context
-     * @return
-     */
-    private fun getPhoneType(context: Context): String? {
-        val manager = context
-            .getSystemService(Activity.TELEPHONY_SERVICE) as TelephonyManager
-        return when (manager.phoneType) {
-            1 -> "GSM"
-            2 -> "CDMA"
-            3 -> "SIP"
-            else -> "NONE"
+    private fun getNetworkType(): String {
+        return when (NetworkUtils.getNetworkType()) {
+            NetworkUtils.NetworkType.NETWORK_NO -> "none"
+            NetworkUtils.NetworkType.NETWORK_WIFI -> "wifi"
+            NetworkUtils.NetworkType.NETWORK_2G -> "2g"
+            NetworkUtils.NetworkType.NETWORK_3G -> "3g"
+            NetworkUtils.NetworkType.NETWORK_4G -> "4g"
+            NetworkUtils.NetworkType.NETWORK_ETHERNET -> "eth"
+            else -> "mobile"
         }
     }
 
@@ -257,7 +247,7 @@ class DeviceInfoUtil {
     private fun getNativePhoneNumber(context: Context): String? {
         val telephonyManager =
             context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        var nativePhoneNumber: String? = ""
+        var nativePhoneNumber: String?
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.READ_SMS
@@ -312,57 +302,48 @@ class DeviceInfoUtil {
     }
 
     private fun getAllContacts(context: Context): List<DeviceInfoBean.Contact>? {
+        val projection = arrayOf(
+            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY,
+            ContactsContract.CommonDataKinds.Phone.NUMBER,
+            ContactsContract.CommonDataKinds.Phone.LAST_TIME_CONTACTED,
+            ContactsContract.CommonDataKinds.Phone.TIMES_CONTACTED,
+            ContactsContract.CommonDataKinds.Phone.CONTACT_LAST_UPDATED_TIMESTAMP
+        )
+
         val contacts: ArrayList<DeviceInfoBean.Contact> = ArrayList()
         val cursor = context.contentResolver.query(
-            ContactsContract.Contacts.CONTENT_URI, null, null, null, null
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            projection, null, null, null
         ) ?: return emptyList()
+
         while (cursor.moveToNext()) {
             //新建一个联系人实例
             val temp: DeviceInfoBean.Contact = DeviceInfoBean.Contact()
-            val contactId = cursor.getString(
-                cursor
-                    .getColumnIndex(ContactsContract.Contacts._ID)
-            )
             //获取联系人姓名
-            val name = cursor.getString(
-                cursor
-                    .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
-            )
+            val name =
+                cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY))
             temp.contact_display_name = name
+            var phone = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+            phone = phone.replace("-", "")
+            phone = phone.replace(" ", "")
+            temp.number = phone
+            val time =
+                cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LAST_TIME_CONTACTED))
+            temp.last_time_contacted = (time) ?: ""
+            val timeC = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TIMES_CONTACTED))
+            temp.times_contacted = (timeC)
+            val upTime =
+                cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_LAST_UPDATED_TIMESTAMP))
+            temp.up_time = upTime
 
-            //获取联系人电话号码
-            val phoneCursor = context.contentResolver.query(
-                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                null,
-                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" + contactId,
-                null,
-                null
-            )
-            while (phoneCursor!!.moveToNext()) {
-                var phone =
-                    phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                phone = phone.replace("-", "")
-                phone = phone.replace(" ", "")
-                temp.number = phone
-                val time =
-                    phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LAST_TIME_CONTACTED))
-                temp.last_time_contacted = (time) ?: ""
-                val timeC =
-                    phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TIMES_CONTACTED))
-                temp.times_contacted = (timeC)
-                val upTime =
-                    phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_LAST_UPDATED_TIMESTAMP))
-                temp.up_time = upTime
-            }
             contacts.add(temp)
-            //记得要把cursor给close掉
-            phoneCursor.close()
         }
+
         cursor.close()
         return contacts
     }
 
-    private fun getScanWifiInfo(context: Context): List<DeviceInfoBean.CurrentWifi> {
+    private fun getScanWifiInfo(): List<DeviceInfoBean.CurrentWifi> {
         val list: MutableList<DeviceInfoBean.CurrentWifi> = ArrayList()
         val mWifiManager = App.context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         // 如果WiFi未打开，先打开WiFi
@@ -396,14 +377,14 @@ class DeviceInfoUtil {
 
                 app_name = pManager.getApplicationLabel(pak.applicationInfo).toString()
                 `package` = pak.packageName
-                in_time = pak.firstInstallTime.toString()
+                in_time = pak.firstInstallTime.toInt()
                 app_type = if (pak.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM <= 0) {
                     0
                 } else 1
                 version_name = pak.versionName
-                version_code = pak.versionCode.toString()
+                version_code = pak.versionCode
                 flags = pak.applicationInfo.flags
-                up_time = pak.lastUpdateTime.toString()
+                up_time = pak.lastUpdateTime.toInt()
             }
 
             appInfoBeans.add(appInfoBean)

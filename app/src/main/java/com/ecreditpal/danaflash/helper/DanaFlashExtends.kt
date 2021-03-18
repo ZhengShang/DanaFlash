@@ -1,7 +1,6 @@
 package com.ecreditpal.danaflash.helper
 
 import android.content.Context
-import android.net.Uri
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -53,22 +52,16 @@ fun String?.combineH5Url(paramMap: Map<String, Any?>? = null): String {
     var paramStr = paramMap?.entries?.joinToString(separator = "&", transform = {
         it.key.plus("=").plus(it.value)
     })
-    if (paramStr.isNullOrEmpty().not()) {
-        paramStr = "?".plus(paramStr)
+    paramStr = if (paramStr.isNullOrEmpty().not()) {
+        "?".plus(paramStr).plus("&")
+    } else {
+        "?"
     }
     return H5_PREFIX.plus(this)
-        .plus(paramStr ?: "")
-        .plus("?")
+        .plus(paramStr)
         .plus("phone=${UserFace.phone}")
         .plus("&")
         .plus("token=${UserFace.token}")
-}
-
-fun Uri?.toBytes(context: Context?): ByteArray? {
-    if (this == null) {
-        return null
-    }
-    return context?.contentResolver?.openInputStream(this)?.buffered()?.use { it.readBytes() }
 }
 
 fun Char?.isAlphabet(): Boolean {

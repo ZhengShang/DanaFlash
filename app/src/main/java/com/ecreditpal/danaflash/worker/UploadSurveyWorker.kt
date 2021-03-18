@@ -8,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType
 import okhttp3.RequestBody
 
+@Deprecated("需要强相关回调的时候, 用这个可能会造成回调不及时")
 class UploadSurveyWorker(
     context: Context,
     workerParameters: WorkerParameters

@@ -42,6 +42,7 @@ class MyOrdersFragment : BaseFragment() {
     private val adapterList = mutableListOf<OrderAdapter>()
     private var amountTrialRes: AmountTrialRes? = null
     private var tempOrderRes: OrderRes? = null
+    private var editBankCard = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,6 +92,14 @@ class MyOrdersFragment : BaseFragment() {
                 SurveyHelper.addOneSurvey("/orderPage", "derateSubmitFail", "AR")
                 ToastUtils.showLong(R.string.failed_to_derating)
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (editBankCard) {
+            refreshList()
+            editBankCard = false
         }
     }
 
@@ -151,6 +160,7 @@ class MyOrdersFragment : BaseFragment() {
             OrderStatus.STATUS_PUSHING -> {
                 //点击后进入修改银行卡页面（h5页面）
                 SurveyHelper.addOneSurvey("/orderPage", "modifyBank", "AR")
+                editBankCard = true
                 WebActivity.loadUrl(
                     context, H5_EDIT_BANK.combineH5Url(
                         mapOf(
@@ -174,7 +184,7 @@ class MyOrdersFragment : BaseFragment() {
             OrderStatus.STATUS_REPAYMENTED -> {
                 //再借一单
                 //点击后进入该产品的订单确认页（h5页面）
-                SurveyHelper.addOneSurvey("/orderPage", "onMoreOrder", "aj")
+                SurveyHelper.addOneSurvey("/orderPage", "onMoreOrder", "ARaj")
                 //需要先检查所有权限,全部权限通过了才能进入详情
                 tempOrderRes = orderRes
                 requestAllPermissions()
@@ -314,6 +324,11 @@ class MyOrdersFragment : BaseFragment() {
 
     private val requestPermissionsLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { map ->
+            //尝试一下更新权限相关的数据信息
+            CommUtils.startGetLocationWorker(context)
+            CommUtils.saveDeviceId(context, lifecycleScope)
+
+            //只有所有权限都拿到了才去详情页
             val allGranted = map.values.all { it == true }
             if (allGranted) {
                 val res = tempOrderRes ?: return@registerForActivityResult

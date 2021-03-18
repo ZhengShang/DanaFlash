@@ -24,8 +24,6 @@ class PersonalFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        SurveyHelper.addOneSurvey("/my", "in")
-
         val homeViewModel: HomeViewModel by activityViewModels()
         homeViewModel.getAd(AD_TITLE_PERSONALPOP)
     }
@@ -65,6 +63,7 @@ class PersonalFragment : BaseFragment() {
 
     fun nav(status: Int) {
         SurveyHelper.addOneSurvey("/my", "myOrder")
+        SurveyHelper.addOneSurvey("/my", "myOrder", "AR")
         if (UserFace.isLogin().not()) {
             CommUtils.navLogin()
             return
@@ -79,5 +78,10 @@ class PersonalFragment : BaseFragment() {
     override fun onStart() {
         super.onStart()
         personalViewModel.updatePhone()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        SurveyHelper.addOneSurvey("/my", "in")
     }
 }

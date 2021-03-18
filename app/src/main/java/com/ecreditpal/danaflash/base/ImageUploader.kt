@@ -28,7 +28,6 @@ class ImageUploader {
         scope: CoroutineScope,
         bitmap: Bitmap?,
         objectKey: String,
-        ocr: Boolean,
         uploadCallback: ((state: String, imageBytes: ByteArray?) -> Unit)? = null
     ) {
         if (bitmap == null) {
@@ -42,8 +41,7 @@ class ImageUploader {
             }
             val compressBytes = withContext(Dispatchers.IO) {
                 kotlin.runCatching {
-                    val c = ImageUtils.rotate(bitmap, if (ocr) 0 else 90, 0f, 0f, true)
-                    ImageUtils.compressByQuality(c, 500_000L, true)
+                    ImageUtils.compressByQuality(bitmap, 500_000L, true)
                 }.getOrNull()
             }
             LoadingTips.dismissLoading()

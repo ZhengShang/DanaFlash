@@ -1,5 +1,7 @@
 package com.ecreditpal.danaflash.ui.comm
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +12,9 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseDialogFragment
 import com.ecreditpal.danaflash.databinding.DialogUpdateBinding
+import com.ecreditpal.danaflash.helper.CommUtils
 import com.ecreditpal.danaflash.ui.home.HomeViewModel
+
 
 class UpdateDialog : BaseDialogFragment() {
     override fun onCreateView(
@@ -39,7 +43,15 @@ class UpdateDialog : BaseDialogFragment() {
         binding.close.setOnClickListener { findNavController().popBackStack() }
         binding.close.visibility = if (isCancelable) View.VISIBLE else View.GONE
         binding.update.setOnClickListener {
-            WebActivity.loadUrl(context, versionRes.link, forDownload = true)
+            if (versionRes.online == 0) {
+                val browserIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(versionRes.link)
+                )
+                startActivity(browserIntent)
+            } else if (versionRes.online == 1) {
+                CommUtils.navGoogleDownload(context, "market://details?id=${context?.packageName}")
+            }
         }
     }
 

@@ -1,10 +1,8 @@
 package com.ecreditpal.danaflash
 
-import DataStoreKeys
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -12,24 +10,20 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.work.*
-import com.blankj.utilcode.util.PhoneUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.base.BaseActivity
 import com.ecreditpal.danaflash.base.PopManager
 import com.ecreditpal.danaflash.data.AD_TITLE_APIPOP
 import com.ecreditpal.danaflash.data.AD_TITLE_PERSONALPOP
 import com.ecreditpal.danaflash.data.AD_TITLE_POP
-import com.ecreditpal.danaflash.data.UserFace
+import com.ecreditpal.danaflash.data.DataStoreKeys
 import com.ecreditpal.danaflash.helper.CommUtils
-import com.ecreditpal.danaflash.helper.SurveyHelper
 import com.ecreditpal.danaflash.helper.readDsData
-import com.ecreditpal.danaflash.helper.writeDsData
 import com.ecreditpal.danaflash.model.AdRes
 import com.ecreditpal.danaflash.model.VersionRes
 import com.ecreditpal.danaflash.ui.home.HomeViewModel
 import com.ecreditpal.danaflash.ui.home.MainFragmentDirections
 import com.ecreditpal.danaflash.ui.settings.VersionViewModel
-import com.ecreditpal.danaflash.worker.UploadAllDeviceInfoWorker
 import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
@@ -53,8 +47,6 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        SurveyHelper.addOneSurvey("/", "in", "")
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
@@ -125,10 +117,6 @@ class MainActivity : BaseActivity() {
     }
 
     private fun startWorkers() {
-        val workManager = WorkManager.getInstance(this)
-        workManager.enqueue(
-            OneTimeWorkRequest.Builder(UploadAllDeviceInfoWorker::class.java).build()
-        )
         CommUtils.startGetLocationWorker(this)
     }
 
@@ -162,7 +150,7 @@ class MainActivity : BaseActivity() {
             map.entries.forEach { entry ->
                 when (entry.key) {
                     Manifest.permission.READ_PHONE_STATE -> {
-                        saveDeviceId()
+                        CommUtils.saveDeviceId(this, lifecycleScope)
                     }
                     Manifest.permission.ACCESS_FINE_LOCATION -> {
                         CommUtils.startGetLocationWorker(this)
@@ -179,23 +167,13 @@ class MainActivity : BaseActivity() {
         }
 
     private val requestLocationLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { grant ->
+            if (grant) {
+                CommUtils.startGetLocationWorker(this)
+            }
             waitForPermission = false
             showPopDialogs()
         }
-
-    @SuppressLint("MissingPermission")
-    private fun saveDeviceId() {
-        val deviceId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            PhoneUtils.getIMEI()
-        } else {
-            PhoneUtils.getDeviceId()
-        }
-        UserFace.deviceId = deviceId
-        lifecycleScope.launch {
-            writeDsData(DataStoreKeys.DEVICE_ID, deviceId)
-        }
-    }
 
     companion object {
         val PERMISSIONS = arrayOf(

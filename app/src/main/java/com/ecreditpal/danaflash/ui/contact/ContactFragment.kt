@@ -20,7 +20,10 @@ import com.ecreditpal.danaflash.helper.isAlphabet
 import com.ecreditpal.danaflash.model.ContactRes
 import com.ecreditpal.danaflash.widget.SideBarSortView
 import com.ecreditpal.danaflash.widget.StatusView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.IOException
 import java.util.*
 
 class ContactFragment : BaseFragment() {
@@ -28,6 +31,10 @@ class ContactFragment : BaseFragment() {
     private lateinit var statusView: StatusView
     private lateinit var sideBarSortView: SideBarSortView
     private val dataList = mutableListOf<Any>()
+
+    private val contactAdapter = ContactAdapter(dataList) {
+        resultBack("1", it)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,9 +47,7 @@ class ContactFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val contactAdapter = ContactAdapter(dataList) {
-            resultBack("1", it)
-        }
+
 
         statusView = view.findViewById(R.id.status_view)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler).apply {
@@ -75,7 +80,7 @@ class ContactFragment : BaseFragment() {
 
         if (ContextCompat.checkSelfPermission(
                 view.context,
-                android.Manifest.permission.READ_CONTACTS
+                Manifest.permission.READ_CONTACTS
             ) == PackageManager.PERMISSION_DENIED
         ) {
             contactLauncher.launch(Manifest.permission.READ_CONTACTS)
@@ -96,10 +101,12 @@ class ContactFragment : BaseFragment() {
     private fun loadContactsData() {
         lifecycleScope.launch {
             statusView.showLoading()
-            val list = CommUtils.getAllContacts(context)
+            val list = withContext(Dispatchers.IO) {
+                CommUtils.getAllContacts(context)
+            }
             when {
                 list == null -> {
-                    statusView.showErrorWithRetry(getString(R.string.failed_to_load)) {
+                    statusView.matchError(IOException()) {
                         loadContactsData()
                     }
                 }
@@ -125,13 +132,14 @@ class ContactFragment : BaseFragment() {
                             }
 
                         }
-                        .onEach {
+                        .forEach {
                             dataList.add(it.key.toString().toUpperCase(Locale.ROOT))
                             dataList.addAll(it.value)
                         }
 
                     sideBarSortView.setValidLabels(dataList)
                     sideBarSortView.visibility = View.VISIBLE
+                    contactAdapter.notifyDataSetChanged()
                     statusView.hideStatus()
                 }
             }

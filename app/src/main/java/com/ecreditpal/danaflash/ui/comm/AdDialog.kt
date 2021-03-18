@@ -62,15 +62,21 @@ class AdDialog : BaseDialogFragment() {
             AD_TITLE_APIPOP -> {
                 "apiPop"
             }
-            AD_TITLE_POP -> {
+            AD_TITLE_POP,
+            AD_TITLE_PERSONALPOP -> {
                 "pop"
             }
             else -> {
                 ""
             }
         }
+        val path = if (adTitle == AD_TITLE_PERSONALPOP) {
+            "/my"
+        } else {
+            "/"
+        }
         if (act.isNotEmpty()) {
-            SurveyHelper.addOneSurvey("/", act)
+            SurveyHelper.addOneSurvey(path, act)
         }
 
 
@@ -102,13 +108,6 @@ class AdDialog : BaseDialogFragment() {
             setIndicator(CircleIndicator(context))
         }
 
-//        view.findViewById<TextView>(R.id.content).apply {
-//            movementMethod = ScrollingMovementMethod.getInstance()
-//            text = "Here show the tips of permissions required"
-//            setOnClickListener {
-//                ToastUtils.showLong("navigate to h5 page")
-//            }
-//        }
         view.findViewById<ImageView>(R.id.close)
             .setOnClickListener { findNavController().popBackStack() }
     }
@@ -124,8 +123,7 @@ class AdDialog : BaseDialogFragment() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
         var code = ""
         var p = "/"
         val act = when (adTitle) {
@@ -149,6 +147,8 @@ class AdDialog : BaseDialogFragment() {
         //需要显示下一个弹窗
         val homeViewModel: HomeViewModel by activityViewModels()
         homeViewModel.tryShowPopDialog()
+
+        super.onDestroy()
     }
 
     private class BannerAdapter(

@@ -3,7 +3,6 @@ package com.ecreditpal.danaflash.ui.settings
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
-import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,7 +49,6 @@ class PolicyFragment : BaseFragment() {
         view.findViewById<ImageView>(R.id.back).setOnClickListener { activity?.onBackPressed() }
 
         val textView = view.findViewById<TextView>(R.id.content)
-        textView.movementMethod = ScrollingMovementMethod.getInstance()
         val policyHtml = view.context.applicationContext.assets
             .open(args.policyFileName).bufferedReader()
             .use {

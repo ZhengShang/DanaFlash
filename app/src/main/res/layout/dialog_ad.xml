@@ -6,36 +6,17 @@
     android:layout_height="match_parent"
     tools:background="@color/black">
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="28dp"
-        app:layout_constraintBottom_toTopOf="@id/close"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.youth.banner.Banner
         android:id="@+id/banner"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="@dimen/def_edge_margin"
-        app:layout_constraintBottom_toTopOf="@id/content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/content"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
-        android:padding="@dimen/def_edge_margin"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/view"
+        app:layout_constraintBottom_toTopOf="@id/close"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_goneMarginBottom="@dimen/def_edge_margin"
-        tools:text="Here is the ad content" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="@color/dana_red" />
+
 
     <ImageView
         android:id="@+id/close"

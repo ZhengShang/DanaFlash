@@ -19,7 +19,7 @@ import com.ecreditpal.danaflash.data.OrderStatus.STATUS_PUSHING
 import com.ecreditpal.danaflash.data.OrderStatus.STATUS_REPAYMENTED
 import com.ecreditpal.danaflash.data.OrderStatus.STATUS_REPAYMENTING
 import com.ecreditpal.danaflash.data.OrderStatus.STATUS_VERIFICATION_FAILED
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 
 @Parcelize

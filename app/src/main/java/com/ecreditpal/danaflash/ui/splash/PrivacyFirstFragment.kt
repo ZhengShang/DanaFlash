@@ -1,10 +1,8 @@
 package com.ecreditpal.danaflash.ui.splash
 
-import DataStoreKeys
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
-import android.text.method.ScrollingMovementMethod
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +14,7 @@ import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseDialogFragment
+import com.ecreditpal.danaflash.data.DataStoreKeys
 import com.ecreditpal.danaflash.helper.writeDsData
 import kotlinx.coroutines.launch
 
@@ -39,11 +38,10 @@ class PrivacyFirstFragment : BaseDialogFragment() {
                 it.readText()
             }
         view.findViewById<TextView>(R.id.content).apply {
-            movementMethod = ScrollingMovementMethod.getInstance()
             text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Html.fromHtml(privacyHtml, Html.FROM_HTML_MODE_COMPACT);
+                Html.fromHtml(privacyHtml, Html.FROM_HTML_MODE_COMPACT)
             } else {
-                Html.fromHtml(privacyHtml);
+                Html.fromHtml(privacyHtml)
             }
         }
         view.findViewById<TextView>(R.id.agree).setOnClickListener {

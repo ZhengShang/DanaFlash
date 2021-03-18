@@ -1,7 +1,6 @@
 package com.ecreditpal.danaflash.model
 
 import com.alibaba.fastjson.JSON
-import com.ecreditpal.danaflash.BuildConfig
 import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.helper.SurveyHelper
 
@@ -19,7 +18,10 @@ class SurveyModel private constructor() {
     val referer: String = UserFace.referrerDetails?.installReferrer ?: "" // google_world
     val source: String = UserFace.mediaSource // google_world
     val deviceId: String = UserFace.gaid // 311b347a-2db0-479c-a368-11dfe282f88e
-    val env: String = if (BuildConfig.DEBUG) "staging" else "production" // staging
+
+    //    val env: String = if (BuildConfig.DEBUG) "staging" else "production" // staging
+    // FIXME: 2021/3/18 临时需要写死位staging
+    val env: String = "staging"
     val m: String = UserFace.phone // 82113079928
     val type: String = "app" // app
     val v = 1 // 1

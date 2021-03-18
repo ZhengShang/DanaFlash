@@ -28,31 +28,48 @@
         android:elevation="10dp"
         android:paddingBottom="10dp">
 
-        <ImageView
-            android:id="@+id/icon"
-            circleImageUrl='@{ComConsKt.IMAGE_PREFIX + info.image}'
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="11dp"
-            android:layout_marginEnd="4dp"
-            app:layout_constraintEnd_toStartOf="@id/title"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/backgrounds/scenic" />
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/productLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
             android:layout_marginTop="11dp"
-            android:text="@{info.name}"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:layout_marginEnd="28dp"
+            android:gravity="center"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/icon"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="KSP Gocash" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/icon"
+                circleImageUrl='@{ComConsKt.IMAGE_PREFIX + info.image}'
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="4dp"
+                android:layout_gravity="center"
+                app:layout_constraintEnd_toStartOf="@id/title"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@tools:sample/backgrounds/scenic" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="@{info.name}"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/icon"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="KSP GocashKSP " />
+        </LinearLayout>
 
         <View
             android:id="@+id/border1"
@@ -65,7 +82,7 @@
             app:layout_constraintBottom_toBottomOf="@id/amount_summary"
             app:layout_constraintEnd_toStartOf="@id/border2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/icon" />
+            app:layout_constraintTop_toBottomOf="@id/productLayout" />
 
         <TextView
             android:id="@+id/amount"
@@ -136,9 +153,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:background="@drawable/selector_dash_btn"
+            android:enabled="@{type == ComConsKt.PRODUCT_TYPE_GP || (type == ComConsKt.PRODUCT_TYPE_API &amp;&amp; info.canApply)}"
             android:gravity="center"
             android:paddingTop="5dp"
-            android:enabled="@{type == ComConsKt.PRODUCT_TYPE_GP || (type == ComConsKt.PRODUCT_TYPE_API &amp;&amp; info.canApply)}"
             android:paddingBottom="5dp"
             android:stateListAnimator="@animator/press_alpha2down"
             android:text='@{type == ComConsKt.PRODUCT_TYPE_API ? info.canApply ? @string/loan_now : "Cap Limit" : @string/download}'

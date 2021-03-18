@@ -170,7 +170,7 @@ object FileUtil {
      * @return
      */
     fun isExists(path: String?): Boolean {
-        val file = File(path)
+        val file = File(path ?: return false)
         return file.exists()
     }
 }

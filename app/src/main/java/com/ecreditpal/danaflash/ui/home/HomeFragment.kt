@@ -8,6 +8,8 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableInt
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.DialogFragmentNavigator
+import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.OneTimeWorkRequest
@@ -29,7 +31,7 @@ import com.ecreditpal.danaflash.ui.comm.CommLoadStateAdapter
 import com.ecreditpal.danaflash.ui.comm.WebActivity
 import com.ecreditpal.danaflash.widget.StatusView
 import com.ecreditpal.danaflash.worker.InvokeFilterProductWorker
-import kotlinx.android.synthetic.main.view_home_banner.view.*
+import com.ecreditpal.danaflash.worker.UploadAllDeviceInfoWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -75,7 +77,11 @@ class HomeFragment : BaseFragment() {
         binding.bannerLayout.root.setOnClickListener {
             SurveyHelper.addOneSurvey("/", "clickBannerApply", "AS")
             //不检测登陆,权限和用户信息等, 直接进入H5页面
-            WebActivity.loadUrl(context, H5_ONE_CLICK_APPLY.combineH5Url())
+            WebActivity.loadUrl(
+                context, H5_ONE_CLICK_APPLY.combineH5Url(
+                    mapOf("trackCode" to "AS")
+                )
+            )
         }
         binding.bannerLayout.tabApi.setOnClickListener {
             SurveyHelper.addOneSurvey("/", "apiTabClick")
@@ -101,6 +107,7 @@ class HomeFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
+        SurveyHelper.addOneSurvey("/", "in")
         if (fromCreate.not()) {
             //默认显示api的tab
             if (tabVisible.get()) {
@@ -113,13 +120,18 @@ class HomeFragment : BaseFragment() {
         }
         fromCreate = false
 
-        //尝试发送product_filter
+        //尝试发送首页任务
         context?.let {
-            WorkManager
-                .getInstance(it)
-                .enqueue(
-                    OneTimeWorkRequest.Builder(InvokeFilterProductWorker::class.java).build()
-                )
+            val workManager = WorkManager.getInstance(it)
+            val uploadAllDeviceInfoWorker = OneTimeWorkRequest.from(UploadAllDeviceInfoWorker::class.java)
+            val invokeFilterProductWorker = OneTimeWorkRequest.from(InvokeFilterProductWorker::class.java)
+
+            workManager.enqueue(uploadAllDeviceInfoWorker)
+            workManager.enqueue(invokeFilterProductWorker)
+        }
+
+        if (findNavController().currentDestination is DialogFragmentNavigator.Destination) {
+            return
         }
         homeViewModel.tryShowPopDialog()
     }
@@ -190,7 +202,8 @@ class HomeFragment : BaseFragment() {
                         mapOf(
                             "id" to product.id, //产品id
                             "productName" to product.name, //产品名
-                            "positionIndex" to position //点击列表时产品所在位置（如没有则传空）
+                            "positionIndex" to position, //点击列表时产品所在位置（如没有则传空）
+                            "trackCode" to "AD$position"
                         )
                     )
                 )

@@ -12,7 +12,6 @@ import android.webkit.WebView.setWebContentsDebuggingEnabled
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.*
 import com.alibaba.fastjson.JSON
@@ -32,7 +31,6 @@ import com.ecreditpal.danaflash.ui.camera.StartLiveness
 import com.ecreditpal.danaflash.ui.camera.StartOcr
 import com.ecreditpal.danaflash.ui.contact.StartContact
 import com.ecreditpal.danaflash.widget.StatusView
-import kotlinx.android.synthetic.main.activity_web.*
 import org.json.JSONObject
 import java.io.File
 
@@ -72,7 +70,7 @@ class WebActivity : BaseActivity(), LifecycleObserver {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window?.statusBarColor = ContextCompat.getColor(this, R.color.dana_orange)
+
         setContentView(R.layout.activity_web)
 
         val url: String = intent?.getStringExtra(EXTRA_URL) ?: ""
@@ -223,11 +221,11 @@ class WebActivity : BaseActivity(), LifecycleObserver {
         }
     }
 
-    private fun uploadUriImage(pair: Pair<String?, Uri?>, ocr: Boolean) {
+    private fun uploadUriImage(pair: Pair<String?, Uri?>) {
         val imageUri = pair.second ?: return
         val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
         val objectKey = CommUtils.getOssObjectKey(imageUri)
-        ImageUploader().uploadImage(lifecycleScope, bitmap, objectKey, ocr) { status, imageBytes ->
+        ImageUploader().uploadImage(lifecycleScope, bitmap, objectKey) { status, imageBytes ->
             if (status == "1") {
                 callJs(
                     webInterface.sendImgUrl(
@@ -247,12 +245,12 @@ class WebActivity : BaseActivity(), LifecycleObserver {
             return@registerForActivityResult
         }
 
-        uploadUriImage(pair, true)
+        uploadUriImage(pair)
     }
 
     private val photoLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) {
         if (it && getPhotoPair != null) {
-            uploadUriImage(getPhotoPair!!, false)
+            uploadUriImage(getPhotoPair!!)
         }
     }
 
@@ -282,5 +280,6 @@ class WebActivity : BaseActivity(), LifecycleObserver {
 
             //默认启动获取定位任务, 如果没有定位权限, worker里面会做拦截的
             CommUtils.startGetLocationWorker(this)
+            CommUtils.saveDeviceId(this, lifecycleScope)
         }
 }

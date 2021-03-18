@@ -1,9 +1,13 @@
 package com.ecreditpal.danaflash.helper
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.provider.ContactsContract
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
@@ -11,11 +15,14 @@ import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.PhoneUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.ecreditpal.danaflash.App
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.LoadingTips
+import com.ecreditpal.danaflash.data.DataStoreKeys
 import com.ecreditpal.danaflash.data.H5_ORDER_CONFIRM
+import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.model.ContactRes
 import com.ecreditpal.danaflash.model.SurveyModel
 import com.ecreditpal.danaflash.net.dfApi
@@ -23,6 +30,7 @@ import com.ecreditpal.danaflash.ui.comm.WebActivity
 import com.ecreditpal.danaflash.ui.login.LoginActivity
 import com.ecreditpal.danaflash.worker.GetLocationWorker
 import com.ecreditpal.danaflash.worker.UploadSurveyWorker
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -43,6 +51,7 @@ object CommUtils {
      * 跳转到google商店下载页
      */
     fun navGoogleDownload(context: Context?, link: String?) {
+        SurveyHelper.addOneSurvey("/", "gogg")
         LogUtils.d("open link in play store => $link")
         val intent = Intent(Intent.ACTION_VIEW).apply {
             data = Uri.parse(link)
@@ -103,11 +112,17 @@ object CommUtils {
      * 获取所有联系人
      */
     fun getAllContacts(context: Context?): MutableList<ContactRes>? {
+
+        val projection = arrayOf(
+            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY,
+            ContactsContract.CommonDataKinds.Phone.NUMBER
+        )
+
         val contactList = mutableListOf<ContactRes>()
         val cr = context?.contentResolver
         val cur = cr?.query(
-            ContactsContract.Contacts.CONTENT_URI,
-            null, null, null, null
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            projection, null, null, null
         ) ?: return null
 
         if (cur.count <= 0) {
@@ -116,27 +131,11 @@ object CommUtils {
 
         try {
             while (cur.moveToNext()) {
-                val id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID))
-                val name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-                    val pCur = cr.query(
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        null,
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                        arrayOf(id),
-                        null
-                    ) ?: continue
-                    while (pCur.moveToNext()) {
-                        val phoneNo =
-                            pCur.getString(
-                                pCur.getColumnIndex(
-                                    ContactsContract.CommonDataKinds.Phone.NUMBER
-                                )
-                            )
-
-                        contactList.add(ContactRes(name, phoneNo))
-                    }
-                    pCur.close()
+                val name =
+                    cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY))
+                val number = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                if (number.isNotBlank()) {
+                    contactList.add(ContactRes(name, number))
                 }
             }
         } catch (e: Exception) {
@@ -174,5 +173,28 @@ object CommUtils {
         WorkManager
             .getInstance(App.context)
             .enqueue(uploadWorkRequest)
+    }
+
+    fun saveDeviceId(context: Context?, scope: CoroutineScope) {
+        context ?: return
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.READ_PHONE_STATE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        if (UserFace.deviceId.isNotBlank()) {
+            return
+        }
+        val deviceId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            PhoneUtils.getIMEI()
+        } else {
+            PhoneUtils.getDeviceId()
+        }
+        UserFace.deviceId = deviceId
+        scope.launch {
+            context.writeDsData(DataStoreKeys.DEVICE_ID, deviceId)
+        }
     }
 }
