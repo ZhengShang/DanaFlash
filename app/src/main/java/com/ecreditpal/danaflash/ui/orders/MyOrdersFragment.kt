@@ -1,15 +1,19 @@
 package com.ecreditpal.danaflash.ui.orders
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.ToastUtils
+import com.ecreditpal.danaflash.MainActivity
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseFragment
 import com.ecreditpal.danaflash.base.LoadingTips
@@ -37,6 +41,7 @@ class MyOrdersFragment : BaseFragment() {
     //保存三个adapter刷新用
     private val adapterList = mutableListOf<OrderAdapter>()
     private var amountTrialRes: AmountTrialRes? = null
+    private var tempOrderRes: OrderRes? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -170,11 +175,9 @@ class MyOrdersFragment : BaseFragment() {
                 //再借一单
                 //点击后进入该产品的订单确认页（h5页面）
                 SurveyHelper.addOneSurvey("/orderPage", "onMoreOrder", "aj")
-                //直接跳入订单确认页
-                WebActivity.loadUrl(
-                    context,
-                    H5_ORDER_CONFIRM.combineH5Url(getH5Params(orderRes))
-                )
+                //需要先检查所有权限,全部权限通过了才能进入详情
+                tempOrderRes = orderRes
+                requestAllPermissions()
             }
         }
     }
@@ -299,5 +302,27 @@ class MyOrdersFragment : BaseFragment() {
     private val livenessLauncher = registerForActivityResult(StartLiveness()) {
         CommUtils.stepAfterLiveness(lifecycleScope, context, it)
     }
+
+    private fun requestAllPermissions() {
+        val requestArray = MainActivity.PERMISSIONS
+            .filter {
+                ContextCompat.checkSelfPermission(context ?: return, it) == PackageManager.PERMISSION_DENIED
+            }.toTypedArray()
+
+        requestPermissionsLauncher.launch(requestArray)
+    }
+
+    private val requestPermissionsLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { map ->
+            val allGranted = map.values.all { it == true }
+            if (allGranted) {
+                val res = tempOrderRes ?: return@registerForActivityResult
+                //直接跳入订单确认页
+                WebActivity.loadUrl(
+                    context,
+                    H5_ORDER_CONFIRM.combineH5Url(getH5Params(res))
+                )
+            }
+        }
 
 }
