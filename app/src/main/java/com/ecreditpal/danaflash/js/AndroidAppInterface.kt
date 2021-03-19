@@ -10,7 +10,6 @@ import android.provider.Settings
 import android.webkit.JavascriptInterface
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.*
 import com.ecreditpal.danaflash.BuildConfig
 import com.ecreditpal.danaflash.data.DataStoreKeys
@@ -59,7 +58,7 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
     fun uploadContactList() {
         webActivity.lifecycleScope.launch {
             val json = CommUtils.getAllContacts(webActivity)?.joinToString {
-                JSON.toJSONString(
+                GsonUtils.toJson(
                     mapOf(
                         "name" to it.name,
                         "number" to it.phone
@@ -159,7 +158,7 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
             "gpsFake" to if (UserFace.location?.isFromMockProvider == true) 1 else 0,
             "success" to success
         )
-        webActivity.callbackInterface("getLocation", JSON.toJSONString(map))
+        webActivity.callbackInterface("getLocation", GsonUtils.toJson(map))
     }
 
     @JavascriptInterface
@@ -181,7 +180,7 @@ class AndroidAppInterface(private val webActivity: WebActivity) {
                 "referrerClickTime" to it?.referrerClickTimestampSeconds,
                 "referrerUrl" to it?.installReferrer
             )
-            webActivity.callbackInterface("getReferer", JSON.toJSONString(map))
+            webActivity.callbackInterface("getReferer", GsonUtils.toJson(map))
         }
     }
 
