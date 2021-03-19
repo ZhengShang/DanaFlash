@@ -20,7 +20,6 @@ import android.telephony.SignalStrength
 import android.telephony.TelephonyManager
 import android.text.TextUtils
 import androidx.core.app.ActivityCompat
-import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.*
 import com.ecreditpal.danaflash.App
 import com.ecreditpal.danaflash.data.UserFace
@@ -174,10 +173,10 @@ class DeviceInfoUtil {
         LogUtils.d(
             """
             设备信息：
-            ${JSON.toJSONString(deviceInfoBean)}
+            ${GsonUtils.toJson(deviceInfoBean)}
             """.trimIndent()
         )
-        return EncodeUtils.base64Encode2String(JSON.toJSONString(deviceInfoBean).toByteArray())
+        return EncodeUtils.base64Encode2String(GsonUtils.toJson(deviceInfoBean).toByteArray())
     }
 
     private val INTERNAL_STORAGE = 0

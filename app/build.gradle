@@ -59,7 +59,6 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha05"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.30"
     implementation "androidx.paging:paging-runtime-ktx:3.0.0-alpha11"
     implementation "androidx.work:work-runtime-ktx:2.5.0-beta02"
     implementation "androidx.activity:activity-ktx:1.2.0-rc01"
@@ -74,10 +73,11 @@ dependencies {
     implementation 'com.android.installreferrer:installreferrer:2.2'
     implementation 'com.aliyun.dpa:oss-android-sdk:2.9.5'
 
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.blankj:utilcodex:1.30.5'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.alibaba:fastjson:1.1.72.android'
     implementation 'com.youth.banner:banner:2.1.0'
 
     testImplementation 'junit:junit:4.+'

@@ -1,6 +1,6 @@
 package com.ecreditpal.danaflash.model
 
-import com.alibaba.fastjson.JSON
+import com.blankj.utilcode.util.GsonUtils
 import com.ecreditpal.danaflash.data.UserFace
 import com.ecreditpal.danaflash.helper.SurveyHelper
 
@@ -50,9 +50,9 @@ class SurveyModel private constructor() {
     }
 
     override fun toString(): String {
-        return JSON.toJSONString(
+        return GsonUtils.toJson(
             mapOf(
-                "survey" to JSON.toJSONString(this)
+                "survey" to GsonUtils.toJson(this)
             )
         )
     }

@@ -14,8 +14,8 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.lifecycle.*
-import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.EncodeUtils
+import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.LogUtils
 import com.ecreditpal.danaflash.R
 import com.ecreditpal.danaflash.base.BaseActivity
@@ -259,7 +259,7 @@ class WebActivity : BaseActivity(), LifecycleObserver {
     }
 
     private val contactLauncher = registerForActivityResult(StartContact()) {
-        val jsonString = JSON.toJSONString(
+        val jsonString = GsonUtils.toJson(
             mapOf(
                 "success" to it.first,
                 "name" to (it.second?.name ?: ""),

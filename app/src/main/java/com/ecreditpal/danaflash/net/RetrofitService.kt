@@ -4,6 +4,7 @@ import com.ecreditpal.danaflash.BuildConfig
 import com.ecreditpal.danaflash.data.BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitService {
@@ -28,7 +29,7 @@ object RetrofitService {
         service = Retrofit.Builder()
             .client(client)
             .baseUrl(BASE_URL)
-            .addConverterFactory(FastJsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
